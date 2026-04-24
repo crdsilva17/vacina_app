@@ -4,6 +4,11 @@ class CustomTextField extends StatelessWidget {
   final String label;
   final IconData icon;
   final TextEditingController controller;
+  final Color colorText;
+  final Color colorLabel;
+  final Color colorIcon;
+  final Color colorBorder;
+  final Color colorBorderSide;
   final bool isPassword;
 
   const CustomTextField({
@@ -11,6 +16,11 @@ class CustomTextField extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.controller,
+    required this.colorText,
+    required this.colorLabel,
+    required this.colorIcon,
+    required this.colorBorder,
+    required this.colorBorderSide,
     this.isPassword = false,
   });
 
@@ -19,18 +29,18 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: isPassword,
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: colorText),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white),
-        prefixIcon: Icon(icon, color: Colors.white,),
+        labelStyle:  TextStyle(color: colorLabel),
+        prefixIcon: Icon(icon, color: colorIcon,),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.white70),
+          borderSide: BorderSide(color: colorBorderSide),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.white),
+          borderSide:   BorderSide(color: colorBorder),
         )
       ),
     );

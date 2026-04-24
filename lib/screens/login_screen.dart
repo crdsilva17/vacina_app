@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/screens/account_screen.dart';
+import 'package:vacina_app/util/custom_navigate.dart';
 
+import '../util/custom_navigate.dart' as CustomNavigate;
 import '../widget/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget? _body() {
+  _body() {
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -42,17 +45,17 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
             child:
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 120,
-                    child: Text('logo'),
+                    child: Placeholder(),
                   ),
                   const SizedBox(height: 16,),
-                  const Text('Vacina Legal',
+                  const Text('IMUNE',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 32,
@@ -65,6 +68,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: 'E-mail',
                       icon: Icons.email_outlined,
                       controller: emailController,
+                      colorBorder: Colors.white,
+                      colorBorderSide: Colors.white70,
+                      colorIcon: Colors.white,
+                      colorLabel: Colors.white,
+                      colorText: Colors.white,
                   ),
 
                   const SizedBox(height: 20,),
@@ -73,6 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: 'Password',
                     icon: Icons.lock_outline,
                     controller: passwordController,
+                    colorBorder: Colors.white,
+                    colorBorderSide: Colors.white70,
+                    colorIcon: Colors.white,
+                    colorLabel: Colors.white,
+                    colorText: Colors.white,
                     isPassword: true,
                   ),
 
@@ -126,7 +139,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: Colors.white70),
                   ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                              push(context, AccountScreen());
+                          },
                           child: const Text(
                             'Cadastre-se',
                             style: TextStyle(
