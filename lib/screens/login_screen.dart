@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vacina_app/screens/account_screen.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 
-import '../util/custom_navigate.dart' as CustomNavigate;
 import '../widget/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -15,6 +15,9 @@ class _AccountScreenState extends State<AccountScreen> {
   final TextEditingController cpfEditController = TextEditingController();
   final TextEditingController postoEditController = TextEditingController();
   final TextEditingController senhaEditController = TextEditingController();
+  final dropValue = ValueNotifier('');
+  final dropOptions = [''];
+  final dropOptionsId = [''];
   final double spacing = 30;
 
   @override
@@ -26,17 +29,18 @@ class _AccountScreenState extends State<AccountScreen> {
         backgroundColor: Colors.blueAccent,
       ),
       body: _body(),
+      onDrawerChanged: _getlocalId(),
     );
   }
 
   _body() {
-    return Container(
+    return Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Center(
+          child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: spacing*3,),
+                SizedBox(height: spacing,),
                 SizedBox(
                   child: CustomTextField(label: 'Nome',
                       icon: Icons.person_outlined,
@@ -62,15 +66,44 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 SizedBox(height: spacing,),
                 SizedBox(
-                  child: CustomTextField(label: 'Posto de Saúde',
-                    icon: Icons.medical_services_outlined,
-                    controller: postoEditController,
+                  child: CustomTextField(label: 'Data de Nascimento',
+                    icon: Icons.badge_outlined,
+                    controller: cpfEditController,
                     colorBorder: Colors.black,
                     colorIcon: Colors.black,
                     colorLabel: Colors.black,
                     colorText: Colors.black,
                     colorBorderSide: Colors.black,
                   ),
+                ),
+                SizedBox(height: spacing,),
+                ValueListenableBuilder(
+                    valueListenable: dropValue,
+                  builder: (BuildContext context, String value, _) {
+                    return SizedBox(
+                      child: DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          label: const Text('Posto de Saúde'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: Icon(Icons.medical_services_outlined),
+                        ),
+                        initialValue: (value.isEmpty) ? null : value,
+                        onChanged: (option) => {
+                          dropValue.value = option.toString(),
+                          //TODO capturar valor de localId
+                          print(dropOptionsId[dropOptions.indexOf(dropValue.value)])
+                        },
+                        items: dropOptions.map((op) => DropdownMenuItem(
+                            value: op,
+                            child: Text(op)
+                        )).toList(),
+                        
+                      ),
+                    );
+                  }
                 ),
                 SizedBox(height: spacing,),
                 SizedBox(
@@ -133,5 +166,15 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
       );
+  }
+
+  _getlocalId() {
+    //TODO
+    dropOptions.clear();
+    dropOptions.add('value1');
+    dropOptions.add('value2');
+    dropOptionsId.clear();
+    dropOptionsId.add('1');
+    dropOptionsId.add('2');
   }
 }
