@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Imune',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.blueAccent),
-      ),
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.blueAccent)),
       home: const LoginScreen(),
     );
   }
