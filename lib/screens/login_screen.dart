@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(body: _body());
   }
 
-  _body() {
+  Container _body() {
     return Container(
       width: double.infinity,
       height: double.infinity,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/screens/store/local_store.dart';
 import 'package:vacina_app/widget/custom_text_field.dart';
+import 'package:intl/intl.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -14,6 +16,10 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   final LocalStore store = LocalStore(
     repository: LocalRepository(client: HttpClient()),
+  );
+  final cpfFormatter = MaskTextInputFormatter(
+    mask: '###.###.###-##',
+    filter: {"#": RegExp(r'[0-9]')},
   );
   final TextEditingController nomeEditController = TextEditingController();
   final TextEditingController emailEditController = TextEditingController();
@@ -44,7 +50,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  _body() {
+  Center _body() {
     _getlocalId();
     return Center(
       child: Padding(
@@ -53,6 +59,7 @@ class _AccountScreenState extends State<AccountScreen> {
           child: Column(
             children: [
               SizedBox(height: spacing),
+              // Field for input name
               SizedBox(
                 child: CustomTextField(
                   label: 'Nome',
@@ -66,11 +73,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: spacing),
+              // Field for input CPF
               SizedBox(
                 child: CustomTextField(
                   label: 'CPF',
                   icon: Icons.badge_outlined,
                   controller: cpfEditController,
+                  keyBoardType: TextInputType.number,
+                  inputFormatter: [cpfFormatter],
                   colorBorder: Colors.black,
                   colorIcon: Colors.black,
                   colorLabel: Colors.black,
@@ -79,19 +89,36 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: spacing),
+              // Field for date of birth
               SizedBox(
-                child: CustomTextField(
-                  label: 'Data de Nascimento',
-                  icon: Icons.badge_outlined,
+                child: TextField(
                   controller: dataNscEditController,
-                  colorBorder: Colors.black,
-                  colorIcon: Colors.black,
-                  colorLabel: Colors.black,
-                  colorText: Colors.black,
-                  colorBorderSide: Colors.black,
+                  decoration: InputDecoration(
+                    label: Text('Data de Nascimento'),
+                    prefixIcon: Icon(
+                      Icons.badge_outlined,
+                      color: Colors.black,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  readOnly: true,
+                  onTap: () {
+                    _setDate();
+                  },
                 ),
               ),
               SizedBox(height: spacing),
+              // field for list of local
               ValueListenableBuilder(
                 valueListenable: dropValue,
                 builder: (BuildContext context, String value, _) {
@@ -120,6 +147,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 },
               ),
               SizedBox(height: spacing),
+              // Field for input e-mail
               SizedBox(
                 child: CustomTextField(
                   label: 'E-mail',
@@ -134,6 +162,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
 
               SizedBox(height: spacing),
+              // Field for password
               SizedBox(
                 child: CustomTextField(
                   label: 'Senha',
@@ -148,6 +177,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: spacing * 2),
+              // Button for send register
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -189,6 +219,22 @@ class _AccountScreenState extends State<AccountScreen> {
       dropOptions.add(val.name);
       dropOptionsId.add(val.id);
       dropValue.value = val.name;
+    }
+  }
+
+  Future<void> _setDate() async {
+    DateTime? _picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100)
+    );
+
+    if (_picked != null) {
+      setState(() {
+        final formatter = DateFormat('dd/MM/yyyy');
+        dataNscEditController.text = formatter.format(_picked);
+      });
     }
   }
 }

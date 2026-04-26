@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
   final IconData icon;
   final TextEditingController controller;
+  final TextInputType keyBoardType;
+  final List<TextInputFormatter>? inputFormatter;
   final Color colorText;
   final Color colorLabel;
   final Color colorIcon;
@@ -21,6 +24,8 @@ class CustomTextField extends StatelessWidget {
     required this.colorIcon,
     required this.colorBorder,
     required this.colorBorderSide,
+    this.keyBoardType = TextInputType.text,
+    this.inputFormatter,
     this.isPassword = false,
   });
 
@@ -43,6 +48,8 @@ class CustomTextField extends StatelessWidget {
           borderSide:   BorderSide(color: colorBorder),
         )
       ),
+      keyboardType: keyBoardType,
+      inputFormatters: inputFormatter,
     );
   }
 }
