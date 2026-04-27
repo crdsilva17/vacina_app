@@ -29,8 +29,7 @@ class HttpClient implements IHttpClient {
           },
           body: json.encode(dados));
     }catch(e){
-      print(e);
+      throw Exception(e);
     }
-    return '[]';
   }
 }
