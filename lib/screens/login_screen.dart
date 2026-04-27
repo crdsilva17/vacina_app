@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _logar,
                     child: const Text('Entrar'),
                   ),
                 ),
@@ -132,5 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+  Future<void> _logar() async {
+    
   }
 }
