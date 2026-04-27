@@ -164,18 +164,18 @@ class _AccountScreenState extends State<AccountScreen> {
               SizedBox(height: spacing),
               // Field for password
               SizedBox(
-                child: CustomTextField(
-                  label: 'Senha',
-                  icon: Icons.password_outlined,
-                  controller: senhaEditController,
-                  colorBorder: Colors.black,
-                  colorIcon: Colors.black,
-                  colorLabel: Colors.black,
-                  colorText: Colors.black,
-                  colorBorderSide: Colors.black,
-                  isPassword: true,
+                child:CustomTextField(
+                      label: 'Senha',
+                      icon: Icons.password_outlined,
+                      controller: senhaEditController,
+                      colorBorder: Colors.black,
+                      colorIcon: Colors.black,
+                      colorLabel: Colors.black,
+                      colorText: Colors.black,
+                      colorBorderSide: Colors.black,
+                      isPassword: true,
+                    ),
                 ),
-              ),
               SizedBox(height: spacing * 2),
               // Button for send register
               Container(
