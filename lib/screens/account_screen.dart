@@ -95,10 +95,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   controller: dataNscEditController,
                   decoration: InputDecoration(
                     label: Text('Data de Nascimento'),
-                    prefixIcon: Icon(
-                      Icons.badge_outlined,
-                      color: Colors.black,
-                    ),
+                    prefixIcon: Icon(Icons.badge_outlined, color: Colors.black),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.black),
@@ -107,9 +104,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.black),
                     ),
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                    ),
+                    labelStyle: TextStyle(color: Colors.black),
                   ),
                   readOnly: true,
                   onTap: () {
@@ -149,33 +144,50 @@ class _AccountScreenState extends State<AccountScreen> {
               SizedBox(height: spacing),
               // Field for input e-mail
               SizedBox(
-                child: CustomTextField(
-                  label: 'E-mail',
-                  icon: Icons.email_outlined,
+                child: TextFormField(
+                  textCapitalization: TextCapitalization.none,
+                  keyboardType: TextInputType.emailAddress,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: emailEditController,
-                  colorBorder: Colors.black,
-                  colorIcon: Colors.black,
-                  colorLabel: Colors.black,
-                  colorText: Colors.black,
-                  colorBorderSide: Colors.black,
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    hintText: 'example@email.com',
+                    prefixIcon: Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira um e-mail';
+                    }
+                    // Expressão regular simples para validar e-mail
+                    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                    RegExp regex = RegExp(pattern);
+                    if (!regex.hasMatch(value)) {
+                      return 'Insira um e-mail válido';
+                    }
+                    return null;
+                  },
                 ),
               ),
 
               SizedBox(height: spacing),
               // Field for password
               SizedBox(
-                child:CustomTextField(
-                      label: 'Senha',
-                      icon: Icons.password_outlined,
-                      controller: senhaEditController,
-                      colorBorder: Colors.black,
-                      colorIcon: Colors.black,
-                      colorLabel: Colors.black,
-                      colorText: Colors.black,
-                      colorBorderSide: Colors.black,
-                      isPassword: true,
-                    ),
+                child: CustomTextField(
+                  label: 'Senha',
+                  icon: Icons.password_outlined,
+                  controller: senhaEditController,
+                  colorBorder: Colors.black,
+                  colorIcon: Colors.black,
+                  colorLabel: Colors.black,
+                  colorText: Colors.black,
+                  colorBorderSide: Colors.black,
+                  isPassword: true,
                 ),
+              ),
               SizedBox(height: spacing * 2),
               // Button for send register
               Container(
@@ -224,10 +236,10 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> _setDate() async {
     DateTime? _picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2100)
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
     );
 
     if (_picked != null) {
