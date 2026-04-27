@@ -3,7 +3,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/screens/store/local_store.dart';
-import 'package:vacina_app/widget/custom_text_field.dart';
 import 'package:intl/intl.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -31,6 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
   final dropOptions = [''];
   final dropOptionsId = [''];
   final double spacing = 30;
+  var _maskPass = true;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _AccountScreenState extends State<AccountScreen> {
       appBar: AppBar(
         title: Text('Cadastro'),
         foregroundColor: Colors.white,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blue[900],
       ),
       body: _body(),
     );
@@ -61,31 +61,25 @@ class _AccountScreenState extends State<AccountScreen> {
               SizedBox(height: spacing),
               // Field for input name
               SizedBox(
-                child: CustomTextField(
-                  label: 'Nome',
-                  icon: Icons.person_outlined,
+                child: TextField(
                   controller: nomeEditController,
-                  colorBorder: Colors.black,
-                  colorIcon: Colors.black,
-                  colorLabel: Colors.black,
-                  colorText: Colors.black,
-                  colorBorderSide: Colors.black,
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                    prefixIcon: Icon(Icons.person_outlined),
+                  ),
                 ),
               ),
               SizedBox(height: spacing),
               // Field for input CPF
               SizedBox(
-                child: CustomTextField(
-                  label: 'CPF',
-                  icon: Icons.badge_outlined,
+                child: TextFormField(
                   controller: cpfEditController,
-                  keyBoardType: TextInputType.number,
-                  inputFormatter: [cpfFormatter],
-                  colorBorder: Colors.black,
-                  colorIcon: Colors.black,
-                  colorLabel: Colors.black,
-                  colorText: Colors.black,
-                  colorBorderSide: Colors.black,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [cpfFormatter],
+                  decoration: InputDecoration(
+                    labelText: 'CPF',
+                    prefixIcon: Icon(Icons.badge_outlined),
+                  ),
                 ),
               ),
               SizedBox(height: spacing),
@@ -96,14 +90,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   decoration: InputDecoration(
                     label: Text('Data de Nascimento'),
                     prefixIcon: Icon(Icons.badge_outlined, color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black),
-                    ),
                     labelStyle: TextStyle(color: Colors.black),
                   ),
                   readOnly: true,
@@ -153,17 +139,14 @@ class _AccountScreenState extends State<AccountScreen> {
                     labelText: 'E-mail',
                     hintText: 'example@email.com',
                     prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black),
-                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira um e-mail';
                     }
                     // Expressão regular simples para validar e-mail
-                    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                    String pattern =
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
                     RegExp regex = RegExp(pattern);
                     if (!regex.hasMatch(value)) {
                       return 'Insira um e-mail válido';
@@ -176,18 +159,28 @@ class _AccountScreenState extends State<AccountScreen> {
               SizedBox(height: spacing),
               // Field for password
               SizedBox(
-                child: CustomTextField(
-                  label: 'Senha',
-                  icon: Icons.password_outlined,
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _maskPass = !_maskPass;
+                        });
+                      },
+                      icon: Icon(
+                        _maskPass
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                    ),
+                  ),
                   controller: senhaEditController,
-                  colorBorder: Colors.black,
-                  colorIcon: Colors.black,
-                  colorLabel: Colors.black,
-                  colorText: Colors.black,
-                  colorBorderSide: Colors.black,
-                  isPassword: true,
+                  obscureText: _maskPass,
                 ),
               ),
+
               SizedBox(height: spacing * 2),
               // Button for send register
               Container(
@@ -201,19 +194,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
                   onPressed: () {},
-                  child: const Text(
-                    'Cadastrar',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  child: const Text('Cadastrar'),
                 ),
               ),
             ],

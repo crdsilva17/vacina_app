@@ -3,28 +3,28 @@ import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final IconData iconData;
+  final IconButton? icon;
   final TextEditingController controller;
   final TextInputType keyBoardType;
   final List<TextInputFormatter>? inputFormatter;
-  final Color colorText;
-  final Color colorLabel;
-  final Color colorIcon;
-  final Color colorBorder;
-  final Color colorBorderSide;
+  final Color? colorText;
+  final Color? colorLabel;
+  final Color? colorIcon;
+  final Color? colorBorder;
   final bool isPassword;
 
   const CustomTextField({
     super.key,
     required this.label,
-    required this.icon,
+    required this.iconData,
     required this.controller,
-    required this.colorText,
-    required this.colorLabel,
-    required this.colorIcon,
-    required this.colorBorder,
-    required this.colorBorderSide,
+    this.colorText,
+    this.colorLabel,
+    this.colorIcon,
+    this.colorBorder,
     this.keyBoardType = TextInputType.text,
+    this.icon,
     this.inputFormatter,
     this.isPassword = false,
   });
@@ -37,16 +37,15 @@ class CustomTextField extends StatelessWidget {
       style: TextStyle(color: colorText),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle:  TextStyle(color: colorLabel),
-        prefixIcon: Icon(icon, color: colorIcon,),
+        labelStyle: TextStyle(color: colorLabel),
+        prefixIcon: Icon(iconData, color: colorIcon),
+        suffixIcon: icon,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: colorBorderSide),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: colorBorder),
-        )
+        ),
       ),
       keyboardType: keyBoardType,
       inputFormatters: inputFormatter,

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vacina_app/screens/account_screen.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 
-import '../widget/custom_text_field.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -14,28 +12,21 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  var _maskPass = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _body());
+    return Scaffold(
+      // Fundo azul escuro usando a paleta de cores
+      backgroundColor: Colors.blue[600],
+      body: _body(),
+    );
   }
 
   Container _body() {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0A0A0F),
-            Color(0xFF0A0A0F),
-            Color(0xFF1B263B),
-            Color(0xFF415A77),
-          ],
-        ),
-      ),
       child: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -44,8 +35,14 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 120, child: Placeholder()),
-                const SizedBox(height: 16),
+                SizedBox(
+                  child: Icon(
+                    Icons.vaccines_outlined,
+                    size: 150,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 15),
                 const Text(
                   'IMUNE',
                   style: TextStyle(
@@ -57,29 +54,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 35),
 
-                CustomTextField(
-                  label: 'E-mail',
-                  icon: Icons.email_outlined,
+                TextField(
                   controller: emailController,
-                  colorBorder: Colors.white,
-                  colorBorderSide: Colors.white70,
-                  colorIcon: Colors.white,
-                  colorLabel: Colors.white,
-                  colorText: Colors.white,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    prefixIcon: Icon(Icons.email_outlined),
+                  ),
                 ),
 
-                const SizedBox(height: 20),
-
-                CustomTextField(
-                  label: 'Password',
-                  icon: Icons.lock_outline,
+                const SizedBox(height: 40),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _maskPass = !_maskPass;
+                        });
+                      },
+                      icon: Icon(
+                        _maskPass
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                    ),
+                  ),
                   controller: passwordController,
-                  colorBorder: Colors.white,
-                  colorBorderSide: Colors.white70,
-                  colorIcon: Colors.white,
-                  colorLabel: Colors.white,
-                  colorText: Colors.white,
-                  isPassword: true,
+                  obscureText: _maskPass,
                 ),
 
                 const SizedBox(height: 10),
@@ -94,28 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.red, Colors.redAccent],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
                     onPressed: () {},
-                    child: const Text(
-                      'Entrar',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                    child: const Text('Entrar'),
                   ),
                 ),
 
