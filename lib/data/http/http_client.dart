@@ -22,12 +22,15 @@ class HttpClient implements IHttpClient {
     required Map<String, String> dados,
   }) async {
     try {
+      String email = dados.keys.first;
+      String senha = dados.values.first;
+      Map<String, String> data = {'email':email, 'senha':senha};
       return await client.post(
           Uri.parse(url),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: json.encode(dados));
+          body: json.encode(data));
     }catch(e){
       throw Exception(e);
     }

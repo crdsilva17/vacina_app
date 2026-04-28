@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:vacina_app/data/http/http_client.dart';
-import 'package:vacina_app/data/models/user_token.dart';
 
 abstract class ITokenRepository {
-  Future<String> getToken(Map<String, String> map);
+  Future<Map<String, dynamic>> getToken(Map<String, String> map);
 }
 
 class TokenRepository implements ITokenRepository {
@@ -17,14 +16,9 @@ class TokenRepository implements ITokenRepository {
   TokenRepository({required this.client});
 
   @override
-  Future<String> getToken(Map<String, String> map) async {
+  Future<Map<String, dynamic>> getToken(Map<String, String> map) async {
     final response = await client.post(url: baseUrl, dados: map);
     final body = jsonDecode(response.body);
-    body.map((item) {
-      final UserToken value = UserToken.fromMap(item);
-      return value.token;
-    });
-
-    return "";
+    return body;
   }
 }

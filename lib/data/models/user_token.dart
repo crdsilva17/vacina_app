@@ -3,7 +3,7 @@ class UserToken {
 
   UserToken({required this.token});
 
-  factory UserToken.fromMap(Map<String, dynamic> map){
-    return UserToken(token: map['token']);
+  factory UserToken.fromMap(Map<String, dynamic> ret){
+    return UserToken(token: ret['token'].toString());
   }
 }

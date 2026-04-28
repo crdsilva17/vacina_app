@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/repositories/token_repository.dart';
 import 'package:vacina_app/screens/account_screen.dart';
+import 'package:vacina_app/screens/main_screen.dart';
+import 'package:vacina_app/screens/store/token_store.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TokenStore token = TokenStore(
+      repository: TokenRepository(client: HttpClient())
+  );
   var _maskPass = false;
 
   @override
@@ -134,6 +141,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
   Future<void> _logar() async {
-    
+    final String email = emailController.text;
+    final String senha = passwordController.text;
+    await token.getToken({email: senha});
+    if (token.state.value != ""){
+      push(context, MainScreen(), replace: true);
+    }
   }
 }
