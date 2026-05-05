@@ -19,7 +19,7 @@ class TokenStore {
       state.value = UserToken(token: result.values.first);
     }catch(e) {
       error.value = 'Falha ao realizar login: $e';
-      throw Exception(error.value);
+      print(error.value);
     } finally {
       isLoading.value = false;
     }

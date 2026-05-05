@@ -50,7 +50,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  Center _body() {
+  Widget? _body() {
     _getlocalId();
     return Center(
       child: Padding(
@@ -217,17 +217,17 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Future<void> _setDate() async {
-    DateTime? _picked = await showDatePicker(
+    DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
 
-    if (_picked != null) {
+    if (picked != null) {
       setState(() {
         final formatter = DateFormat('dd/MM/yyyy');
-        dataNscEditController.text = formatter.format(_picked);
+        dataNscEditController.text = formatter.format(picked);
       });
     }
   }

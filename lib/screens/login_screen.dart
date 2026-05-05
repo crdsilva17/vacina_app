@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/token_repository.dart';
 import 'package:vacina_app/screens/account_screen.dart';
-import 'package:vacina_app/screens/main_screen.dart';
+import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/screens/store/token_store.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 
@@ -14,24 +14,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TokenStore token = TokenStore(
-      repository: TokenRepository(client: HttpClient())
+    repository: TokenRepository(client: HttpClient()),
   );
   var _maskPass = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Fundo azul escuro usando a paleta de cores
-      backgroundColor: Colors.blue[600],
-      body: _body(),
-    );
+    return Scaffold(backgroundColor: Colors.blue[600], body: _body());
   }
 
-  Container _body() {
-    return Container(
+  Widget _body() {
+    return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Center(
@@ -61,35 +59,71 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 35),
 
-                TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'E-mail',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _maskPass = !_maskPass;
-                        });
-                      },
-                      icon: Icon(
-                        _maskPass
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        child: TextFormField(
+                          textCapitalization: TextCapitalization.none,
+                          keyboardType: TextInputType.emailAddress,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            labelText: 'E-mail',
+                            hintText: 'example@email.com',
+                            prefixIcon: Icon(Icons.email_outlined),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, insira um e-mail';
+                            }
+                            // Expressão regular simples para validar e-mail
+                            String pattern =
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                            RegExp regex = RegExp(pattern);
+                            if (!regex.hasMatch(value)) {
+                              return 'Insira um e-mail válido';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 30),
+                      // Field for password
+                      SizedBox(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _maskPass = !_maskPass;
+                                });
+                              },
+                              icon: Icon(
+                                _maskPass
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            String pattern =
+                                r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
+                            RegExp regex = RegExp(pattern);
+                           /* if (value == null || !regex.hasMatch(value)) {
+                              return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
+                            }*/
+                            return null;
+                          },
+                          controller: passwordController,
+                          obscureText: _maskPass,
+                        ),
+                      ),
+                    ],
                   ),
-                  controller: passwordController,
-                  obscureText: _maskPass,
                 ),
 
                 const SizedBox(height: 10),
@@ -102,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _logar,
@@ -140,12 +174,17 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   Future<void> _logar() async {
-    final String email = emailController.text;
-    final String senha = passwordController.text;
-    await token.getToken({email: senha});
-    if (token.state.value != ""){
-      push(context, MainScreen(), replace: true);
+    if (_formKey.currentState!.validate()) {
+      final String email = emailController.text;
+      final String senha = passwordController.text;
+      await token.getToken({'email': email, 'senha': senha});
+      setState(() {
+        push(context, CheckScreen(), replace: true);
+      });
+      _formKey.currentState!.save();
+      _formKey.currentState!.reset();
     }
   }
 }
