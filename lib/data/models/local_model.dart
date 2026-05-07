@@ -21,6 +21,17 @@ class LocalModel {
     required this.horarioFuncionamento,
   });
 
+  LocalModel.empty()
+    : id = '',
+      name = '',
+      rua = '',
+      numero = '',
+      bairro = '',
+      cidade = '',
+      estado = '',
+      cep = '',
+      horarioFuncionamento = '';
+
   factory LocalModel.fromMap(Map<String, dynamic> map) {
     return LocalModel(
       id: map['id'],

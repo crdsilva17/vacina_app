@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/models/local_model.dart';
+import 'package:vacina_app/data/models/user_model.dart';
 
 import 'header_content.dart';
 import 'notification_icon.dart';
 
 class AppBarSection extends StatelessWidget {
   final VoidCallback onAvatarTap;
+  final UserModel user;
+  final LocalModel local;
 
-  const AppBarSection({super.key, required this.onAvatarTap});
+  const AppBarSection({super.key, required this.onAvatarTap, required this.user, required this.local});
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
       elevation: 0,
-      title: const HeaderContent(),
+      title: HeaderContent(user: user, local: local),
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
-          child: CircleAvatar(),
           onTap: onAvatarTap,
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+              'https://via.placeholder.com/150', // foto do usuário
+            ),
+          ),
         ),
       ),
       actions: const [NotificationIcon()],

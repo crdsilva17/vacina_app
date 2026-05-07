@@ -6,6 +6,7 @@ import 'package:vacina_app/data/models/local_model.dart';
 
 abstract class ILocalRepository {
   Future<List<LocalModel>> getLocal();
+  Future<LocalModel> getLocalById(String id);
 }
 
 class LocalRepository implements ILocalRepository {
@@ -16,6 +17,21 @@ class LocalRepository implements ILocalRepository {
   };
 
   LocalRepository({required this.client});
+
+  @override
+  Future<LocalModel> getLocalById(String id) async {
+    final response = await client.get(
+      uri: {
+        'base': ApiEndpoints.baseUrl,
+        'endpoint': '${ApiEndpoints.locais}/$id',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return LocalModel.fromMap(jsonDecode(response.body));
+    }
+    return LocalModel.empty();
+  }
 
   @override
   Future<List<LocalModel>> getLocal() async {

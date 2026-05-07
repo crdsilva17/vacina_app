@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/models/local_model.dart';
+import 'package:vacina_app/data/models/user_model.dart';
 
 class HeaderContent extends StatelessWidget {
-  const HeaderContent({super.key});
+  final UserModel user;
+  final LocalModel local;
+  const HeaderContent({super.key, required this.user, required this.local});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,10 @@ class HeaderContent extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [Text('Olá, Usuário'), Text('Sua localização')],
+            children: [
+              Text('Olá, ${user.name}'),
+              Text(local.name),
+            ],
           ),
         ),
       ],

@@ -30,4 +30,17 @@ class LocalStore {
 
     isLoading.value = false;
   }
+
+  Future getLocalById(String id) async {
+    isLoading.value = true;
+
+    try {
+      final result = await repository.getLocalById(id);
+      state.value = [result];
+    } catch (e) {
+      error.value = 'Ocorreu um erro ${e.toString()}';
+    }
+
+    isLoading.value = false;
+  }
 }

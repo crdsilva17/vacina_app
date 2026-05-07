@@ -5,7 +5,7 @@ class UserModel {
   String email;
   String birth;
   String cpf;
-  int role;
+  String role;
 
   UserModel({
     required this.id,
@@ -14,16 +14,25 @@ class UserModel {
     required this.email,
     required this.birth,
     required this.cpf,
-    required this.role
+    required this.role,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  UserModel.empty()
+    : id = '',
+      localId = '',
+      name = '',
+      email = '',
+      birth = '',
+      cpf = '',
+      role = '';
+
+  factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
       localId: map['localId'],
-      name: map['name'],
+      name: map['nome'],
       email: map['email'],
-      birth: map['birth'],
+      birth: map['dataNscto'],
       cpf: map['cpf'],
       role: map['role'],
     );

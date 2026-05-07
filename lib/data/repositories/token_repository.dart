@@ -25,7 +25,7 @@ class TokenRepository implements ITokenRepository {
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       SharedPreferences shared = await SharedPreferences.getInstance();
-      shared.setString('token', 'Token ${body['token']}');
+      shared.setString('token', 'Bearer ${body['token']}');
       shared.setString(
         'validDate',
         '${DateTime.now().add(const Duration(hours: 24))}',
