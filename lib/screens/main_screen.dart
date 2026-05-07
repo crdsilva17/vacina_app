@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vacina_app/data/http/http_client.dart';
-import 'package:vacina_app/data/repositories/token_repository.dart';
+import 'package:vacina_app/data/models/local_model.dart';
+import 'package:vacina_app/data/models/user_model.dart';
+import 'package:vacina_app/data/repositories/users_repository.dart';
+import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/screens/check_screen.dart';
+import 'package:vacina_app/screens/store/local_store.dart';
+import 'package:vacina_app/screens/store/users_store.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
 
@@ -17,10 +22,24 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var repository = TokenRepository(client: HttpClient());
+  final UsersStore store = UsersStore(
+    repository: UsersRepository(client: HttpClient()),
+  );
+  final LocalStore localStore = LocalStore(
+    repository: LocalRepository(client: HttpClient()),
+  );
+  UserModel user = UserModel.empty();
+  LocalModel local = LocalModel.empty();
 
   void openDrawer() {
     _scaffoldKey.currentState?.openDrawer();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+    _loadLocal();
   }
 
   @override
@@ -31,14 +50,14 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const UserAccountsDrawerHeader(
+            UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                   'https://via.placeholder.com/150', // foto do usuário
                 ),
               ),
-              accountName: Text('Cristiano'),
-              accountEmail: Text('cristiano@email.com'),
+              accountName: Text(user.name),
+              accountEmail: Text(user.email),
               decoration: BoxDecoration(color: Colors.blue),
             ),
 
@@ -68,11 +87,42 @@ class _MainScreenState extends State<MainScreen> {
         color: Colors.blue[200],
         child: CustomScrollView(
           slivers: [
-            AppBarSection(onAvatarTap: openDrawer),
-            const SliverToBoxAdapter(child: HeroSection()),
+            AppBarSection(onAvatarTap: openDrawer, user: user, local: local),
+            _body(),
           ],
         ),
       ),
     );
+  }
+
+  SliverList _body() {
+    if (user.role == 'ADMIN') {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          const Text('Conteúdo para administradores'),
+        ]),
+      );
+    } else {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          const HeroSection(),
+          Center(child: const Text('Conteúdo para usuários comuns')),
+        ]),
+      );
+    }
+  }
+
+  Future<void> _loadUser() async {
+    await store.getUser();
+    setState(() {
+      user = store.state.value;
+    });
+  }
+
+  Future<void> _loadLocal() async {
+    await localStore.getLocalById(user.localId);
+    setState(() {
+      local = localStore.state.value[0];
+    });
   }
 }
