@@ -39,7 +39,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _loadUser();
-    _loadLocal();
   }
 
   @override
@@ -116,6 +115,7 @@ class _MainScreenState extends State<MainScreen> {
     await store.getUser();
     setState(() {
       user = store.state.value;
+      _loadLocal();
     });
   }
 
