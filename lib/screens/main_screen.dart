@@ -10,6 +10,7 @@ import 'package:vacina_app/screens/store/local_store.dart';
 import 'package:vacina_app/screens/store/users_store.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
+import 'package:vacina_app/widget/hero_adm_section.dart';
 
 import '../widget/hero_section.dart';
 
@@ -98,6 +99,7 @@ class _MainScreenState extends State<MainScreen> {
     if (user.role == 'ADMIN') {
       return SliverList(
         delegate: SliverChildListDelegate([
+          const HeroAdmSection(),
           const Text('Conteúdo para administradores'),
         ]),
       );
