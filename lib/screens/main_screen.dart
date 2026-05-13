@@ -100,7 +100,6 @@ class _MainScreenState extends State<MainScreen> {
       return SliverList(
         delegate: SliverChildListDelegate([
           const HeroAdmSection(),
-          const Text('Conteúdo para administradores'),
         ]),
       );
     } else {

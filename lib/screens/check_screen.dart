@@ -35,8 +35,10 @@ class _CheckScreenState extends State<CheckScreen> {
     if (token['token'] != null &&
         token['valid'] != null &&
         DateTime.parse(token['valid']).isAfter(DateTime.now())) {
+      if (!mounted) return;
       push(context, MainScreen(), replace: true);
     } else {
+      if (!mounted) return;
       push(context, LoginScreen(), replace: true);
     }
   }

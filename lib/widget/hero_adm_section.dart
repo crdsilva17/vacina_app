@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/screens/locais_screen.dart';
+import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/widget/custom_buttom.dart';
 
 class HeroAdmSection extends StatelessWidget {
@@ -16,9 +18,9 @@ class HeroAdmSection extends StatelessWidget {
               Row(
                 children: [
                   InkWell(
-                    onTap: () => print('Gerenciar Locais'),
+                    onTap: () => push(context, LocaisScreen()),
                     child: CustomButtom(
-                      text: 'Gerenciar Locais',
+                      text: 'Postos de Saúde',
                       icon: Icons.location_on_outlined,
                     ),
                   ),
@@ -53,10 +55,6 @@ class HeroAdmSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 40),
-              const Text(
-                'Aqui você pode gerenciar usuários, locais de vacinação e visualizar relatórios.',
-                style: TextStyle(fontSize: 16),
-              ),
             ],
           ),
       ),
