@@ -31,6 +31,30 @@ class LocalModel {
       estado = '',
       cep = '',
       horarioFuncionamento = '';
+  
+  LocalModel copyWith({
+    String? id,
+    String? name,
+    String? rua,
+    String? numero,
+    String? bairro,
+    String? cidade,
+    String? estado,
+    String? cep,
+    String? horarioFuncionamento,
+  }) {
+    return LocalModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      rua: rua ?? this.rua,
+      numero: numero ?? this.numero,
+      bairro: bairro ?? this.bairro,
+      cidade: cidade ?? this.cidade,
+      estado: estado ?? this.estado,
+      cep: cep ?? this.cep,
+      horarioFuncionamento: horarioFuncionamento ?? this.horarioFuncionamento,
+    );
+  }
 
   factory LocalModel.fromMap(Map<String, dynamic> map) {
     return LocalModel(

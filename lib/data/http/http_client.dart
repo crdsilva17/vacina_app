@@ -6,12 +6,15 @@ import 'package:http/http.dart' as http;
 abstract class IHttpClient {
   Future get({required Map<String, String> uri});
 
-  Future getAuth({
-    required Map<String, String> uri,
-    required String token,
-  });
+  Future getAuth({required Map<String, String> uri, required String token});
 
   Future post({
+    required Map<String, String> uri,
+    required Map<String, String> body,
+  });
+
+  Future put({
+    required String token,
     required Map<String, String> uri,
     required Map<String, String> body,
   });
@@ -60,12 +63,33 @@ class HttpClient implements IHttpClient {
     var url = Uri.parse("${uri['base']}${uri['endpoint']}");
     try {
       return await client.get(
-        url, 
+        url,
         headers: {HttpHeaders.authorizationHeader: token},
-        );
+      );
     } catch (e) {
       print(e);
     }
     return null;
+  }
+
+  @override
+  Future<dynamic> put({
+    required String token,
+    required Map<String, String> uri,
+    required Map<String, String> body,
+  }) async {
+    try {
+      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
+      return await client.put(
+        url,
+        headers: {
+          HttpHeaders.authorizationHeader: token,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(body),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 }

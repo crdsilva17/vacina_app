@@ -43,4 +43,9 @@ class LocalStore {
 
     isLoading.value = false;
   }
+
+  void updateLocal(LocalModel updatedLocal) async{
+    await repository.updateLocal(updatedLocal);
+    await getLocal();
+  }
 }

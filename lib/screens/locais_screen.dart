@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/screens/store/local_store.dart';
 
@@ -11,9 +12,16 @@ class LocaisScreen extends StatefulWidget {
 }
 
 class _LocaisScreenState extends State<LocaisScreen> {
-  final LocalStore localStore = LocalStore(
+  LocalStore localStore = LocalStore(
     repository: LocalRepository(client: HttpClient()),
   );
+
+  List<LocalModel> newLocal = List<LocalModel>.empty();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   var isEditing = <bool>[];
 
@@ -21,7 +29,6 @@ class _LocaisScreenState extends State<LocaisScreen> {
   void initState() {
     super.initState();
     _getlocais();
-    
   }
 
   @override
@@ -41,6 +48,10 @@ class _LocaisScreenState extends State<LocaisScreen> {
       await localStore.getLocal();
       setState(() {
         isEditing = List<bool>.filled(localStore.state.value.length, false);
+        newLocal = List<LocalModel>.filled(
+          localStore.state.value.length,
+          LocalModel.empty(),
+        );
       });
     } catch (e) {
       print('Erro ao obter locais: $e');
@@ -85,62 +96,157 @@ class _LocaisScreenState extends State<LocaisScreen> {
       return DataRow(
         cells: [
           DataCell(
-            isEditing[idToIndex[e.id]!] ? TextField(
-              controller: TextEditingController(text: e.name),
-              onSubmitted: (newValue) {
-                setState(() {});
-              },
-            ) : Text(e.name),
+            isEditing[idToIndex[e.id]!]
+                ? TextField(
+                    controller: TextEditingController(text: e.name),
+                    onChanged: (value) {
+                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                          .copyWith(name: value);
+                    },
+                  )
+                : Text(e.name),
           ),
-          DataCell(Center(child: isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.numero),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.numero))),
-          DataCell(isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.rua),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.rua)),
-          DataCell(isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.bairro),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.bairro)),
-          DataCell(isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.cidade),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.cidade)),
-          DataCell(Center(child: isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.estado),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.estado))),
-          DataCell(Center(child: isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.cep),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.cep))),
-          DataCell(Center(child: isEditing[idToIndex[e.id]!] ? TextField(
-            controller: TextEditingController(text: e.horarioFuncionamento),
-            onSubmitted: (newValue) {
-              setState(() {});
-            },
-          ) : Text(e.horarioFuncionamento))),
+          DataCell(
+            Center(
+              child: isEditing[idToIndex[e.id]!]
+                  ? TextField(
+                      controller: TextEditingController(text: e.numero),
+                      onChanged: (value) {
+                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                            .copyWith(numero: value);
+                      },
+                    )
+                  : Text(e.numero),
+            ),
+          ),
+          DataCell(
+            isEditing[idToIndex[e.id]!]
+                ? TextField(
+                    controller: TextEditingController(text: e.rua),
+                    onChanged: (value) {
+                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                          .copyWith(rua: value);
+                    },
+                  )
+                : Text(e.rua),
+          ),
+          DataCell(
+            isEditing[idToIndex[e.id]!]
+                ? TextField(
+                    controller: TextEditingController(text: e.bairro),
+                    onChanged: (value) {
+                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                          .copyWith(bairro: value);
+                    },
+                  )
+                : Text(e.bairro),
+          ),
+          DataCell(
+            isEditing[idToIndex[e.id]!]
+                ? TextField(
+                    controller: TextEditingController(text: e.cidade),
+                    onChanged: (value) {
+                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                          .copyWith(cidade: value);
+                    },
+                  )
+                : Text(e.cidade),
+          ),
+          DataCell(
+            Center(
+              child: isEditing[idToIndex[e.id]!]
+                  ? TextField(
+                      controller: TextEditingController(text: e.estado),
+                      onChanged: (value) {
+                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                            .copyWith(estado: value);
+                      },
+                    )
+                  : Text(e.estado),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: isEditing[idToIndex[e.id]!]
+                  ? TextField(
+                      controller: TextEditingController(text: e.cep),
+                      onChanged: (value) {
+                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                            .copyWith(cep: value);
+                      },
+                    )
+                  : Text(e.cep),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: isEditing[idToIndex[e.id]!]
+                  ? TextField(
+                      controller: TextEditingController(
+                        text: e.horarioFuncionamento,
+                      ),
+                      onChanged: (value) {
+                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
+                            .copyWith(horarioFuncionamento: value);
+                      },
+                    )
+                  : Text(e.horarioFuncionamento),
+            ),
+          ),
           DataCell(
             IconButton(
               icon: Icon(isEditing[idToIndex[e.id]!] ? Icons.save : Icons.edit),
               onPressed: () {
                 // Lógica para editar o local
                 setState(() {
-                  isEditing[idToIndex[e.id]!] = !isEditing[idToIndex[e.id]!];
+                  if (isEditing[idToIndex[e.id]!]) {
+                    LocalModel updatedLocal = LocalModel(
+                      id: newLocal[idToIndex[e.id]!].id.isEmpty
+                          ? e.id
+                          : newLocal[idToIndex[e.id]!].id,
+                      name: newLocal[idToIndex[e.id]!].name.isEmpty
+                          ? e.name
+                          : newLocal[idToIndex[e.id]!].name,
+                      numero: newLocal[idToIndex[e.id]!].numero.isEmpty
+                          ? e.numero
+                          : newLocal[idToIndex[e.id]!].numero,
+                      rua: newLocal[idToIndex[e.id]!].rua.isEmpty
+                          ? e.rua
+                          : newLocal[idToIndex[e.id]!].rua,
+                      bairro: newLocal[idToIndex[e.id]!].bairro.isEmpty
+                          ? e.bairro
+                          : newLocal[idToIndex[e.id]!].bairro,
+                      cidade: newLocal[idToIndex[e.id]!].cidade.isEmpty
+                          ? e.cidade
+                          : newLocal[idToIndex[e.id]!].cidade,
+                      estado: newLocal[idToIndex[e.id]!].estado.isEmpty
+                          ? e.estado
+                          : newLocal[idToIndex[e.id]!].estado,
+                      cep: newLocal[idToIndex[e.id]!].cep.isEmpty
+                          ? e.cep
+                          : newLocal[idToIndex[e.id]!].cep,
+                      horarioFuncionamento:
+                          newLocal[idToIndex[e.id]!]
+                              .horarioFuncionamento
+                              .isEmpty
+                          ? e.horarioFuncionamento
+                          : newLocal[idToIndex[e.id]!].horarioFuncionamento,
+                    );
+                    localStore.updateLocal(updatedLocal);
+                    local[idToIndex[e.id]!] = updatedLocal;
+                    isEditing[idToIndex[e.id]!] = false;
+                  } else if (isEditing.any((editing) => editing)) {
+                    // Se já houver outro item em edição, não permita iniciar a edição de outro
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Finalize a edição atual antes de editar outro item.',
+                        ),
+                      ),
+                    );
+                  } else {
+                    isEditing[idToIndex[e.id]!] = !isEditing[idToIndex[e.id]!];
+                  }
                 });
               },
             ),
