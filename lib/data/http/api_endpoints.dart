@@ -23,4 +23,6 @@ class ApiEndpoints {
   static String vacinaById(String id) => '/api/v1/vacinas$id';
 
   static String vacinaByName(String name) => '/api/v1/vacinas/$name';
+
+  static String getCep(String cep) => 'https://brasilapi.com.br/api/cep/v1/$cep';
 }
