@@ -13,6 +13,16 @@ class AddressModel {
     required this.street,
   });
 
+  factory AddressModel.empty() {
+    return AddressModel(
+      cep: '',
+      state: '',
+      city: '',
+      neighborhood: '',
+      street: '',
+    );
+  }
+
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
       cep: json['cep'] ?? '',
