@@ -3,10 +3,9 @@ import 'package:vacina_app/data/dto/local_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
-import 'package:vacina_app/screens/store/local_store.dart';
+import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/util/cep_input_formatter.dart';
 import 'package:vacina_app/util/time_range_input_formatter.dart';
-import 'package:vacina_app/widget/custom_text_field.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});

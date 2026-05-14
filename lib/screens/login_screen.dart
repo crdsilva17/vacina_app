@@ -3,7 +3,7 @@ import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/token_repository.dart';
 import 'package:vacina_app/screens/account_screen.dart';
 import 'package:vacina_app/screens/check_screen.dart';
-import 'package:vacina_app/screens/store/token_store.dart';
+import 'package:vacina_app/data/store/token_store.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 
 class LoginScreen extends StatefulWidget {
