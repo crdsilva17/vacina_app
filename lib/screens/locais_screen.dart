@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/dto/local_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/address_model.dart';
 import 'package:vacina_app/data/models/local_model.dart';
+import 'package:vacina_app/data/repositories/address_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
-import 'package:vacina_app/screens/store/local_store.dart';
+import 'package:vacina_app/data/store/address_store.dart';
+import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/util/cep_input_formatter.dart';
 import 'package:vacina_app/util/time_range_input_formatter.dart';
-import 'package:vacina_app/widget/custom_text_field.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});
@@ -18,6 +20,10 @@ class LocaisScreen extends StatefulWidget {
 class _LocaisScreenState extends State<LocaisScreen> {
   LocalStore localStore = LocalStore(
     repository: LocalRepository(client: HttpClient()),
+  );
+
+  AddressStore addressStore = AddressStore(
+    repository: AddressRepository(client: HttpClient()),
   );
 
   List<LocalModel> newLocal = List<LocalModel>.empty();
@@ -38,6 +44,8 @@ class _LocaisScreenState extends State<LocaisScreen> {
   }
 
   var isEditing = <bool>[];
+
+  bool insert = false;
 
   @override
   void initState() {
@@ -125,6 +133,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
               child: isEditing[idToIndex[e.id]!]
                   ? TextField(
                       controller: TextEditingController(text: e.numero),
+                      keyboardType: TextInputType.number,
                       onChanged: (value) {
                         newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
                             .copyWith(numero: value);
@@ -184,6 +193,9 @@ class _LocaisScreenState extends State<LocaisScreen> {
               child: isEditing[idToIndex[e.id]!]
                   ? TextField(
                       controller: TextEditingController(text: e.cep),
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      inputFormatters: [CepInputFormatter()],
                       onChanged: (value) {
                         newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
                             .copyWith(cep: value);
@@ -199,6 +211,9 @@ class _LocaisScreenState extends State<LocaisScreen> {
                       controller: TextEditingController(
                         text: e.horarioFuncionamento,
                       ),
+                      keyboardType: TextInputType.datetime,
+                      textAlign: TextAlign.center,
+                      inputFormatters: [TimeRangeInputFormatter()],
                       onChanged: (value) {
                         newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
                             .copyWith(horarioFuncionamento: value);
@@ -309,53 +324,121 @@ class _LocaisScreenState extends State<LocaisScreen> {
         DataCell(
           TextField(
             controller: nameController,
-            decoration: InputDecoration(hintText: 'Nome'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'nome':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
           ),
         ),
         DataCell(
           TextField(
             controller: numeroController,
-            decoration: InputDecoration(hintText: 'Numero'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'número':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
             keyboardType: TextInputType.number,
           ),
         ),
         DataCell(
           TextField(
             controller: ruaController,
-            decoration: InputDecoration(hintText: 'Rua'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'rua':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
           ),
         ),
         DataCell(
           TextField(
             controller: bairroController,
-            decoration: InputDecoration(hintText: 'Bairro'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'bairro':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
           ),
         ),
         DataCell(
           TextField(
             controller: cidadeController,
-            decoration: InputDecoration(hintText: 'Cidade'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'cidade':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
           ),
         ),
         DataCell(
           TextField(
             controller: estadoController,
-            decoration: InputDecoration(hintText: 'Estado'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'estado':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
           ),
         ),
         DataCell(
           TextField(
             controller: cepController,
-            decoration: InputDecoration(hintText: 'CEP'),
+            decoration: InputDecoration(
+              hintText: insert?'CEP':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
             inputFormatters: [CepInputFormatter()],
+            onChanged: (event) async {
+              // Lógica para buscar o endereço com base no CEP
+              if (cepController.text.length == 9) {
+                await addressStore.fetchAddressByCep(cepController.text);
+                AddressModel address = addressStore.state.value;
+                setState(() {
+                  ruaController.text = address.street;
+                  bairroController.text = address.neighborhood;
+                  cidadeController.text = address.city;
+                  estadoController.text = address.state;
+                });
+              }
+            },
           ),
         ),
         DataCell(
           TextField(
             controller: horarioFuncionamentoController,
-            decoration: InputDecoration(hintText: 'Horário de Funcionamento'),
+            readOnly: !insert,
+            decoration: InputDecoration(
+              hintText: insert?'horário de funcionamento':'add',
+              filled: insert,
+              border: insert
+                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                  : InputBorder.none,
+            ),
             keyboardType: TextInputType.datetime,
             textAlign: TextAlign.center,
             inputFormatters: [TimeRangeInputFormatter()],
@@ -363,8 +446,14 @@ class _LocaisScreenState extends State<LocaisScreen> {
         ),
         DataCell(
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: Icon(insert ? Icons.save : Icons.add),
             onPressed: () async {
+              if (!insert) {
+                setState(() {
+                  insert = true;
+                });
+                return;
+              }
               // Lógica para adicionar um novo local
               if (nameController.text.isEmpty ||
                   numeroController.text.isEmpty ||
@@ -404,11 +493,32 @@ class _LocaisScreenState extends State<LocaisScreen> {
                 estadoController.clear();
                 cepController.clear();
                 horarioFuncionamentoController.clear();
+                insert = false;
               });
             },
           ),
         ),
-        const DataCell(SizedBox()), // Célula vazia para o ícone de excluir
+        DataCell(
+          insert
+              ? IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    // Lógica para cancelar a adição de um novo local
+                    setState(() {
+                      nameController.clear();
+                      numeroController.clear();
+                      ruaController.clear();
+                      bairroController.clear();
+                      cidadeController.clear();
+                      estadoController.clear();
+                      cepController.clear();
+                      horarioFuncionamentoController.clear();
+                      insert = false;
+                    });
+                  },
+                )
+              : const SizedBox(),
+        ), // Célula vazia para o ícone de excluir
       ],
     );
 

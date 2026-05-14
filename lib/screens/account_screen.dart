@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
-import 'package:vacina_app/screens/store/local_store.dart';
+import 'package:vacina_app/data/store/local_store.dart';
 import 'package:intl/intl.dart';
 
 class AccountScreen extends StatefulWidget {
