@@ -10,7 +10,11 @@ abstract class ILocalRepository {
   Future<List<LocalModel>> getLocal();
   Future<LocalModel> getLocalById(String id);
 
+  Future<void> createLocal(LocalRequest localRequest);
+
   Future<void> updateLocal(LocalModel updatedLocal);
+
+  Future<void> deleteLocal(String id);
 }
 
 class LocalRepository implements ILocalRepository {
@@ -57,11 +61,37 @@ class LocalRepository implements ILocalRepository {
     final String? token = shared.getString('token');
     final LocalRequest localRequest = LocalRequest.fromLocalModel(updatedLocal);
     url['base'] = ApiEndpoints.baseUrl;
-    url['endpoint'] = ApiEndpoints.localPut(updatedLocal.id);
-    return client.put(
+    url['endpoint'] = ApiEndpoints.localById(updatedLocal.id);
+    return await client.put(
       token: token.toString(),
       uri: url,
       body: localRequest.toMap(),
     );
+  }
+  
+  @override
+  Future<void> deleteLocal(String id) async {
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    url['base'] = ApiEndpoints.baseUrl;
+    url['endpoint'] = ApiEndpoints.localById(id);
+    return await client.delete(
+      token: token.toString(),
+      uri: url,
+    );
+  }
+  
+  @override
+  Future<void> createLocal(LocalRequest localRequest) async{
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    url['base'] = ApiEndpoints.baseUrl;
+    url['endpoint'] = ApiEndpoints.locais;
+
+    return await client.postAuth(
+      token: token.toString(),
+      uri: url,
+      body: localRequest.toMap(),
+     );
   }
 }

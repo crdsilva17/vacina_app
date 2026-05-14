@@ -11,13 +11,11 @@ class ApiEndpoints {
   static const String user = '/api/v1/usuarios';
   static const String vacinas = '/api/v1/vacinas';
 
-  static String localPut(String id) => '/api/v1/locais?id=$id';
-
   static String getLocalById(String id) => '/api/v1/locais/id?id=$id';
 
-  static String localById(String id) => '/api/v1/locais$id';
+  static String localById(String id) => '/api/v1/locais?id=$id';
 
-  static String vacinaByLocalId(String id) => '/api/v1/vacinas/locais$id';
+  static String vacinaByLocalId(String id) => '/api/v1/vacinas/locais?id=$id';
 
   static String vacinaByLocalName(String name) =>
       '/api/v1/vacinas/locais/name$name';

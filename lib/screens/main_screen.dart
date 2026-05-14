@@ -52,8 +52,9 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150', // foto do usuário
+                child: Text(
+                  user.name.isNotEmpty ? user.name[0].toUpperCase() : '',
+                  style: const TextStyle(fontSize: 24, color: Colors.white),
                 ),
               ),
               accountName: Text(user.name),

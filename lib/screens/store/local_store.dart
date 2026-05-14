@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:vacina_app/data/dto/local_request.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 
@@ -44,8 +45,26 @@ class LocalStore {
     isLoading.value = false;
   }
 
-  void updateLocal(LocalModel updatedLocal) async{
+  Future createLocal(LocalRequest localRequest) async {
+    isLoading.value = true;
+
+    try {
+      await repository.createLocal(localRequest);
+      await getLocal();
+    } catch (e) {
+      error.value = 'Ocorreu um erro ${e.toString()}';
+    }
+
+    isLoading.value = false;
+  }
+
+  Future updateLocal(LocalModel updatedLocal) async{
     await repository.updateLocal(updatedLocal);
+    await getLocal();
+  }
+
+  Future deleteLocal(String id) async {
+    await repository.deleteLocal(id);
     await getLocal();
   }
 }

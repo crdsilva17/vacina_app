@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/dto/local_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/screens/store/local_store.dart';
+import 'package:vacina_app/util/cep_input_formatter.dart';
+import 'package:vacina_app/util/time_range_input_formatter.dart';
+import 'package:vacina_app/widget/custom_text_field.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});
@@ -17,6 +21,16 @@ class _LocaisScreenState extends State<LocaisScreen> {
   );
 
   List<LocalModel> newLocal = List<LocalModel>.empty();
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController numeroController = TextEditingController();
+  final TextEditingController ruaController = TextEditingController();
+  final TextEditingController bairroController = TextEditingController();
+  final TextEditingController cidadeController = TextEditingController();
+  final TextEditingController estadoController = TextEditingController();
+  final TextEditingController cepController = TextEditingController();
+  final TextEditingController horarioFuncionamentoController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -92,7 +106,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
       for (int i = 0; i < local.length; i++) local[i].id: i,
     };
 
-    return local.map((e) {
+    List<DataRow> rows = local.map((e) {
       return DataRow(
         cells: [
           DataCell(
@@ -256,11 +270,150 @@ class _LocaisScreenState extends State<LocaisScreen> {
               icon: const Icon(Icons.delete),
               onPressed: () {
                 // Lógica para excluir o local
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Confirmar Exclusão'),
+                    content: const Text(
+                      'Tem certeza de que deseja excluir este local?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await localStore.deleteLocal(e.id);
+                          setState(() {
+                            _getlocais();
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Excluir'),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ),
         ],
       );
     }).toList();
+
+    DataRow addRow = DataRow(
+      cells: [
+        DataCell(
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(hintText: 'Nome'),
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: numeroController,
+            decoration: InputDecoration(hintText: 'Numero'),
+            keyboardType: TextInputType.number,
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: ruaController,
+            decoration: InputDecoration(hintText: 'Rua'),
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: bairroController,
+            decoration: InputDecoration(hintText: 'Bairro'),
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: cidadeController,
+            decoration: InputDecoration(hintText: 'Cidade'),
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: estadoController,
+            decoration: InputDecoration(hintText: 'Estado'),
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: cepController,
+            decoration: InputDecoration(hintText: 'CEP'),
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            inputFormatters: [CepInputFormatter()],
+          ),
+        ),
+        DataCell(
+          TextField(
+            controller: horarioFuncionamentoController,
+            decoration: InputDecoration(hintText: 'Horário de Funcionamento'),
+            keyboardType: TextInputType.datetime,
+            textAlign: TextAlign.center,
+            inputFormatters: [TimeRangeInputFormatter()],
+          ),
+        ),
+        DataCell(
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              // Lógica para adicionar um novo local
+              if (nameController.text.isEmpty ||
+                  numeroController.text.isEmpty ||
+                  ruaController.text.isEmpty ||
+                  bairroController.text.isEmpty ||
+                  cidadeController.text.isEmpty ||
+                  estadoController.text.isEmpty ||
+                  cepController.text.isEmpty ||
+                  horarioFuncionamentoController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Preencha todos os campos para adicionar um novo local.',
+                    ),
+                  ),
+                );
+                return;
+              }
+              LocalRequest newLocalRequest = LocalRequest(
+                name: nameController.text,
+                numero: numeroController.text,
+                rua: ruaController.text,
+                bairro: bairroController.text,
+                cidade: cidadeController.text,
+                estado: estadoController.text,
+                cep: cepController.text,
+                horarioFuncionamento: horarioFuncionamentoController.text,
+              );
+              await localStore.createLocal(newLocalRequest);
+              await _getlocais();
+              setState(() {
+                nameController.clear();
+                numeroController.clear();
+                ruaController.clear();
+                bairroController.clear();
+                cidadeController.clear();
+                estadoController.clear();
+                cepController.clear();
+                horarioFuncionamentoController.clear();
+              });
+            },
+          ),
+        ),
+        const DataCell(SizedBox()), // Célula vazia para o ícone de excluir
+      ],
+    );
+
+    rows.add(addRow);
+
+    return rows;
   }
 }

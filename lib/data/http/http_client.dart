@@ -8,6 +8,12 @@ abstract class IHttpClient {
 
   Future getAuth({required Map<String, String> uri, required String token});
 
+  Future postAuth({
+    required String token,
+    required Map<String, String> uri,
+    required Map<String, String> body,
+  });
+
   Future post({
     required Map<String, String> uri,
     required Map<String, String> body,
@@ -18,6 +24,8 @@ abstract class IHttpClient {
     required Map<String, String> uri,
     required Map<String, String> body,
   });
+
+  Future delete({required String token, required Map<String, String> uri});
 }
 
 class HttpClient implements IHttpClient {
@@ -81,6 +89,43 @@ class HttpClient implements IHttpClient {
     try {
       var url = Uri.parse("${uri['base']}${uri['endpoint']}");
       return await client.put(
+        url,
+        headers: {
+          HttpHeaders.authorizationHeader: token,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(body),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Future<void> delete({
+    required String token,
+    required Map<String, String> uri,
+  }) async {
+    try {
+      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
+      await client.delete(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Future postAuth({
+    required String token,
+    required Map<String, String> uri,
+    required Map<String, String> body,
+  }) async{
+    try {
+      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
+      await client.post(
         url,
         headers: {
           HttpHeaders.authorizationHeader: token,

@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
-  final IconData iconData;
+  final String hint;
+  final IconData? iconData;
   final IconButton? icon;
   final TextEditingController controller;
   final TextInputType keyBoardType;
@@ -17,8 +18,9 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.label,
-    required this.iconData,
+    required this.hint,
     required this.controller,
+    this.iconData,
     this.colorText,
     this.colorLabel,
     this.colorIcon,
@@ -38,6 +40,7 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(color: colorLabel),
+        hintText: hint,
         prefixIcon: Icon(iconData, color: colorIcon),
         suffixIcon: icon,
         enabledBorder: OutlineInputBorder(
