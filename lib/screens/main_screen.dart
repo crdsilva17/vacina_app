@@ -77,8 +77,8 @@ class _MainScreenState extends State<MainScreen> {
                 var shared = await SharedPreferences.getInstance();
                 shared.remove('token');
                 shared.remove('valid');
-                Navigator.pop(context);
-                push(context, CheckScreen(), replace: true);
+                _close();
+                _open(CheckScreen());
               },
             ),
           ],
@@ -99,9 +99,7 @@ class _MainScreenState extends State<MainScreen> {
   SliverList _body() {
     if (user.role == 'ADMIN') {
       return SliverList(
-        delegate: SliverChildListDelegate([
-          const HeroAdmSection(),
-        ]),
+        delegate: SliverChildListDelegate([const HeroAdmSection()]),
       );
     } else {
       return SliverList(
@@ -126,5 +124,13 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       local = localStore.state.value[0];
     });
+  }
+
+  void _open(Widget screen) {
+    push(context, screen);
+  }
+
+  void _close() {
+    Navigator.pop(context);
   }
 }
