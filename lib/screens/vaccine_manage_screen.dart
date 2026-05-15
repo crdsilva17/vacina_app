@@ -12,7 +12,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gerenciar Vacina'),
+        title: Text('Gerenciar Vacinas'),
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue[900],
       ),
