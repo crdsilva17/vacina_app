@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/screens/locais_screen.dart';
+import 'package:vacina_app/screens/vaccine_manage_screen.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/widget/custom_buttom.dart';
 
@@ -26,7 +27,9 @@ class HeroAdmSection extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   InkWell(
-                    onTap: () => print('Gerenciar Vacinas'),
+                    onTap: () {
+                      push(context, VaccineManageScreen());
+                    },
                     child: CustomButtom(
                       text: 'Gerenciar Vacinas',
                       icon: Icons.vaccines,
