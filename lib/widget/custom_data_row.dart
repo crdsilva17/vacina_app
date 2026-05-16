@@ -29,12 +29,13 @@ class CustomDataRow {
   List<DataRow> rowsLocal(List<LocalModel> locals) {
     var local = locals;
     Map<String, int> idToIndex = {
-      for (int i = 0; i < local.length; i++) local[i].id: i,
+      for (int i = 0; i < local.length; i++) local[i].id: i + 1,
     };
     return <DataRow>[
       for (var local in locals)
         DataRow(
           cells: [
+            DataCell(Center(child: Text(idToIndex[local.id].toString()))),
             DataCell(Center(child: Text(local.name))),
             DataCell(Center(child: Text(local.numero),)),
             DataCell(Center(child: Text(local.rua))),

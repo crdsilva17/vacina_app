@@ -54,6 +54,7 @@ class CustomDataColumn {
 
   List<DataColumn> get columnsLocal {
     return const <DataColumn>[
+      DataColumn(label: Expanded(child: Text('ID', textAlign: TextAlign.center))),
       DataColumn(
         label: Expanded(child: Text('Nome', textAlign: TextAlign.center)),
       ),
