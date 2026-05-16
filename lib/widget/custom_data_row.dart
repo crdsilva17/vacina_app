@@ -3,7 +3,6 @@ import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 
 class CustomDataRow {
-
   List<DataRow> rowsVaccine(List<VaccineModel> vaccines) {
     return <DataRow>[
       for (var vaccine in vaccines)
@@ -26,7 +25,11 @@ class CustomDataRow {
     ];
   }
 
-  List<DataRow> rowsLocal(List<LocalModel> locals) {
+  List<DataRow> rowsLocal(
+    BuildContext context,
+    List<LocalModel> locals,
+    Function(String id) onDelete,
+  ) {
     var local = locals;
     Map<String, int> idToIndex = {
       for (int i = 0; i < local.length; i++) local[i].id: i + 1,
@@ -37,15 +40,51 @@ class CustomDataRow {
           cells: [
             DataCell(Center(child: Text(idToIndex[local.id].toString()))),
             DataCell(Center(child: Text(local.name))),
-            DataCell(Center(child: Text(local.numero),)),
+            DataCell(Center(child: Text(local.numero))),
             DataCell(Center(child: Text(local.rua))),
             DataCell(Center(child: Text(local.bairro))),
             DataCell(Center(child: Text(local.cidade))),
             DataCell(Center(child: Text(local.estado))),
             DataCell(Center(child: Text(local.cep))),
             DataCell(Center(child: Text(local.horarioFuncionamento))),
-            DataCell(Center(child: IconButton(onPressed: (){}, icon: Icon(Icons.edit)),)),
-            DataCell(Center(child: IconButton(onPressed: (){}, icon: Icon(Icons.delete)),))
+            DataCell(
+              Center(
+                child: IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+              ),
+            ),
+            DataCell(
+              Center(
+                child: IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Confirmar Exclusão'),
+                        content: const Text(
+                          'Tem certeza de que deseja excluir este local?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              onDelete(local.id);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Excluir'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.delete),
+                ),
+              ),
+            ),
           ],
         ),
     ];

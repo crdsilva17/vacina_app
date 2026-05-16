@@ -84,16 +84,26 @@ class _LocaisScreenState extends State<LocaisScreen> {
 
   Widget _body() {
     return SafeArea(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(columns: CustomDataColumn().columnsLocal, rows: CustomDataRow().rowsLocal(localStore.state.value)),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: CustomDataColumn().columnsLocal,
+              rows: CustomDataRow().rowsLocal(context, localStore.state.value, _onDelete),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
+
+  void _onDelete(String id) async {
+    await localStore.deleteLocal(id);
+    setState(() {
+      _getlocais();
+    });
   }
 
   List<DataRow> _customRow() {
