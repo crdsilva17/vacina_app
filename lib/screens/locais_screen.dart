@@ -10,6 +10,7 @@ import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/util/cep_input_formatter.dart';
 import 'package:vacina_app/util/time_range_input_formatter.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
+import 'package:vacina_app/widget/custom_data_row.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});
@@ -88,7 +89,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
           child: Center(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: DataTable(columns: CustomDataColumn().columnsLocal, rows: _customRow()),
+              child: DataTable(columns: CustomDataColumn().columnsLocal, rows: CustomDataRow().rowsLocal(localStore.state.value)),
             ),
           ),
         ),

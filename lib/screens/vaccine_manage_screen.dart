@@ -32,7 +32,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
               scrollDirection: Axis.horizontal,
               child: DataTable(
                 columns: CustomDataColumn().columnsVaccine,
-                rows: CustomDataRow(vaccines: []).rows,
+                rows: CustomDataRow().rowsVaccine(List.empty()),
               ),
             ),
           ),
