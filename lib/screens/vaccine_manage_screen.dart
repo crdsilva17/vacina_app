@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_data_row.dart';
 
