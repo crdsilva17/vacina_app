@@ -9,6 +9,7 @@ import 'package:vacina_app/data/store/address_store.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/util/cep_input_formatter.dart';
 import 'package:vacina_app/util/time_range_input_formatter.dart';
+import 'package:vacina_app/widget/custom_data_column.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});
@@ -87,26 +88,11 @@ class _LocaisScreenState extends State<LocaisScreen> {
           child: Center(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: DataTable(columns: _customColumns(), rows: _customRow()),
+              child: DataTable(columns: CustomDataColumn().columnsLocal, rows: _customRow()),
             ),
           ),
         ),
       );
-  }
-
-  List<DataColumn> _customColumns() {
-    return [
-      const DataColumn(label: Text('Nome')),
-      const DataColumn(label: Text('Numero')),
-      const DataColumn(label: Text('Rua')),
-      const DataColumn(label: Text('Bairro')),
-      const DataColumn(label: Text('Cidade')),
-      const DataColumn(label: Text('Estado')),
-      const DataColumn(label: Text('CEP')),
-      const DataColumn(label: Text('Horário de Funcionamento')),
-      const DataColumn(label: Text('Editar')),
-      const DataColumn(label: Text('Excluir')),
-    ];
   }
 
   List<DataRow> _customRow() {
