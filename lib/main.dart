@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vacina_app/screens/check_screen.dart';
+import 'package:vacina_app/util/my_custom_scroll_behavior.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      scrollBehavior: MyCustomScrollBehavior(),
       home: const CheckScreen(),
     );
   }
