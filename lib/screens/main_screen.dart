@@ -89,18 +89,18 @@ class _MainScreenState extends State<MainScreen> {
         child: CustomScrollView(
           slivers: [
             AppBarSection(onAvatarTap: openDrawer, user: user, local: local),
-            _body(),
+            _body(context),
           ],
         ),
       ),
     );
   }
 
-  SliverList _body() {
+  SliverList _body(BuildContext context) {
     if (user.role == 'ADMIN') {
       return SliverList(
         delegate: SliverChildListDelegate([
-          const Center(child: HeroAdmSection()),
+          Center(child: HeroAdmSection(context:context)),
         ]),
       );
     } else {

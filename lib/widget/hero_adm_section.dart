@@ -5,7 +5,10 @@ import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/widget/custom_buttom.dart';
 
 class HeroAdmSection extends StatelessWidget {
-  const HeroAdmSection({super.key});
+  const HeroAdmSection({super.key, required this.context});
+
+  final BuildContext context;
+  double get screenWidth => MediaQuery.of(context).size.width;
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +20,29 @@ class HeroAdmSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            InkWell(
-              onTap: () => push(context, LocaisScreen()),
-              child: CustomButtom(
-                text: 'Postos de Saúde',
-                icon: Icons.location_on_outlined,
+            SizedBox(
+              width: screenWidth * 0.4,
+              child: InkWell(
+                onTap: () => push(context, LocaisScreen()),
+                child: Center(
+                  child: CustomButtom(
+                    text: 'Postos de Saúde',
+                    icon: Icons.location_on_outlined,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 12),
-            InkWell(
-              onTap: () {
-                push(context, VaccineManageScreen());
-              },
-              child: CustomButtom(
-                text: 'Gerenciar Vacinas',
-                icon: Icons.vaccines,
+            SizedBox(
+              width: screenWidth * 0.4,
+              child: InkWell(
+                onTap: () {
+                  push(context, VaccineManageScreen());
+                },
+                child: CustomButtom(
+                  text: 'Gerenciar Vacinas',
+                  icon: Icons.vaccines,
+                ),
               ),
             ),
           ],
@@ -40,19 +51,25 @@ class HeroAdmSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            InkWell(
-              onTap: () => print('Campanhas'),
-              child: CustomButtom(
-                text: 'Campanhas',
-                icon: Icons.campaign_outlined,
+            SizedBox(
+              width: screenWidth * 0.4,
+              child: InkWell(
+                onTap: () => print('Campanhas'),
+                child: CustomButtom(
+                  text: 'Campanhas',
+                  icon: Icons.campaign_outlined,
+                ),
               ),
             ),
             const SizedBox(width: 12),
-            InkWell(
-              onTap: () => print('Gerenciar Usuários'),
-              child: CustomButtom(
-                text: 'Gerenciar Usuários',
-                icon: Icons.people_outline,
+            SizedBox(
+              width: screenWidth * 0.4,
+              child: InkWell(
+                onTap: () => print('Gerenciar Usuários'),
+                child: CustomButtom(
+                  text: 'Gerenciar Usuários',
+                  icon: Icons.people_outline,
+                ),
               ),
             ),
           ],
