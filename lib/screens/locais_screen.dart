@@ -80,17 +80,18 @@ class _LocaisScreenState extends State<LocaisScreen> {
     }
   }
 
-  SafeArea _body() {
+  Widget _body() {
     return SafeArea(
-      child: SizedBox.expand(
         child: SingleChildScrollView(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(columns: _customColumns(), rows: _customRow()),
+          scrollDirection: Axis.vertical,
+          child: Center(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(columns: _customColumns(), rows: _customRow()),
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   List<DataColumn> _customColumns() {
@@ -326,7 +327,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: nameController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'nome':'add',
+              hintText: insert ? 'nome' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -339,7 +340,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: numeroController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'número':'add',
+              hintText: insert ? 'número' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -353,7 +354,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: ruaController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'rua':'add',
+              hintText: insert ? 'rua' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -366,7 +367,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: bairroController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'bairro':'add',
+              hintText: insert ? 'bairro' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -379,7 +380,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: cidadeController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'cidade':'add',
+              hintText: insert ? 'cidade' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -392,7 +393,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: estadoController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'estado':'add',
+              hintText: insert ? 'estado' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -404,7 +405,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
           TextField(
             controller: cepController,
             decoration: InputDecoration(
-              hintText: insert?'CEP':'add',
+              hintText: insert ? 'CEP' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
@@ -433,7 +434,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
             controller: horarioFuncionamentoController,
             readOnly: !insert,
             decoration: InputDecoration(
-              hintText: insert?'horário de funcionamento':'add',
+              hintText: insert ? 'horário de funcionamento' : 'add',
               filled: insert,
               border: insert
                   ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))

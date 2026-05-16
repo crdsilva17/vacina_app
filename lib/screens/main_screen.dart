@@ -99,13 +99,15 @@ class _MainScreenState extends State<MainScreen> {
   SliverList _body() {
     if (user.role == 'ADMIN') {
       return SliverList(
-        delegate: SliverChildListDelegate([const HeroAdmSection()]),
+        delegate: SliverChildListDelegate([
+          const Center(child: HeroAdmSection()),
+        ]),
       );
     } else {
       return SliverList(
         delegate: SliverChildListDelegate([
-          const HeroSection(),
-          Center(child: const Text('Conteúdo para usuários comuns')),
+          const Center(child: HeroSection()),
+          const Center(child: Text('Conteúdo para usuários comuns')),
         ]),
       );
     }
