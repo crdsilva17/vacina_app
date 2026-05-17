@@ -21,20 +21,18 @@ class HeroAdmSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: screenWidth * 0.4,
+              width: screenWidth * 0.45,
               child: InkWell(
                 onTap: () => push(context, LocaisScreen()),
-                child: Center(
-                  child: CustomButtom(
+                child: CustomButtom(
                     text: 'Postos de Saúde',
                     icon: Icons.location_on_outlined,
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             SizedBox(
-              width: screenWidth * 0.4,
+              width: screenWidth * 0.45,
               child: InkWell(
                 onTap: () {
                   push(context, VaccineManageScreen());
@@ -47,12 +45,12 @@ class HeroAdmSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: screenWidth * 0.4,
+              width: screenWidth * 0.45,
               child: InkWell(
                 onTap: () => print('Campanhas'),
                 child: CustomButtom(
@@ -61,9 +59,9 @@ class HeroAdmSection extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             SizedBox(
-              width: screenWidth * 0.4,
+              width: screenWidth * 0.45,
               child: InkWell(
                 onTap: () => print('Gerenciar Usuários'),
                 child: CustomButtom(
