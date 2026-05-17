@@ -91,7 +91,13 @@ class _LocaisScreenState extends State<LocaisScreen> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: CustomDataColumn().columnsLocal,
-              rows: CustomDataRow().rowsLocal(context, localStore.state.value, _onDelete),
+              rows: CustomDataRow().rowsLocal(
+                context,
+                localStore.state.value,
+                isEditing,
+                _onDelete,
+                _onEdit,
+              ),
             ),
           ),
         ),
@@ -106,218 +112,31 @@ class _LocaisScreenState extends State<LocaisScreen> {
     });
   }
 
-  List<DataRow> _customRow() {
-    var local = localStore.state.value;
-    Map<String, int> idToIndex = {
-      for (int i = 0; i < local.length; i++) local[i].id: i,
-    };
+  void _onEdit(int index, LocalModel e) async {
+    if (isEditing[index]) {
+      await localStore.updateLocal(e);
+    }
 
-    List<DataRow> rows = local.map((e) {
-      return DataRow(
-        cells: [
-          DataCell(
-            isEditing[idToIndex[e.id]!]
-                ? TextField(
-                    controller: TextEditingController(text: e.name),
-                    onChanged: (value) {
-                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                          .copyWith(name: value);
-                    },
-                  )
-                : Text(e.name),
-          ),
-          DataCell(
-            Center(
-              child: isEditing[idToIndex[e.id]!]
-                  ? TextField(
-                      controller: TextEditingController(text: e.numero),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                            .copyWith(numero: value);
-                      },
-                    )
-                  : Text(e.numero),
+    setState(() {
+      if (isEditing[index]) {
+        isEditing[index] = false;
+      } else if (isEditing.any((editing) => editing)) {
+        // Se já houver outro item em edição, não permita iniciar a edição de outro
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Finalize a edição atual antes de editar outro item.',
             ),
           ),
-          DataCell(
-            isEditing[idToIndex[e.id]!]
-                ? TextField(
-                    controller: TextEditingController(text: e.rua),
-                    onChanged: (value) {
-                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                          .copyWith(rua: value);
-                    },
-                  )
-                : Text(e.rua),
-          ),
-          DataCell(
-            isEditing[idToIndex[e.id]!]
-                ? TextField(
-                    controller: TextEditingController(text: e.bairro),
-                    onChanged: (value) {
-                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                          .copyWith(bairro: value);
-                    },
-                  )
-                : Text(e.bairro),
-          ),
-          DataCell(
-            isEditing[idToIndex[e.id]!]
-                ? TextField(
-                    controller: TextEditingController(text: e.cidade),
-                    onChanged: (value) {
-                      newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                          .copyWith(cidade: value);
-                    },
-                  )
-                : Text(e.cidade),
-          ),
-          DataCell(
-            Center(
-              child: isEditing[idToIndex[e.id]!]
-                  ? TextField(
-                      controller: TextEditingController(text: e.estado),
-                      onChanged: (value) {
-                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                            .copyWith(estado: value);
-                      },
-                    )
-                  : Text(e.estado),
-            ),
-          ),
-          DataCell(
-            Center(
-              child: isEditing[idToIndex[e.id]!]
-                  ? TextField(
-                      controller: TextEditingController(text: e.cep),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [CepInputFormatter()],
-                      onChanged: (value) {
-                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                            .copyWith(cep: value);
-                      },
-                    )
-                  : Text(e.cep),
-            ),
-          ),
-          DataCell(
-            Center(
-              child: isEditing[idToIndex[e.id]!]
-                  ? TextField(
-                      controller: TextEditingController(
-                        text: e.horarioFuncionamento,
-                      ),
-                      keyboardType: TextInputType.datetime,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [TimeRangeInputFormatter()],
-                      onChanged: (value) {
-                        newLocal[idToIndex[e.id]!] = newLocal[idToIndex[e.id]!]
-                            .copyWith(horarioFuncionamento: value);
-                      },
-                    )
-                  : Text(e.horarioFuncionamento),
-            ),
-          ),
-          DataCell(
-            IconButton(
-              icon: Icon(isEditing[idToIndex[e.id]!] ? Icons.save : Icons.edit),
-              onPressed: () {
-                // Lógica para editar o local
-                setState(() {
-                  if (isEditing[idToIndex[e.id]!]) {
-                    LocalModel updatedLocal = LocalModel(
-                      id: newLocal[idToIndex[e.id]!].id.isEmpty
-                          ? e.id
-                          : newLocal[idToIndex[e.id]!].id,
-                      name: newLocal[idToIndex[e.id]!].name.isEmpty
-                          ? e.name
-                          : newLocal[idToIndex[e.id]!].name,
-                      numero: newLocal[idToIndex[e.id]!].numero.isEmpty
-                          ? e.numero
-                          : newLocal[idToIndex[e.id]!].numero,
-                      rua: newLocal[idToIndex[e.id]!].rua.isEmpty
-                          ? e.rua
-                          : newLocal[idToIndex[e.id]!].rua,
-                      bairro: newLocal[idToIndex[e.id]!].bairro.isEmpty
-                          ? e.bairro
-                          : newLocal[idToIndex[e.id]!].bairro,
-                      cidade: newLocal[idToIndex[e.id]!].cidade.isEmpty
-                          ? e.cidade
-                          : newLocal[idToIndex[e.id]!].cidade,
-                      estado: newLocal[idToIndex[e.id]!].estado.isEmpty
-                          ? e.estado
-                          : newLocal[idToIndex[e.id]!].estado,
-                      cep: newLocal[idToIndex[e.id]!].cep.isEmpty
-                          ? e.cep
-                          : newLocal[idToIndex[e.id]!].cep,
-                      horarioFuncionamento:
-                          newLocal[idToIndex[e.id]!]
-                              .horarioFuncionamento
-                              .isEmpty
-                          ? e.horarioFuncionamento
-                          : newLocal[idToIndex[e.id]!].horarioFuncionamento,
-                    );
-                    localStore.updateLocal(updatedLocal);
-                    local[idToIndex[e.id]!] = updatedLocal;
-                    isEditing[idToIndex[e.id]!] = false;
-                  } else if (isEditing.any((editing) => editing)) {
-                    // Se já houver outro item em edição, não permita iniciar a edição de outro
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Finalize a edição atual antes de editar outro item.',
-                        ),
-                      ),
-                    );
-                  } else {
-                    isEditing[idToIndex[e.id]!] = !isEditing[idToIndex[e.id]!];
-                  }
-                });
-              },
-            ),
-          ),
-          DataCell(
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                // Lógica para excluir o local
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Confirmar Exclusão'),
-                    content: const Text(
-                      'Tem certeza de que deseja excluir este local?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancelar'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await localStore.deleteLocal(e.id);
-                          setState(() {
-                            _getlocais();
-                          });
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Excluir'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      );
-    }).toList();
+        );
+      } else {
+        isEditing[index] = !isEditing[index];
+      }
+    });
+  }
 
-    DataRow addRow = DataRow(
+  DataRow _customRow() {
+   return DataRow(
       cells: [
         DataCell(
           TextField(
@@ -519,9 +338,5 @@ class _LocaisScreenState extends State<LocaisScreen> {
         ), // Célula vazia para o ícone de excluir
       ],
     );
-
-    rows.add(addRow);
-
-    return rows;
   }
 }
