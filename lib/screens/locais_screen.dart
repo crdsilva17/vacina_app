@@ -11,6 +11,7 @@ import 'package:vacina_app/util/cep_input_formatter.dart';
 import 'package:vacina_app/util/time_range_input_formatter.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_data_row.dart';
+import 'package:vacina_app/widget/custom_new_row.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});
@@ -39,6 +40,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
   final TextEditingController cepController = TextEditingController();
   final TextEditingController horarioFuncionamentoController =
       TextEditingController();
+  bool isNewRow = false;
 
   @override
   void dispose() {
@@ -91,20 +93,27 @@ class _LocaisScreenState extends State<LocaisScreen> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: CustomDataColumn().columnsLocal,
-              rows: CustomDataRow().rowsLocal(
-                context,
-                localStore.state.value,
-                isEditing,
-                _onDelete,
-                _onEdit,
-              ),
+              rows: [
+                ...CustomDataRow().rowsLocal(
+                  context,
+                  localStore.state.value,
+                  isEditing,
+                  _onDelete,
+                  _onEdit,
+                ),
+                CustomNewRow().newRow(isNewRow, _onUpdate),
+              ],
             ),
           ),
         ),
       ),
     );
   }
-
+  void _onUpdate() async{
+    setState(() {
+      isNewRow = !isNewRow;
+    });
+  }
   void _onDelete(String id) async {
     await localStore.deleteLocal(id);
     setState(() {
@@ -136,7 +145,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
   }
 
   DataRow _customRow() {
-   return DataRow(
+    return DataRow(
       cells: [
         DataCell(
           TextField(

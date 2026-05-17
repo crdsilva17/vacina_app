@@ -3,6 +3,7 @@ import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/util/cep_input_formatter.dart';
 import 'package:vacina_app/util/time_range_input_formatter.dart';
+import 'package:vacina_app/widget/custom_new_row.dart';
 
 class CustomDataRow {
   List<DataRow> rowsVaccine(List<VaccineModel> vaccines) {
