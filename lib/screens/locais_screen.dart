@@ -31,6 +31,15 @@ class _LocaisScreenState extends State<LocaisScreen> {
 
   List<LocalModel> newLocal = List<LocalModel>.empty();
 
+  TextEditingController name = TextEditingController();
+  TextEditingController rua = TextEditingController();
+  TextEditingController numero = TextEditingController();
+  TextEditingController bairro = TextEditingController();
+  TextEditingController cidade = TextEditingController();
+  TextEditingController estado = TextEditingController();
+  TextEditingController cep = TextEditingController();
+  TextEditingController horario = TextEditingController();
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController numeroController = TextEditingController();
   final TextEditingController ruaController = TextEditingController();
@@ -91,29 +100,59 @@ class _LocaisScreenState extends State<LocaisScreen> {
         child: Center(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: CustomDataColumn().columnsLocal,
-              rows: [
-                ...CustomDataRow().rowsLocal(
-                  context,
-                  localStore.state.value,
-                  isEditing,
-                  _onDelete,
-                  _onEdit,
-                ),
-                CustomNewRow().newRow(isNewRow, _onUpdate),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: DataTable(
+                columns: CustomDataColumn().columnsLocal,
+                rows: [
+                  ...CustomDataRow().rowsLocal(
+                    context,
+                    localStore.state.value,
+                    isEditing,
+                    _onDelete,
+                    _onEdit,
+                  ),
+                  CustomNewRow(
+                    name: name,
+                    rua: rua,
+                    numero: numero,
+                    bairro: bairro,
+                    cidade: cidade,
+                    estado: estado,
+                    cep: cep,
+                    horario: horario,
+                  ).newRow(context, isNewRow, _onUpdate, _onCreate),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-  void _onUpdate() async{
+
+  void _onUpdate(bool replace) async {
     setState(() {
-      isNewRow = !isNewRow;
+      if (replace) {
+        isNewRow = !isNewRow;
+        name.text = '';
+        rua.text = '';
+        numero.text = '';
+        bairro.text = '';
+        cidade.text = '';
+        estado.text = '';
+        cep.text = '';
+        horario.text = '';
+      }
     });
   }
+
+  void _onCreate(LocalRequest newLocalRequest) async {
+    await localStore.createLocal(newLocalRequest);
+    await _getlocais();
+    _onUpdate(true);
+  }
+
   void _onDelete(String id) async {
     await localStore.deleteLocal(id);
     setState(() {
