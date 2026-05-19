@@ -7,8 +7,6 @@ import 'package:vacina_app/data/repositories/address_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/store/address_store.dart';
 import 'package:vacina_app/data/store/local_store.dart';
-import 'package:vacina_app/util/cep_input_formatter.dart';
-import 'package:vacina_app/util/time_range_input_formatter.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_data_row.dart';
 import 'package:vacina_app/widget/custom_new_row.dart';
@@ -30,25 +28,8 @@ class _LocaisScreenState extends State<LocaisScreen> {
   );
 
   List<LocalModel> newLocal = List<LocalModel>.empty();
+  Map<String, Map<String, TextEditingController>> controllers = {};
 
-  TextEditingController name = TextEditingController();
-  TextEditingController rua = TextEditingController();
-  TextEditingController numero = TextEditingController();
-  TextEditingController bairro = TextEditingController();
-  TextEditingController cidade = TextEditingController();
-  TextEditingController estado = TextEditingController();
-  TextEditingController cep = TextEditingController();
-  TextEditingController horario = TextEditingController();
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController numeroController = TextEditingController();
-  final TextEditingController ruaController = TextEditingController();
-  final TextEditingController bairroController = TextEditingController();
-  final TextEditingController cidadeController = TextEditingController();
-  final TextEditingController estadoController = TextEditingController();
-  final TextEditingController cepController = TextEditingController();
-  final TextEditingController horarioFuncionamentoController =
-      TextEditingController();
   bool isNewRow = false;
 
   @override
@@ -81,6 +62,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
   Future<void> _getlocais() async {
     try {
       await localStore.getLocal();
+      initializeControllers(localStore.state.value);
       setState(() {
         isEditing = List<bool>.filled(localStore.state.value.length, false);
         newLocal = List<LocalModel>.filled(
@@ -107,21 +89,21 @@ class _LocaisScreenState extends State<LocaisScreen> {
                 rows: [
                   ...CustomDataRow().rowsLocal(
                     context,
+                    controllers,
                     localStore.state.value,
                     isEditing,
                     _onDelete,
                     _onEdit,
+                    _onGetCep,
                   ),
-                  CustomNewRow(
-                    name: name,
-                    rua: rua,
-                    numero: numero,
-                    bairro: bairro,
-                    cidade: cidade,
-                    estado: estado,
-                    cep: cep,
-                    horario: horario,
-                  ).newRow(context, isNewRow, _onUpdate, _onCreate),
+                  CustomNewRow().newRow(
+                    context,
+                    controllers,
+                    isNewRow,
+                    _onUpdate,
+                    _onCreate,
+                    _onGetCep,
+                  ),
                 ],
               ),
             ),
@@ -135,16 +117,38 @@ class _LocaisScreenState extends State<LocaisScreen> {
     setState(() {
       if (replace) {
         isNewRow = !isNewRow;
-        name.text = '';
-        rua.text = '';
-        numero.text = '';
-        bairro.text = '';
-        cidade.text = '';
-        estado.text = '';
-        cep.text = '';
-        horario.text = '';
+        // Limpar linha nova
       }
     });
+  }
+
+  void initializeControllers(List<LocalModel> locals) {
+    for (var local in locals) {
+      controllers[local.id] = {
+        'nome': TextEditingController(text: local.name),
+        'rua': TextEditingController(text: local.rua),
+        'numero': TextEditingController(text: local.numero),
+        'bairro': TextEditingController(text: local.bairro),
+        'cidade': TextEditingController(text: local.cidade),
+        'estado': TextEditingController(text: local.estado),
+        'cep': TextEditingController(text: local.cep),
+        'horario': TextEditingController(text: local.horarioFuncionamento),
+      };
+    }
+  }
+
+  void _onGetCep(String event, String id) async {
+    if (event.length == 9) {
+      await addressStore.fetchAddressByCep(event);
+      AddressModel addressModel = addressStore.state.value;
+      var entry = controllers.entries.firstWhere(
+        (element) => element.key == id,
+      );
+      entry.value['rua']!.text = addressModel.street;
+      entry.value['bairro']!.text = addressModel.neighborhood;
+      entry.value['cidade']!.text = addressModel.city;
+      entry.value['estado']!.text = addressModel.state;
+    }
   }
 
   void _onCreate(LocalRequest newLocalRequest) async {
@@ -156,6 +160,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
   void _onDelete(String id) async {
     await localStore.deleteLocal(id);
     setState(() {
+      controllers.remove(id);
       _getlocais();
     });
   }
@@ -181,210 +186,5 @@ class _LocaisScreenState extends State<LocaisScreen> {
         isEditing[index] = !isEditing[index];
       }
     });
-  }
-
-  DataRow _customRow() {
-    return DataRow(
-      cells: [
-        DataCell(
-          TextField(
-            controller: nameController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'nome' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: numeroController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'número' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-            keyboardType: TextInputType.number,
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: ruaController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'rua' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: bairroController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'bairro' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: cidadeController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'cidade' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: estadoController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'estado' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: cepController,
-            decoration: InputDecoration(
-              hintText: insert ? 'CEP' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
-            inputFormatters: [CepInputFormatter()],
-            onChanged: (event) async {
-              // Lógica para buscar o endereço com base no CEP
-              if (cepController.text.length == 9) {
-                await addressStore.fetchAddressByCep(cepController.text);
-                AddressModel address = addressStore.state.value;
-                setState(() {
-                  ruaController.text = address.street;
-                  bairroController.text = address.neighborhood;
-                  cidadeController.text = address.city;
-                  estadoController.text = address.state;
-                });
-              }
-            },
-          ),
-        ),
-        DataCell(
-          TextField(
-            controller: horarioFuncionamentoController,
-            readOnly: !insert,
-            decoration: InputDecoration(
-              hintText: insert ? 'horário de funcionamento' : 'add',
-              filled: insert,
-              border: insert
-                  ? OutlineInputBorder(borderRadius: BorderRadius.circular(12))
-                  : InputBorder.none,
-            ),
-            keyboardType: TextInputType.datetime,
-            textAlign: TextAlign.center,
-            inputFormatters: [TimeRangeInputFormatter()],
-          ),
-        ),
-        DataCell(
-          IconButton(
-            icon: Icon(insert ? Icons.save : Icons.add),
-            onPressed: () async {
-              if (!insert) {
-                setState(() {
-                  insert = true;
-                });
-                return;
-              }
-              // Lógica para adicionar um novo local
-              if (nameController.text.isEmpty ||
-                  numeroController.text.isEmpty ||
-                  ruaController.text.isEmpty ||
-                  bairroController.text.isEmpty ||
-                  cidadeController.text.isEmpty ||
-                  estadoController.text.isEmpty ||
-                  cepController.text.isEmpty ||
-                  horarioFuncionamentoController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Preencha todos os campos para adicionar um novo local.',
-                    ),
-                  ),
-                );
-                return;
-              }
-              LocalRequest newLocalRequest = LocalRequest(
-                name: nameController.text,
-                numero: numeroController.text,
-                rua: ruaController.text,
-                bairro: bairroController.text,
-                cidade: cidadeController.text,
-                estado: estadoController.text,
-                cep: cepController.text,
-                horarioFuncionamento: horarioFuncionamentoController.text,
-              );
-              await localStore.createLocal(newLocalRequest);
-              await _getlocais();
-              setState(() {
-                nameController.clear();
-                numeroController.clear();
-                ruaController.clear();
-                bairroController.clear();
-                cidadeController.clear();
-                estadoController.clear();
-                cepController.clear();
-                horarioFuncionamentoController.clear();
-                insert = false;
-              });
-            },
-          ),
-        ),
-        DataCell(
-          insert
-              ? IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    // Lógica para cancelar a adição de um novo local
-                    setState(() {
-                      nameController.clear();
-                      numeroController.clear();
-                      ruaController.clear();
-                      bairroController.clear();
-                      cidadeController.clear();
-                      estadoController.clear();
-                      cepController.clear();
-                      horarioFuncionamentoController.clear();
-                      insert = false;
-                    });
-                  },
-                )
-              : const SizedBox(),
-        ), // Célula vazia para o ícone de excluir
-      ],
-    );
   }
 }

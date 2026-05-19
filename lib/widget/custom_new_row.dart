@@ -11,32 +11,33 @@ class CustomNewRow {
   AddressStore addressStore = AddressStore(
     repository: AddressRepository(client: HttpClient()),
   );
-  final TextEditingController name;
-  final TextEditingController rua;
-  final TextEditingController numero;
-  final TextEditingController bairro;
-  final TextEditingController cidade;
-  final TextEditingController estado;
-  final TextEditingController cep;
-  final TextEditingController horario;
-
-  CustomNewRow({
-    required this.name,
-    required this.rua,
-    required this.numero,
-    required this.bairro,
-    required this.cidade,
-    required this.estado,
-    required this.cep,
-    required this.horario,
-  });
 
   DataRow newRow(
     BuildContext context,
+    Map<String, Map<String, TextEditingController>> controllers,
     bool isEditing,
     Function(bool rep) onUpdate,
     Function(LocalRequest newLocal) onCreate,
+    Function(String event, String id) onGetCpf,
   ) {
+    if (isEditing) {
+      controllers.addAll({
+        "new": {
+          'nome': TextEditingController(),
+          'rua': TextEditingController(),
+          'numero': TextEditingController(),
+          'bairro': TextEditingController(),
+          'cidade': TextEditingController(),
+          'estado': TextEditingController(),
+          'cep': TextEditingController(),
+          'horario': TextEditingController(),
+        },
+      });
+    }
+    var entry = controllers.entries.isNotEmpty
+        ? controllers.entries.last
+        : null;
+
     return DataRow(
       cells: [
         DataCell(Center(child: isEditing ? Text('Auto') : Text('new'))),
@@ -46,7 +47,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: name,
+                      controller: entry?.value['nome'],
                       textAlignVertical: TextAlignVertical.bottom,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
@@ -66,7 +67,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: numero,
+                      controller: entry?.value['numero'],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.bottom,
@@ -87,7 +88,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: rua,
+                      controller: entry?.value['rua'],
                       keyboardType: TextInputType.text,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.bottom,
@@ -108,7 +109,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: bairro,
+                      controller: entry?.value['bairro'],
                       keyboardType: TextInputType.text,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.bottom,
@@ -129,7 +130,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: cidade,
+                      controller: entry?.value['cidade'],
                       keyboardType: TextInputType.text,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.bottom,
@@ -150,7 +151,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: estado,
+                      controller: entry?.value['estado'],
                       keyboardType: TextInputType.text,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.bottom,
@@ -171,7 +172,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: cep,
+                      controller: entry?.value['cep'],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.bottom,
@@ -185,12 +186,7 @@ class CustomNewRow {
                       onChanged: (event) async {
                         // Lógica para buscar o endereço com base no CEP
                         if (event.length == 9) {
-                          await addressStore.fetchAddressByCep(event);
-                          AddressModel address = addressStore.state.value;
-                          rua.text = address.street;
-                          bairro.text = address.neighborhood;
-                          cidade.text = address.city;
-                          estado.text = address.state;
+                          onGetCpf(event, entry!.key);
                           onUpdate(false);
                         }
                       },
@@ -205,7 +201,7 @@ class CustomNewRow {
                 ? Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: TextField(
-                      controller: horario,
+                      controller: entry?.value['horario'],
                       inputFormatters: [TimeRangeInputFormatter()],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
@@ -229,14 +225,14 @@ class CustomNewRow {
                   onUpdate(true);
                   return;
                 }
-                if (name.text.isEmpty ||
-                    rua.text.isEmpty ||
-                    numero.text.isEmpty ||
-                    bairro.text.isEmpty ||
-                    cidade.text.isEmpty ||
-                    estado.text.isEmpty ||
-                    cep.text.isEmpty ||
-                    horario.text.isEmpty) {
+                if (entry!.value['nome']!.text.isEmpty ||
+                    entry.value['rua']!.text.isEmpty ||
+                    entry.value['numero']!.text.isEmpty ||
+                    entry.value['bairro']!.text.isEmpty ||
+                    entry.value['cidade']!.text.isEmpty ||
+                    entry.value['estado']!.text.isEmpty ||
+                    entry.value['cep']!.text.isEmpty ||
+                    entry.value['horario']!.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
@@ -248,14 +244,14 @@ class CustomNewRow {
                   return;
                 }
                 LocalRequest newLocal = LocalRequest(
-                  name: name.text,
-                  rua: rua.text,
-                  numero: numero.text,
-                  bairro: bairro.text,
-                  cidade: cidade.text,
-                  estado: estado.text,
-                  cep: cep.text,
-                  horarioFuncionamento: horario.text,
+                  name: entry.value['name']!.text,
+                  rua: entry.value['rua']!.text,
+                  numero: entry.value['numero']!.text,
+                  bairro: entry.value['bairro']!.text,
+                  cidade: entry.value['cidade']!.text,
+                  estado: entry.value['estado']!.text,
+                  cep: entry.value['cep']!.text,
+                  horarioFuncionamento: entry.value['horario']!.text,
                 );
                 onCreate(newLocal);
               },

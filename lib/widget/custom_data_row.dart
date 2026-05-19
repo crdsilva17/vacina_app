@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/models/address_model.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/util/cep_input_formatter.dart';
@@ -29,140 +30,139 @@ class CustomDataRow {
 
   List<DataRow> rowsLocal(
     BuildContext context,
+    Map<String, Map<String, TextEditingController>> controllers,
     List<LocalModel> locals,
     List<bool> isEditing,
     Function(String id) onDelete,
     Function(int index, LocalModel local) onEdit,
+    Function(String event, String id) onGetCep,
   ) {
-    var local = locals;
-    TextEditingController nameController = TextEditingController();
-    TextEditingController numeroController = TextEditingController();
-    TextEditingController ruaController = TextEditingController();
-    TextEditingController bairroController = TextEditingController();
-    TextEditingController cidadeController = TextEditingController();
-    TextEditingController estadoController = TextEditingController();
-    TextEditingController cepController = TextEditingController();
-    TextEditingController horarioFuncionamentoController =
-        TextEditingController();
-
     Map<String, int> idToIndex = {
-      for (int i = 0; i < local.length; i++) local[i].id: i + 1,
+      for (int i = 0; i < controllers.length; i++)
+        controllers.keys.elementAt(i): i + 1,
     };
     return <DataRow>[
-      for (var local in locals)
+      for (var entry in controllers.entries)
         DataRow(
           cells: [
-            DataCell(Center(child: Text(idToIndex[local.id].toString()))),
+            DataCell(Center(child: Text(idToIndex[entry.key].toString()))),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
-                        controller: nameController..text = local.name,
+                        controller: entry.value['nome'],
                       )
-                    : Text(local.name),
+                    : Text(entry.value['nome']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
-                        controller: numeroController..text = local.numero,
+                        controller: entry.value['numero'],
                         keyboardType: TextInputType.number,
                       )
-                    : Text(local.numero),
+                    : Text(entry.value['numero']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
-                        controller: ruaController..text = local.rua,
+                        controller: entry.value['rua'],
                       )
-                    : Text(local.rua),
+                    : Text(entry.value['rua']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
-                        controller: bairroController..text = local.bairro,
+                        controller: entry.value['bairro'],
                       )
-                    : Text(local.bairro),
+                    : Text(entry.value['bairro']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
-                        controller: cidadeController..text = local.cidade,
+                        controller: entry.value['cidade'],
                       )
-                    : Text(local.cidade),
+                    : Text(entry.value['cidade']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
-                        controller: estadoController..text = local.estado,
+                        controller: entry.value['estado'],
                       )
-                    : Text(local.estado),
+                    : Text(entry.value['estado']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
                         inputFormatters: [CepInputFormatter()],
                         keyboardType: TextInputType.number,
-                        controller: cepController..text = local.cep,
+                        controller: entry.value['cep'],
+                        onChanged: (event) async {
+                          // Lógica para buscar o endereço com base no CEP
+                          if (event.length == 9) {
+                            await onGetCep(event, entry.key);
+                          }
+                        },
                       )
-                    : Text(local.cep),
+                    : Text(entry.value['cep']!.text),
               ),
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[local.id]! - 1]
+                child: isEditing[idToIndex[entry.key]! - 1]
                     ? TextField(
                         textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
                         inputFormatters: [TimeRangeInputFormatter()],
-                        controller: horarioFuncionamentoController
-                          ..text = local.horarioFuncionamento,
+                        controller: entry.value['horario'],
                       )
-                    : Text(local.horarioFuncionamento),
+                    : Text(entry.value['horario']!.text),
               ),
             ),
             DataCell(
               Center(
                 child: IconButton(
                   onPressed: () {
-                    if (isEditing[idToIndex[local.id]! - 1]) {
+                    if (isEditing[idToIndex[entry.key]! - 1]) {
                       LocalModel updatedLocal = LocalModel(
-                        id: local.id,
-                        name: nameController.text,
-                        numero: numeroController.text,
-                        rua: ruaController.text,
-                        bairro: bairroController.text,
-                        cidade: cidadeController.text,
-                        estado: estadoController.text,
-                        cep: cepController.text,
-                        horarioFuncionamento:
-                            horarioFuncionamentoController.text,
+                        id: entry.key,
+                        name: entry.value['nome']!.text,
+                        numero: entry.value['numero']!.text,
+                        rua: entry.value['rua']!.text,
+                        bairro: entry.value['bairro']!.text,
+                        cidade: entry.value['cidade']!.text,
+                        estado: entry.value['estado']!.text,
+                        cep: entry.value['cep']!.text,
+                        horarioFuncionamento: entry.value['horario']!.text,
                       );
-                      onEdit(idToIndex[local.id]! - 1, updatedLocal);
+                      onEdit(idToIndex[entry.key]! - 1, updatedLocal);
                     } else {
-                      onEdit(idToIndex[local.id]! - 1, local);
+                      var local = locals.firstWhere(
+                        (element) => element.id == entry.key,
+                      );
+                      onEdit(idToIndex[entry.key]! - 1, local);
                     }
                   },
                   icon: Icon(
-                    isEditing[idToIndex[local.id]! - 1]
+                    isEditing[idToIndex[entry.key]! - 1]
                         ? Icons.save
                         : Icons.edit,
                   ),
@@ -189,7 +189,7 @@ class CustomDataRow {
                           ),
                           TextButton(
                             onPressed: () {
-                              onDelete(local.id);
+                              onDelete(entry.key);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Excluir'),
