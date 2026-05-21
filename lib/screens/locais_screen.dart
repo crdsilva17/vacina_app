@@ -9,7 +9,6 @@ import 'package:vacina_app/data/store/address_store.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_data_row.dart';
-import 'package:vacina_app/widget/custom_new_row.dart';
 
 class LocaisScreen extends StatefulWidget {
   const LocaisScreen({super.key});
@@ -32,8 +31,15 @@ class _LocaisScreenState extends State<LocaisScreen> {
 
   bool isNewRow = false;
 
+  String? _idEdit;
+
   @override
   void dispose() {
+    for (var controller in controllers.entries) {
+      for (var item in controller.value.entries) {
+        item.value.dispose();
+      }
+    }
     super.dispose();
   }
 
@@ -64,7 +70,6 @@ class _LocaisScreenState extends State<LocaisScreen> {
       await localStore.getLocal();
       initializeControllers(localStore.state.value);
       setState(() {
-        isEditing = List<bool>.filled(localStore.state.value.length, false);
         newLocal = List<LocalModel>.filled(
           localStore.state.value.length,
           LocalModel.empty(),
@@ -89,21 +94,25 @@ class _LocaisScreenState extends State<LocaisScreen> {
                 rows: [
                   ...CustomDataRow().rowsLocal(
                     context,
+                    _idEdit,
                     controllers,
                     localStore.state.value,
                     isEditing,
                     _onDelete,
                     _onEdit,
+                    _onCreate,
+                    _onUpdate,
                     _onGetCep,
-                  ),
+                  ) /*
                   CustomNewRow().newRow(
                     context,
-                    controllers,
+                    controllers.values.last,
                     isNewRow,
                     _onUpdate,
                     _onCreate,
                     _onGetCep,
-                  ),
+                    _onNew,
+                  ),*/,
                 ],
               ),
             ),
@@ -113,7 +122,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
     );
   }
 
-  void _onUpdate(bool replace) async {
+  void _onUpdate(bool replace) {
     setState(() {
       if (replace) {
         isNewRow = !isNewRow;
@@ -123,6 +132,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
   }
 
   void initializeControllers(List<LocalModel> locals) {
+    controllers.clear();
     for (var local in locals) {
       controllers[local.id] = {
         'nome': TextEditingController(text: local.name),
@@ -134,6 +144,19 @@ class _LocaisScreenState extends State<LocaisScreen> {
         'cep': TextEditingController(text: local.cep),
         'horario': TextEditingController(text: local.horarioFuncionamento),
       };
+    }
+    controllers["new"] = {
+      'nome': TextEditingController(text: 'new'),
+      'rua': TextEditingController(text: 'new'),
+      'numero': TextEditingController(text: 'new'),
+      'bairro': TextEditingController(text: 'new'),
+      'cidade': TextEditingController(text: 'new'),
+      'estado': TextEditingController(text: 'new'),
+      'cep': TextEditingController(text: 'new'),
+      'horario': TextEditingController(text: 'new'),
+    };
+    for (var i = 0; i < controllers.length; i++) {
+      isEditing.add(false);
     }
   }
 
@@ -152,6 +175,14 @@ class _LocaisScreenState extends State<LocaisScreen> {
   }
 
   void _onCreate(LocalRequest newLocalRequest) async {
+    if (newLocalRequest.isEmpty()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Preencha todos os campos antes de salvar!'),
+        ),
+      );
+      return;
+    }
     await localStore.createLocal(newLocalRequest);
     await _getlocais();
     _onUpdate(true);
@@ -182,9 +213,21 @@ class _LocaisScreenState extends State<LocaisScreen> {
             ),
           ),
         );
+        return;
       } else {
         isEditing[index] = !isEditing[index];
+        _idEdit = e.id;
       }
     });
+
+    final cepController = controllers[e.id]?['cep'];
+
+    if (cepController != null) {
+      // Força o cursor para o final do texto do CEP
+      cepController.value = cepController.value.copyWith(
+        text: cepController.text,
+        selection: TextSelection.collapsed(offset: cepController.text.length),
+      );
+    }
   }
 }

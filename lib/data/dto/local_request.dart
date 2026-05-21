@@ -21,6 +21,16 @@ class LocalRequest {
     required this.horarioFuncionamento,
   });
 
+  LocalRequest.empty()
+    : name = '',
+      rua = '',
+      numero = '',
+      bairro = '',
+      cidade = '',
+      estado = '',
+      cep = '',
+      horarioFuncionamento = '';
+
   factory LocalRequest.fromLocalModel(LocalModel local) {
     return LocalRequest(
       name: local.name,
@@ -32,6 +42,20 @@ class LocalRequest {
       cep: local.cep,
       horarioFuncionamento: local.horarioFuncionamento,
     );
+  }
+
+  bool isEmpty() {
+    if (bairro.isEmpty ||
+        cep.isEmpty ||
+        cidade.isEmpty ||
+        estado.isEmpty ||
+        horarioFuncionamento.isEmpty ||
+        name.isEmpty ||
+        numero.isEmpty ||
+        rua.isEmpty) {
+      return true;
+    }
+    return false;
   }
 
   Map<String, String> toMap() {
@@ -46,5 +70,4 @@ class LocalRequest {
       'horarioFuncionamento': horarioFuncionamento,
     };
   }
-
 }
