@@ -219,14 +219,17 @@ class _LocaisScreenState extends State<LocaisScreen> {
         _idEdit = e.id;
       }
     });
+    setFocus('cep', e.id);
+  }
 
-    final cepController = controllers[e.id]?['cep'];
+  void setFocus(String controller, String id) {
+    final myController = controllers[id]?[controller];
 
-    if (cepController != null) {
+    if (myController != null) {
       // Força o cursor para o final do texto do CEP
-      cepController.value = cepController.value.copyWith(
-        text: cepController.text,
-        selection: TextSelection.collapsed(offset: cepController.text.length),
+      myController.value = myController.value.copyWith(
+        text: myController.text,
+        selection: TextSelection.collapsed(offset: myController.text.length),
       );
     }
   }
