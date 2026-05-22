@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
 
@@ -19,6 +20,15 @@ class VaccineStore {
     }
 
     isLoading.value = false;
+  }
+
+  Future<void> put(String id, VaccineRequest vaccine) async {
+    isLoading.value = true;
+    try {
+      await repository.putVaccine(id, vaccine);
+    } catch (e) {
+      error.value = 'Error ao atualizar vacina: $e';
+    }
   }
 
   Future<void> delete(String id) async {
