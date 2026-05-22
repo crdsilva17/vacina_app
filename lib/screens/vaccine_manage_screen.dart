@@ -19,6 +19,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   );
 
   final Map<String, Map<String, TextEditingController>> controllers = {};
+  final List<bool> isEditing = [];
 
   @override
   void initState() {
@@ -57,11 +58,15 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
 
   Future _getVaccines() async {
     await store.getList();
+    if (!mounted) return;
     if (store.error.value.isNotEmpty) {
-      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Não foi possível carregar as vacinas!')),
       );
+    }
+    initializerControllers(store.stateList.value);
+    for (var i = 0; i < controllers.keys.length; i++) {
+      isEditing.add(false);
     }
     setState(() {});
   }
