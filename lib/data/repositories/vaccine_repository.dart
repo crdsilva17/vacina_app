@@ -24,8 +24,10 @@ class VaccineRepository implements IVaccineRepository {
 
   @override
   Future<void> deleteVaccine(String id) async {
-    // TODO: implement deleteVaccine
-    return;
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    url['endpoint'] = ApiEndpoints.vacinaById(id);
+    await client.delete(token: token.toString(), uri: url);
   }
 
   @override

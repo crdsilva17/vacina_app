@@ -3,9 +3,11 @@ import 'package:vacina_app/data/models/vaccine_model.dart';
 
 class CustomRowVaccine {
   List<DataRow> rowsVaccine(
+    BuildContext context,
     List<VaccineModel> vaccines,
     Map<String, Map<String, TextEditingController>> controllers,
     List<bool> isEditing,
+    Function(String id) onDelete,
   ) {
     Map<String, int> idToIndex = {
       for (var i = 0; i < controllers.length; i++)
@@ -38,7 +40,35 @@ class CustomRowVaccine {
             ),
             DataCell(
               Center(
-                child: IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                child: IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Excluir'),
+                        content: Text(
+                          'Deseja excluir a vacina "${entry.value['name']!.text}"?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              onDelete(entry.key);
+                            },
+                            child: Text('Confirmar'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.delete),
+                ),
               ),
             ),
           ],

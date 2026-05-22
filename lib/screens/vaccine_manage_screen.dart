@@ -49,9 +49,11 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
             child: DataTable(
               columns: CustomDataColumn().columnsVaccine,
               rows: CustomRowVaccine().rowsVaccine(
+                context,
                 store.stateList.value,
                 controllers,
                 isEditing,
+                _onDelete,
               ),
             ),
           ),
@@ -77,6 +79,11 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
 
   Future _deleteVaccine(String id) async {
     await store.delete(id);
+    await _getVaccines();
+  }
+
+  void _onDelete(String id) {
+    _deleteVaccine(id);
   }
 
   void initializerControllers(List<VaccineModel> vaccines) {

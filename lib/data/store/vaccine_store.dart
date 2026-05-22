@@ -28,6 +28,6 @@ class VaccineStore {
     } catch (e) {
       error.value = 'Error ao excluir vacina: $e';
     }
-    await getList();
+    //await getList();
   }
 }
