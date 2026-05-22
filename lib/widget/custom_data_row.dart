@@ -42,16 +42,16 @@ class CustomDataRow {
   ) {
     Map<String, int> idToIndex = {
       for (int i = 0; i < controllers.length; i++)
-        controllers.keys.elementAt(i): i + 1,
+        controllers.keys.elementAt(i): i,
     };
     for (var entry in controllers.entries) {
-      if (entry.key.toString().contains('new')) {
+      if (entry.key.toString().contains('add_new')) {
         for (var item in entry.value.entries) {
-          item.value.text = isEditing[idToIndex[entry.key]! - 1]
-              ? item.value.text.toString().contains('new')
+          item.value.text = isEditing[idToIndex[entry.key]!]
+              ? item.value.text.toString().contains('add_new')
                     ? ''
                     : item.value.text
-              : 'new';
+              : 'add_new';
         }
       }
     }
@@ -62,7 +62,7 @@ class CustomDataRow {
             DataCell(
               Center(
                 child: Text(
-                  entry.value['nome'].toString().contains('new')
+                  entry.value['nome'].toString().contains('add_new')
                       ? 'Auto'
                       : idToIndex[entry.key].toString(),
                 ),
@@ -70,7 +70,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         controller: entry.value['nome'],
@@ -80,7 +80,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         controller: entry.value['numero'],
@@ -91,7 +91,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         controller: entry.value['rua'],
@@ -101,7 +101,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         controller: entry.value['bairro'],
@@ -111,7 +111,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         controller: entry.value['cidade'],
@@ -121,7 +121,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         controller: entry.value['estado'],
@@ -131,7 +131,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         inputFormatters: [CepInputFormatter()],
@@ -150,7 +150,7 @@ class CustomDataRow {
             ),
             DataCell(
               Center(
-                child: isEditing[idToIndex[entry.key]! - 1]
+                child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
@@ -164,8 +164,8 @@ class CustomDataRow {
               Center(
                 child: IconButton(
                   onPressed: () {
-                    if (isEditing[idToIndex[entry.key]! - 1]) {
-                      if (entry.key.toString().contains('new')) {
+                    if (isEditing[idToIndex[entry.key]!]) {
+                      if (entry.key.toString().contains('add_new')) {
                         LocalRequest newLocal = LocalRequest(
                           name: entry.value['nome']!.text,
                           numero: entry.value['numero']!.text,
@@ -177,7 +177,7 @@ class CustomDataRow {
                           horarioFuncionamento: entry.value['horario']!.text,
                         );
                         // Se ID for new cria novo Local
-                        isEditing[idToIndex[entry.key]! - 1] = false;
+                        isEditing[idToIndex[entry.key]!] = false;
                         onCreate(newLocal);
                       } else {
                         //Caso contrario edita local existente
@@ -192,11 +192,11 @@ class CustomDataRow {
                           cep: entry.value['cep']!.text,
                           horarioFuncionamento: entry.value['horario']!.text,
                         );
-                        onEdit(idToIndex[entry.key]! - 1, updatedLocal);
+                        onEdit(idToIndex[entry.key]!, updatedLocal);
                       }
                     } else {
                       LocalModel local;
-                      if (entry.key.contains('new')) {
+                      if (entry.key.contains('add_new')) {
                         local = LocalModel(
                           id: entry.key,
                           name: entry.value['nome']!.text,
@@ -214,13 +214,13 @@ class CustomDataRow {
                         );
                       }
 
-                      onEdit(idToIndex[entry.key]! - 1, local);
+                      onEdit(idToIndex[entry.key]!, local);
                     }
                   },
                   icon: Icon(
-                    isEditing[idToIndex[entry.key]! - 1]
+                    isEditing[idToIndex[entry.key]!]
                         ? Icons.save
-                        : entry.value['nome'].toString().contains('new')
+                        : entry.value['nome'].toString().contains('add_new')
                         ? Icons.add
                         : Icons.edit,
                   ),
@@ -252,8 +252,8 @@ class CustomDataRow {
     Function(bool replace) onUpdate,
     Function(String id) onDelete,
   ) {
-    bool isEdit = id.contains('new');
-    bool isActive = isEditing[index[id]! - 1];
+    bool isEdit = id.contains('add_new');
+    bool isActive = isEditing[index[id]!];
 
     if (isEdit && !isActive) {
       return Text('');
@@ -280,7 +280,7 @@ class CustomDataRow {
                 onPressed: () {
                   if (isEdit) {
                     Navigator.of(context).pop();
-                    isEditing[index[id]! - 1] = false;
+                    isEditing[index[id]!] = false;
                     onUpdate(true);
                   } else {
                     if (isEditing.any((element) => element)) {

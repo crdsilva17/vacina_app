@@ -103,16 +103,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
                     _onCreate,
                     _onUpdate,
                     _onGetCep,
-                  ) /*
-                  CustomNewRow().newRow(
-                    context,
-                    controllers.values.last,
-                    isNewRow,
-                    _onUpdate,
-                    _onCreate,
-                    _onGetCep,
-                    _onNew,
-                  ),*/,
+                  ),
                 ],
               ),
             ),
@@ -122,6 +113,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
     );
   }
 
+  // Realizar Update da tela
   void _onUpdate(bool replace) {
     setState(() {
       if (replace) {
@@ -131,8 +123,20 @@ class _LocaisScreenState extends State<LocaisScreen> {
     });
   }
 
+  // Inicialiar Controlllers
   void initializeControllers(List<LocalModel> locals) {
     controllers.clear();
+    controllers["add_new"] = {
+      'nome': TextEditingController(text: 'add_new'),
+      'rua': TextEditingController(text: 'add_new'),
+      'numero': TextEditingController(text: 'add_new'),
+      'bairro': TextEditingController(text: 'add_new'),
+      'cidade': TextEditingController(text: 'add_new'),
+      'estado': TextEditingController(text: 'add_new'),
+      'cep': TextEditingController(text: 'add_new'),
+      'horario': TextEditingController(text: 'add_new'),
+    };
+
     for (var local in locals) {
       controllers[local.id] = {
         'nome': TextEditingController(text: local.name),
@@ -145,21 +149,13 @@ class _LocaisScreenState extends State<LocaisScreen> {
         'horario': TextEditingController(text: local.horarioFuncionamento),
       };
     }
-    controllers["new"] = {
-      'nome': TextEditingController(text: 'new'),
-      'rua': TextEditingController(text: 'new'),
-      'numero': TextEditingController(text: 'new'),
-      'bairro': TextEditingController(text: 'new'),
-      'cidade': TextEditingController(text: 'new'),
-      'estado': TextEditingController(text: 'new'),
-      'cep': TextEditingController(text: 'new'),
-      'horario': TextEditingController(text: 'new'),
-    };
+
     for (var i = 0; i < controllers.length; i++) {
       isEditing.add(false);
     }
   }
 
+  // metodo para buscar endereço em uma API externa
   void _onGetCep(String event, String id) async {
     if (event.length == 9) {
       await addressStore.fetchAddressByCep(event);
@@ -174,6 +170,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
     }
   }
 
+  // Criar novo Local no Banco de Dados da API
   void _onCreate(LocalRequest newLocalRequest) async {
     if (newLocalRequest.isEmpty()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -188,6 +185,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
     _onUpdate(true);
   }
 
+  //Deletar local no Banco de Dados da API
   void _onDelete(String id) async {
     await localStore.deleteLocal(id);
     setState(() {
@@ -196,6 +194,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
     });
   }
 
+  // Realizar a edição nos dados do Posto de Saúde
   void _onEdit(int index, LocalModel e) async {
     if (isEditing[index]) {
       await localStore.updateLocal(e);
@@ -222,6 +221,7 @@ class _LocaisScreenState extends State<LocaisScreen> {
     setFocus('cep', e.id);
   }
 
+  // Enviar curso para o controller correto
   void setFocus(String controller, String id) {
     final myController = controllers[id]?[controller];
 
