@@ -10,7 +10,7 @@ abstract class IVaccineRepository {
   Future<List<VaccineModel>> getVaccines();
   Future<void> postVaccine(VaccineRequest vaccine);
   Future<void> deleteVaccine(String id);
-  Future<void> putVaccine(String id);
+  Future<void> putVaccine(String id, VaccineRequest vaccine);
 }
 
 class VaccineRepository implements IVaccineRepository {
@@ -54,8 +54,10 @@ class VaccineRepository implements IVaccineRepository {
   }
 
   @override
-  Future<void> putVaccine(String id) async {
-    // TODO: implement putVaccine
-    return;
+  Future<void> putVaccine(String id, VaccineRequest vaccine) async {
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    url['endpoints'] = ApiEndpoints.vacinaById(id);
+    await client.put(token: token.toString(), uri: url, body: vaccine.toMap());
   }
 }
