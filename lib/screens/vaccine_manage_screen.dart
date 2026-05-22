@@ -21,9 +21,6 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   void initState() {
     super.initState();
     _getVaccines();
-    for (var vaccine in store.stateList.value) {
-      print(vaccine.name);
-    }
   }
 
   @override
@@ -60,5 +57,6 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     if (store.error.value.isNotEmpty) {
       print('ERROR => ${store.error.value}');
     }
+    setState(() {});
   }
 }

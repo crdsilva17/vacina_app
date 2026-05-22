@@ -1,5 +1,5 @@
 class VaccineModel {
-  final int id;
+  final String id;
   final String name;
   final String manufacturer;
   final String manufactureDate;
@@ -30,17 +30,17 @@ class VaccineModel {
   factory VaccineModel.fromJson(Map<String, dynamic> json) {
     return VaccineModel(
       id: json['id'],
-      name: json['name'],
-      manufacturer: json['manufacturer'],
-      manufactureDate: json['manufactureDate'],
-      expiryDate: json['expiryDate'],
-      lot: json['lot'],
-      minRecommendedAge: json['minRecommendedAge'],
-      maxRecommendedAge: json['maxRecommendedAge'],
-      posto: json['posto'],
-      doses: json['doses'],
-      description: json['description'],
-      stockQuantity: json['stockQuantity'],
+      name: json['name'] ?? 'Não informado.',
+      manufacturer: json['manufacturer'] ?? 'Desconhecido.',
+      manufactureDate: json['manufactureDate'] ?? '1990-01-01',
+      expiryDate: json['expiryDate'] ?? '1991-01-01',
+      lot: json['lot'] ?? '0',
+      minRecommendedAge: json['minRecommendedAge'] ?? 0,
+      maxRecommendedAge: json['maxRecommendedAge'] ?? 1,
+      posto: json['posto'] ?? 'Não informado.',
+      doses: json['doses'] ?? 0,
+      description: json['description'] ?? 'Sem descrição.',
+      stockQuantity: json['stockQuantity'] ?? 0,
     );
   }
 }
