@@ -12,21 +12,25 @@ class CustomRowVaccine {
         controllers.keys.elementAt(i): i,
     };
     return <DataRow>[
-      for (var vaccine in vaccines)
+      for (var entry in controllers.entries)
         DataRow(
           cells: [
-            DataCell(Center(child: Text(idToIndex[vaccine.id].toString()))),
-            DataCell(Center(child: Text(vaccine.name))),
-            DataCell(Center(child: Text(vaccine.manufacturer))),
-            DataCell(Center(child: Text(vaccine.manufactureDate))),
-            DataCell(Center(child: Text(vaccine.expiryDate))),
-            DataCell(Center(child: Text(vaccine.lot))),
-            DataCell(Center(child: Text(vaccine.minRecommendedAge.toString()))),
-            DataCell(Center(child: Text(vaccine.maxRecommendedAge.toString()))),
-            DataCell(Center(child: Text(vaccine.posto))),
-            DataCell(Center(child: Text(vaccine.doses))),
-            DataCell(Center(child: Text(vaccine.description))),
-            DataCell(Center(child: Text(vaccine.stockQuantity.toString()))),
+            DataCell(Center(child: Text(idToIndex[entry.key].toString()))),
+            DataCell(Center(child: Text(entry.value['name']!.text))),
+            DataCell(Center(child: Text(entry.value['manufacturer']!.text))),
+            DataCell(Center(child: Text(entry.value['manufactureDate']!.text))),
+            DataCell(Center(child: Text(entry.value['expiryDate']!.text))),
+            DataCell(Center(child: Text(entry.value['lot']!.text))),
+            DataCell(
+              Center(child: Text(entry.value['minRecommendedAge']!.text)),
+            ),
+            DataCell(
+              Center(child: Text(entry.value['maxRecommendedAge']!.text)),
+            ),
+            DataCell(Center(child: Text(entry.value['posto']!.text))),
+            DataCell(Center(child: Text(entry.value['doses']!.text))),
+            DataCell(Center(child: Text(entry.value['description']!.text))),
+            DataCell(Center(child: Text(entry.value['stockQuantity']!.text))),
             DataCell(
               Center(
                 child: IconButton(onPressed: () {}, icon: Icon(Icons.edit)),

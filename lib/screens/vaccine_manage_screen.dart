@@ -76,6 +76,22 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   }
 
   void initializerControllers(List<VaccineModel> vaccines) {
+    controllers.clear();
+
+    controllers['add_new'] = {
+      'name': TextEditingController(text: 'add_new'),
+      'manufacturer': TextEditingController(text: 'add_new'),
+      'manufactureDate': TextEditingController(text: 'add_new'),
+      'expiryDate': TextEditingController(text: 'add_new'),
+      'lot': TextEditingController(text: 'add_new'),
+      'minRecommendedAge': TextEditingController(text: 'add_new'),
+      'maxRecommendedAge': TextEditingController(text: 'add_new'),
+      'posto': TextEditingController(text: 'add_new'),
+      'doses': TextEditingController(text: 'add_new'),
+      'description': TextEditingController(text: 'add_new'),
+      'stockQuantity': TextEditingController(text: 'add_new'),
+    };
+
     for (var vaccine in vaccines) {
       controllers[vaccine.id] = {
         'name': TextEditingController(text: vaccine.name),
@@ -90,6 +106,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
           text: vaccine.maxRecommendedAge.toString(),
         ),
         'posto': TextEditingController(text: vaccine.posto),
+        'doses': TextEditingController(text: vaccine.doses),
         'description': TextEditingController(text: vaccine.description),
         'stockQuantity': TextEditingController(
           text: vaccine.stockQuantity.toString(),
