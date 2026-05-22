@@ -75,6 +75,10 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     setState(() {});
   }
 
+  Future _deleteVaccine(String id) async {
+    await store.delete(id);
+  }
+
   void initializerControllers(List<VaccineModel> vaccines) {
     controllers.clear();
 
