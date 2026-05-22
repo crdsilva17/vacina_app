@@ -20,4 +20,14 @@ class VaccineStore {
 
     isLoading.value = false;
   }
+
+  Future<void> delete(String id) async {
+    isLoading.value = true;
+    try {
+      await repository.deleteVaccine(id);
+    } catch (e) {
+      error.value = 'Error ao excluir vacina: $e';
+    }
+    await getList();
+  }
 }
