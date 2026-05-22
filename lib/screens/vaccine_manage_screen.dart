@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
@@ -74,6 +75,11 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     for (var i = 0; i < controllers.keys.length; i++) {
       isEditing.add(false);
     }
+    setState(() {});
+  }
+
+  Future _onUpdate(String id, VaccineRequest vaccine) async {
+    await store.put(id, vaccine);
     setState(() {});
   }
 
