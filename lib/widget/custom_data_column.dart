@@ -49,12 +49,16 @@ class CustomDataColumn {
           child: Text('Quantidade em Estoque', textAlign: TextAlign.center),
         ),
       ),
+      DataColumn(label: Expanded(child: Text('Editar'))),
+      DataColumn(label: Expanded(child: Text('Excluir'))),
     ];
   }
 
   List<DataColumn> get columnsLocal {
     return const <DataColumn>[
-      DataColumn(label: Expanded(child: Text('ID', textAlign: TextAlign.center))),
+      DataColumn(
+        label: Expanded(child: Text('ID', textAlign: TextAlign.center)),
+      ),
       DataColumn(
         label: Expanded(child: Text('Nome', textAlign: TextAlign.center)),
       ),

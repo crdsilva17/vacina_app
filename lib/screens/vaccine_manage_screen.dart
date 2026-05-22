@@ -48,7 +48,11 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: CustomDataColumn().columnsVaccine,
-              rows: CustomRowVaccine().rowsVaccine(store.stateList.value),
+              rows: CustomRowVaccine().rowsVaccine(
+                store.stateList.value,
+                controllers,
+                isEditing,
+              ),
             ),
           ),
         ),
