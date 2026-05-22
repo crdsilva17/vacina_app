@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
-import 'package:vacina_app/widget/custom_data_row.dart';
+import 'package:vacina_app/widget/custom_row_vaccine.dart';
 
 class VaccineManageScreen extends StatefulWidget {
   const VaccineManageScreen({super.key});
@@ -26,16 +26,16 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     return SafeArea(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-          child: Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: CustomDataColumn().columnsVaccine,
-                rows: CustomDataRow().rowsVaccine(List.empty()),
-              ),
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: CustomDataColumn().columnsVaccine,
+              rows: CustomRowVaccine().rowsVaccine(List.empty()),
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }
