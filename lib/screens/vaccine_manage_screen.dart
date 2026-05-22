@@ -55,7 +55,10 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   Future _getVaccines() async {
     await store.getList();
     if (store.error.value.isNotEmpty) {
-      print('ERROR => ${store.error.value}');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Não foi possível carregar as vacinas!')),
+      );
     }
     setState(() {});
   }
