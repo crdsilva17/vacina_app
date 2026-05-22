@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
 import 'package:vacina_app/data/store/vaccine_store.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
@@ -16,6 +17,8 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   VaccineStore store = VaccineStore(
     repository: VaccineRepository(client: HttpClient()),
   );
+
+  final Map<String, Map<String, TextEditingController>> controllers = {};
 
   @override
   void initState() {
@@ -61,5 +64,28 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
       );
     }
     setState(() {});
+  }
+
+  void initializerControllers(List<VaccineModel> vaccines) {
+    for (var vaccine in vaccines) {
+      controllers[vaccine.id] = {
+        'name': TextEditingController(text: vaccine.name),
+        'manufacturer': TextEditingController(text: vaccine.manufacturer),
+        'manufactureDate': TextEditingController(text: vaccine.manufactureDate),
+        'expiryDate': TextEditingController(text: vaccine.expiryDate),
+        'lot': TextEditingController(text: vaccine.lot),
+        'minRecommendedAge': TextEditingController(
+          text: vaccine.minRecommendedAge.toString(),
+        ),
+        'maxRecommendedAge': TextEditingController(
+          text: vaccine.maxRecommendedAge.toString(),
+        ),
+        'posto': TextEditingController(text: vaccine.posto),
+        'description': TextEditingController(text: vaccine.description),
+        'stockQuantity': TextEditingController(
+          text: vaccine.stockQuantity.toString(),
+        ),
+      };
+    }
   }
 }
