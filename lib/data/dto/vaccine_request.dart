@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class VaccineRequest {
   final String nome;
   final String descricao;
@@ -24,6 +26,22 @@ class VaccineRequest {
     required this.idadeMinima,
     required this.quantidadeDisponivel,
   });
+
+  factory VaccineRequest.fromMapEntry(MapEntry entry) {
+    return VaccineRequest(
+      nome: entry.value['name']!.text,
+      descricao: entry.value['description']!.text,
+      local: entry.value['posto']!.text,
+      fabricante: entry.value['manufacturer']!.text,
+      dataFabricacao: entry.value['manufactureDate']!.text,
+      dataValidade: entry.value['expiryDate']!.text,
+      lote: entry.value['lot']!.text,
+      doses: entry.value['doses']!.text,
+      idadeMaxima: entry.value['maxRecommendedAge']!.text,
+      idadeMinima: entry.value['minRecommendedAge']!.text,
+      quantidadeDisponivel: entry.value['stockQuantity']!.text,
+    );
+  }
 
   Map<String, String> toMap() {
     return {

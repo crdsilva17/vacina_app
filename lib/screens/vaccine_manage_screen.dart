@@ -55,6 +55,8 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
                 controllers,
                 isEditing,
                 _onDelete,
+                _onUpdate,
+                _setState,
               ),
             ),
           ),
@@ -78,7 +80,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     setState(() {});
   }
 
-  Future _onUpdate(String id, VaccineRequest vaccine) async {
+  Future _onUpdateVaccine(String id, VaccineRequest vaccine) async {
     await store.put(id, vaccine);
     setState(() {});
   }
@@ -88,8 +90,16 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     await _getVaccines();
   }
 
+  void _onUpdate(String id, VaccineRequest vaccine) {
+    _onUpdateVaccine(id, vaccine);
+  }
+
   void _onDelete(String id) {
     _deleteVaccine(id);
+  }
+
+  void _setState() {
+    setState(() {});
   }
 
   void initializerControllers(List<VaccineModel> vaccines) {
