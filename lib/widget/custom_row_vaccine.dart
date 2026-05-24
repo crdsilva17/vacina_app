@@ -47,6 +47,9 @@ class CustomRowVaccine {
                     Navigator.of(context).pop();
                     if (entry.key == 'add_new') {
                       isEditing[idToIndex[entry.key]!] = false;
+                      for (final e in entry.value.values) {
+                        e.clear();
+                      }
                       setState();
                       return;
                     }
