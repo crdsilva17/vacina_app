@@ -194,7 +194,38 @@ class CustomRowVaccine {
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(controller: entry.value['doses'])
+                    ? TextField(
+                        controller: entry.value['doses'],
+                        readOnly: true,
+                        onTap: () async {
+                          List<String> opt = [
+                            'DUAS_DOSES',
+                            'QUATRO_DOSES',
+                            'DOSE_UNICA',
+                            'VARIAS_DOSES',
+                            'TRES_DOSES',
+                          ];
+                          final result = await showModalBottomSheet<String>(
+                            context: context,
+                            builder: (context) {
+                              return ListView.builder(
+                                itemCount: opt.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(opt[index]),
+                                    onTap: () {
+                                      Navigator.pop(context, opt[index]);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          );
+                          if (opt.isNotEmpty) {
+                            entry.value['doses']!.text = result!;
+                          }
+                        },
+                      )
                     : Text(
                         entry.key == 'add_new'
                             ? 'add_new'
