@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
+import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 
 class CustomRowVaccine {
@@ -10,14 +11,17 @@ class CustomRowVaccine {
     List<bool> isEditing,
     Function(String id) onDelete,
     Function(String id, VaccineRequest vaccine) onUpdate,
+    Function(VaccineRequest vaccine) onCreate,
     Function() setState,
     Function(TextEditingController edit) setDate,
-    Function(TextEditingController controller) getLocalId,
+    Function() getLocalId,
   ) {
     Map<String, int> idToIndex = {
       for (var i = 0; i < controllers.length; i++)
         controllers.keys.elementAt(i): i,
     };
+
+    LocalModel local = LocalModel.empty();
 
     Widget btnDelete(MapEntry entry) {
       return IconButton(
@@ -174,8 +178,10 @@ class CustomRowVaccine {
                     ? TextField(
                         controller: entry.value['posto'],
                         readOnly: true,
-                        onTap: () {
-                          getLocalId(entry.value['posto']!);
+                        onTap: () async {
+                          local = await getLocalId();
+                          entry.value['posto']!.text = local.name;
+                          //setState();
                         },
                       )
                     : Text(
@@ -232,15 +238,21 @@ class CustomRowVaccine {
                       return;
                     }
                     if (isEditing[idToIndex[entry.key]!]) {
+                      //entry.value['posto']!.text = local.id;
+
                       VaccineRequest request = VaccineRequest.fromMapEntry(
                         entry,
                       );
 
+                      //entry.value['posto']!.text = local.name;
+
                       if (entry.key == 'add_new') {
+                        onCreate(request);
                       } else {
                         onUpdate(entry.key, request);
                       }
                       isEditing[idToIndex[entry.key]!] = false;
+                      setState();
                     }
                   },
                   icon: Icon(

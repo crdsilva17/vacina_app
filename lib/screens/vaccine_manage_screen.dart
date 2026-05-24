@@ -64,6 +64,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
                 isEditing,
                 _onDelete,
                 _onUpdate,
+                _onCreate,
                 _setState,
                 _setDate,
                 _getLocal,
@@ -91,11 +92,11 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     setState(() {});
   }
 
-  Future<void> _getLocalId(TextEditingController controller) async {
+  Future<LocalModel> _getLocalId() async {
     await storeLocal.getLocal();
     List<LocalModel> items = storeLocal.state.value;
-    if (!mounted) return;
-    final option = await showModalBottomSheet<String>(
+    if (!mounted) return LocalModel.empty();
+    final option = await showModalBottomSheet<LocalModel>(
       context: context,
       builder: (context) {
         return ListView.builder(
@@ -104,16 +105,20 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
             return ListTile(
               title: Text(items[index].name),
               onTap: () {
-                Navigator.pop(context, items[index].name);
+                Navigator.pop(context, items[index]);
               },
             );
           },
         );
       },
     );
-    if (option.toString().isNotEmpty) {
-      controller.text = option.toString();
-    }
+
+    return option!;
+  }
+
+  Future<void> _onPost(VaccineRequest vaccine) async {
+    await store.post(vaccine);
+    await _getVaccines();
   }
 
   Future<void> _onUpdateVaccine(String id, VaccineRequest vaccine) async {
@@ -142,8 +147,12 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     }
   }
 
-  void _getLocal(TextEditingController controller) {
-    _getLocalId(controller);
+  Future<LocalModel> _getLocal() async {
+    return await _getLocalId();
+  }
+
+  void _onCreate(VaccineRequest vaccine) {
+    _onPost(vaccine);
   }
 
   void _onUpdate(String id, VaccineRequest vaccine) {

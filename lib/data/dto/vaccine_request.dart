@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
+import 'package:intl/intl.dart';
+
 class VaccineRequest {
   final String nome;
   final String descricao;
-  final String local;
+  final String localId;
   final String fabricante;
   final String dataFabricacao;
   final String dataValidade;
@@ -14,7 +18,7 @@ class VaccineRequest {
   VaccineRequest({
     required this.nome,
     required this.descricao,
-    required this.local,
+    required this.localId,
     required this.fabricante,
     required this.dataFabricacao,
     required this.dataValidade,
@@ -29,7 +33,7 @@ class VaccineRequest {
     return VaccineRequest(
       nome: entry.value['name']!.text,
       descricao: entry.value['description']!.text,
-      local: entry.value['posto']!.text,
+      localId: entry.value['posto']!.text,
       fabricante: entry.value['manufacturer']!.text,
       dataFabricacao: entry.value['manufactureDate']!.text,
       dataValidade: entry.value['expiryDate']!.text,
@@ -41,19 +45,26 @@ class VaccineRequest {
     );
   }
 
-  Map<String, String> toMap() {
+  Map<String, dynamic> toMap() {
+    DateTime dateTime1 = DateFormat('dd/MM/yyyy').parse(dataFabricacao);
+    DateTime dateTime2 = DateFormat('dd/MM/yyyy').parse(dataValidade);
+
+    String formattedDate1 = DateFormat('yyyy-MM-dd').format(dateTime1);
+    String formattedDate2 = DateFormat('yyyy-MM-dd').format(dateTime2);
+
     return {
       'nome': nome,
       'descricao': descricao,
-      'local': local,
+      'localId': localId,
       'fabricante': fabricante,
-      'dataFabricacao': dataFabricacao,
-      'dataValidade': dataValidade,
+      'dataFabricacao': formattedDate1,
+      'dataValidade': formattedDate2,
       'lote': lote,
-      'doses': doses,
-      'idadeMaxima': idadeMaxima,
-      'idadeMinima': idadeMinima,
-      'quantidadeDisponivel': quantidadeDisponivel,
+      'doses':
+          doses, // [DUAS_DOSES, QUATRO_DOSES, DOSE_UNICA, VARIAS_DOSES, TRES_DOSES]
+      'idadeMaxima': int.parse(idadeMaxima),
+      'idadeMinima': int.parse(idadeMinima),
+      'quantidadeDisponivel': int.parse(quantidadeDisponivel),
     };
   }
 }

@@ -11,18 +11,18 @@ abstract class IHttpClient {
   Future postAuth({
     required String token,
     required Map<String, String> uri,
-    required Map<String, String> body,
+    required Map<String, dynamic> body,
   });
 
   Future post({
     required Map<String, String> uri,
-    required Map<String, String> body,
+    required Map<String, dynamic> body,
   });
 
   Future put({
     required String token,
     required Map<String, String> uri,
-    required Map<String, String> body,
+    required Map<String, dynamic> body,
   });
 
   Future delete({required String token, required Map<String, String> uri});
@@ -45,7 +45,7 @@ class HttpClient implements IHttpClient {
   @override
   Future<dynamic> post({
     required Map<String, String> uri,
-    required Map<String, String> body,
+    required Map<String, dynamic> body,
   }) async {
     try {
       var url = Uri.parse("${uri['base']}${uri['endpoint']}");
@@ -84,7 +84,7 @@ class HttpClient implements IHttpClient {
   Future<dynamic> put({
     required String token,
     required Map<String, String> uri,
-    required Map<String, String> body,
+    required Map<String, dynamic> body,
   }) async {
     try {
       var url = Uri.parse("${uri['base']}${uri['endpoint']}");
@@ -121,8 +121,8 @@ class HttpClient implements IHttpClient {
   Future postAuth({
     required String token,
     required Map<String, String> uri,
-    required Map<String, String> body,
-  }) async{
+    required Map<String, dynamic> body,
+  }) async {
     try {
       var url = Uri.parse("${uri['base']}${uri['endpoint']}");
       await client.post(

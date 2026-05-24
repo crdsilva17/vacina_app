@@ -22,6 +22,16 @@ class VaccineStore {
     isLoading.value = false;
   }
 
+  Future<void> post(VaccineRequest vaccine) async {
+    isLoading.value = true;
+    try {
+      await repository.postVaccine(vaccine);
+    } catch (e) {
+      error.value = 'Error ao criar vacina: $e';
+    }
+    isLoading.value = false;
+  }
+
   Future<void> put(String id, VaccineRequest vaccine) async {
     isLoading.value = true;
     try {
@@ -29,6 +39,7 @@ class VaccineStore {
     } catch (e) {
       error.value = 'Error ao atualizar vacina: $e';
     }
+    isLoading.value = false;
   }
 
   Future<void> delete(String id) async {
@@ -38,6 +49,6 @@ class VaccineStore {
     } catch (e) {
       error.value = 'Error ao excluir vacina: $e';
     }
-    //await getList();
+    isLoading.value = false;
   }
 }
