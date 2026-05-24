@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class VaccineRequest {
   final String nome;
   final String descricao;

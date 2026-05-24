@@ -11,6 +11,7 @@ class CustomRowVaccine {
     Function(String id) onDelete,
     Function(String id, VaccineRequest vaccine) onUpdate,
     Function() setState,
+    Function(TextEditingController edit) setDate,
   ) {
     Map<String, int> idToIndex = {
       for (var i = 0; i < controllers.length; i++)
@@ -86,14 +87,24 @@ class CustomRowVaccine {
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(controller: entry.value['manufactureDate'])
+                    ? TextField(
+                        controller: entry.value['manufactureDate'],
+                        onTap: () {
+                          setDate(entry.value['manufactureDate']!);
+                        },
+                      )
                     : Text(entry.value['manufactureDate']!.text),
               ),
             ),
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(controller: entry.value['expiryDate'])
+                    ? TextField(
+                        controller: entry.value['expiryDate'],
+                        onTap: () {
+                          setDate(entry.value['expiryDate']!);
+                        },
+                      )
                     : Text(entry.value['expiryDate']!.text),
               ),
             ),

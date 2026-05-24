@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
@@ -57,6 +58,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
                 _onDelete,
                 _onUpdate,
                 _setState,
+                _setDate,
               ),
             ),
           ),
@@ -88,6 +90,22 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
   Future _deleteVaccine(String id) async {
     await store.delete(id);
     await _getVaccines();
+  }
+
+  Future<void> _setDate(TextEditingController edit) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      setState(() {
+        final formatter = DateFormat('dd/MM/yyyy');
+        edit.text = formatter.format(picked);
+      });
+    }
   }
 
   void _onUpdate(String id, VaccineRequest vaccine) {
