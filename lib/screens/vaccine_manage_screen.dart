@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
+import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
+import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/vaccine_store.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_row_vaccine.dart';
@@ -18,6 +21,10 @@ class VaccineManageScreen extends StatefulWidget {
 class _VaccineManageScreenState extends State<VaccineManageScreen> {
   VaccineStore store = VaccineStore(
     repository: VaccineRepository(client: HttpClient()),
+  );
+
+  LocalStore storeLocal = LocalStore(
+    repository: LocalRepository(client: HttpClient()),
   );
 
   final Map<String, Map<String, TextEditingController>> controllers = {};
@@ -59,6 +66,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
                 _onUpdate,
                 _setState,
                 _setDate,
+                _getLocal,
               ),
             ),
           ),
@@ -67,7 +75,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     );
   }
 
-  Future _getVaccines() async {
+  Future<void> _getVaccines() async {
     await store.getList();
     if (!mounted) return;
     if (store.error.value.isNotEmpty) {
@@ -75,6 +83,7 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
         SnackBar(content: Text('Não foi possível carregar as vacinas!')),
       );
     }
+
     initializerControllers(store.stateList.value);
     for (var i = 0; i < controllers.keys.length; i++) {
       isEditing.add(false);
@@ -82,12 +91,37 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     setState(() {});
   }
 
-  Future _onUpdateVaccine(String id, VaccineRequest vaccine) async {
+  Future<void> _getLocalId(TextEditingController controller) async {
+    await storeLocal.getLocal();
+    List<LocalModel> items = storeLocal.state.value;
+    if (!mounted) return;
+    final option = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) {
+        return ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(items[index].name),
+              onTap: () {
+                Navigator.pop(context, items[index].name);
+              },
+            );
+          },
+        );
+      },
+    );
+    if (option.toString().isNotEmpty) {
+      controller.text = option.toString();
+    }
+  }
+
+  Future<void> _onUpdateVaccine(String id, VaccineRequest vaccine) async {
     await store.put(id, vaccine);
     setState(() {});
   }
 
-  Future _deleteVaccine(String id) async {
+  Future<void> _deleteVaccine(String id) async {
     await store.delete(id);
     await _getVaccines();
   }
@@ -106,6 +140,10 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
         edit.text = formatter.format(picked);
       });
     }
+  }
+
+  void _getLocal(TextEditingController controller) {
+    _getLocalId(controller);
   }
 
   void _onUpdate(String id, VaccineRequest vaccine) {
