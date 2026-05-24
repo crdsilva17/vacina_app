@@ -121,14 +121,20 @@ class CustomRowVaccine {
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(controller: entry.value['minRecommendedAge'])
+                    ? TextField(
+                        controller: entry.value['minRecommendedAge'],
+                        keyboardType: TextInputType.number,
+                      )
                     : Text(entry.value['minRecommendedAge']!.text),
               ),
             ),
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(controller: entry.value['maxRecommendedAge'])
+                    ? TextField(
+                        controller: entry.value['maxRecommendedAge'],
+                        keyboardType: TextInputType.number,
+                      )
                     : Text(entry.value['maxRecommendedAge']!.text),
               ),
             ),
@@ -162,7 +168,10 @@ class CustomRowVaccine {
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(controller: entry.value['stockQuantity'])
+                    ? TextField(
+                        controller: entry.value['stockQuantity'],
+                        keyboardType: TextInputType.number,
+                      )
                     : Text(entry.value['stockQuantity']!.text),
               ),
             ),
