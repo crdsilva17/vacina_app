@@ -49,8 +49,13 @@ class VaccineRepository implements IVaccineRepository {
 
   @override
   Future<void> postVaccine(VaccineRequest vaccine) async {
-    // TODO: implement postVaccine
-    return;
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    await client.postAuth(
+      token: token.toString(),
+      uri: url,
+      body: vaccine.toMap(),
+    );
   }
 
   @override
