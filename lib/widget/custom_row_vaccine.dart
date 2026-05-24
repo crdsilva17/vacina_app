@@ -75,14 +75,22 @@ class CustomRowVaccine {
               Center(
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(controller: entry.value['name'])
-                    : Text(entry.value['name']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['name']!.text,
+                      ),
               ),
             ),
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(controller: entry.value['manufacturer'])
-                    : Text(entry.value['manufacturer']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['manufacturer']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -95,7 +103,11 @@ class CustomRowVaccine {
                           setDate(entry.value['manufactureDate']!);
                         },
                       )
-                    : Text(entry.value['manufactureDate']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['manufactureDate']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -108,14 +120,22 @@ class CustomRowVaccine {
                           setDate(entry.value['expiryDate']!);
                         },
                       )
-                    : Text(entry.value['expiryDate']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['expiryDate']!.text,
+                      ),
               ),
             ),
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(controller: entry.value['lot'])
-                    : Text(entry.value['lot']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['lot']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -123,9 +143,14 @@ class CustomRowVaccine {
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         controller: entry.value['minRecommendedAge'],
+                        textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
                       )
-                    : Text(entry.value['minRecommendedAge']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['minRecommendedAge']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -133,9 +158,14 @@ class CustomRowVaccine {
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         controller: entry.value['maxRecommendedAge'],
+                        textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
                       )
-                    : Text(entry.value['maxRecommendedAge']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['maxRecommendedAge']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -148,21 +178,33 @@ class CustomRowVaccine {
                           getLocalId(entry.value['posto']!);
                         },
                       )
-                    : Text(entry.value['posto']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['posto']!.text,
+                      ),
               ),
             ),
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(controller: entry.value['doses'])
-                    : Text(entry.value['doses']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['doses']!.text,
+                      ),
               ),
             ),
             DataCell(
               Center(
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(controller: entry.value['description'])
-                    : Text(entry.value['description']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['description']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -170,9 +212,14 @@ class CustomRowVaccine {
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
                         controller: entry.value['stockQuantity'],
+                        textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
                       )
-                    : Text(entry.value['stockQuantity']!.text),
+                    : Text(
+                        entry.key == 'add_new'
+                            ? 'add_new'
+                            : entry.value['stockQuantity']!.text,
+                      ),
               ),
             ),
             DataCell(
@@ -189,7 +236,10 @@ class CustomRowVaccine {
                         entry,
                       );
 
-                      onUpdate(entry.key, request);
+                      if (entry.key == 'add_new') {
+                      } else {
+                        onUpdate(entry.key, request);
+                      }
                       isEditing[idToIndex[entry.key]!] = false;
                     }
                   },

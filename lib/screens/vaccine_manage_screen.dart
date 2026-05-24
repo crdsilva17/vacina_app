@@ -162,17 +162,17 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     controllers.clear();
 
     controllers['add_new'] = {
-      'name': TextEditingController(text: 'add_new'),
-      'manufacturer': TextEditingController(text: 'add_new'),
-      'manufactureDate': TextEditingController(text: 'add_new'),
-      'expiryDate': TextEditingController(text: 'add_new'),
-      'lot': TextEditingController(text: 'add_new'),
-      'minRecommendedAge': TextEditingController(text: 'add_new'),
-      'maxRecommendedAge': TextEditingController(text: 'add_new'),
-      'posto': TextEditingController(text: 'add_new'),
-      'doses': TextEditingController(text: 'add_new'),
-      'description': TextEditingController(text: 'add_new'),
-      'stockQuantity': TextEditingController(text: 'add_new'),
+      'name': TextEditingController(text: ''),
+      'manufacturer': TextEditingController(text: ''),
+      'manufactureDate': TextEditingController(text: ''),
+      'expiryDate': TextEditingController(text: ''),
+      'lot': TextEditingController(text: ''),
+      'minRecommendedAge': TextEditingController(text: ''),
+      'maxRecommendedAge': TextEditingController(text: ''),
+      'posto': TextEditingController(text: ''),
+      'doses': TextEditingController(text: ''),
+      'description': TextEditingController(text: ''),
+      'stockQuantity': TextEditingController(text: ''),
     };
 
     for (var vaccine in vaccines) {
