@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
+import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
@@ -37,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
 
   UserModel user = UserModel.empty();
   LocalModel local = LocalModel.empty();
+  List<VaccineModel> vaccines = [];
 
   void openDrawer() {
     _scaffoldKey.currentState?.openDrawer();
@@ -110,7 +112,9 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       return SliverList(
         delegate: SliverChildListDelegate([
-          const Center(child: HeroSection()),
+          Center(
+            child: HeroSection(user: user, vaccines: vaccines),
+          ),
           const Center(child: Text('Conteúdo para usuários comuns')),
         ]),
       );
@@ -121,19 +125,23 @@ class _MainScreenState extends State<MainScreen> {
     await store.getUser();
     setState(() {
       user = store.state.value;
-      _loadLocal();
     });
+    await _loadLocal();
   }
 
   Future<void> _loadLocal() async {
-    await localStore.getLocalById(user.localId);
+    await localStore.getLocalByNome(user.localId);
     setState(() {
       local = localStore.state.value[0];
     });
+    await _loadVaccines();
   }
 
   Future<void> _loadVaccines() async {
-    await vaccineStore.getListByLocal(user.localId);
+    await vaccineStore.getListByLocal(local.name);
+    setState(() {
+      vaccines = vaccineStore.stateList.value;
+    });
   }
 
   void _open(Widget screen) {

@@ -45,6 +45,19 @@ class LocalStore {
     isLoading.value = false;
   }
 
+  Future getLocalByNome(String local) async {
+    isLoading.value = true;
+
+    try {
+      final result = await repository.getLocalByNome(local);
+      state.value = [result];
+    } catch (e) {
+      error.value = 'Ocorreu um erro ${e.toString()}';
+    }
+
+    isLoading.value = false;
+  }
+
   Future createLocal(LocalRequest localRequest) async {
     isLoading.value = true;
 
@@ -58,7 +71,7 @@ class LocalStore {
     isLoading.value = false;
   }
 
-  Future updateLocal(LocalModel updatedLocal) async{
+  Future updateLocal(LocalModel updatedLocal) async {
     await repository.updateLocal(updatedLocal);
     await getLocal();
   }

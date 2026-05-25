@@ -68,7 +68,7 @@ class VaccineRepository implements IVaccineRepository {
   Future<List<VaccineModel>> getVaccinesByLocal(String local) async {
     final SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString('token');
-    url['endpoint'] = ApiEndpoints.vacinaByLocalId(local);
+    url['endpoint'] = ApiEndpoints.vacinaByLocal(local);
     final response = await client.getAuth(uri: url, token: token.toString());
     List<VaccineModel> vaccines = [];
 
