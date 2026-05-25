@@ -1,54 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/models/vaccine_model.dart';
 
 class VaccineStatusCard extends StatelessWidget {
-  const VaccineStatusCard({super.key});
+  final VaccineModel vaccineModel;
+  const VaccineStatusCard({super.key, required this.vaccineModel});
 
   @override
   Widget build(BuildContext context) {
-    // Aqui você consome estado (Provider, Riverpod, etc.)
     return Card(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              const Icon(Icons.shield_outlined, size: 50.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+            child: Column(
+              children: [
+                SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.greenAccent.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.greenAccent, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.greenAccent.withValues(alpha: 0.6),
+                        blurRadius: 12,
+                        spreadRadius: 2,
                       ),
-                      child: const Text(
-                        'Boa Notícia!',
-                        style: TextStyle(
-                          fontSize: 8,
-                          color: Colors.green,
-                          backgroundColor: Colors.greenAccent,
-                        ),
-                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    'Boa Notícia!',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                      letterSpacing: 0.5,
                     ),
+                  ),
+                ),
+
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.vaccines_outlined,
+                      size: 60.0,
+                      color: Colors.green,
+                    ),
+                    SizedBox(width: 20),
                     const Text(
                       'Vacina disponível',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const Text('Influenza'),
-                    const Text('Posto de Saúde'),
                   ],
                 ),
-              ),
-            ],
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Nome',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(vaccineModel.name, style: TextStyle(fontSize: 18)),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Descrição',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(vaccineModel.description),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Doses',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(vaccineModel.doses),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 8),
           Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
-              children: const [
-                Expanded(child: Text('Primary')),
+              children: [
+                Expanded(
+                  child: TextButton(onPressed: () {}, child: Text('Info')),
+                ),
                 SizedBox(width: 8),
-                Expanded(child: Text("Secondary")),
+                Expanded(
+                  child: TextButton(onPressed: () {}, child: Text('Agendar')),
+                ),
               ],
             ),
           ),

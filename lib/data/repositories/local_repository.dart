@@ -9,6 +9,7 @@ import 'package:vacina_app/data/models/local_model.dart';
 abstract class ILocalRepository {
   Future<List<LocalModel>> getLocal();
   Future<LocalModel> getLocalById(String id);
+  Future<LocalModel> getLocalByNome(String nome);
 
   Future<void> createLocal(LocalRequest localRequest);
 
@@ -31,6 +32,19 @@ class LocalRepository implements ILocalRepository {
     final SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString('token');
     url['endpoint'] = ApiEndpoints.getLocalById(id);
+    final response = await client.getAuth(uri: url, token: token.toString());
+
+    if (response.statusCode == 200) {
+      return LocalModel.fromMap(jsonDecode(response.body));
+    }
+    return LocalModel.empty();
+  }
+
+  @override
+  Future<LocalModel> getLocalByNome(String local) async {
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    url['endpoint'] = ApiEndpoints.getLocalByNome(local);
     final response = await client.getAuth(uri: url, token: token.toString());
 
     if (response.statusCode == 200) {
@@ -68,21 +82,18 @@ class LocalRepository implements ILocalRepository {
       body: localRequest.toMap(),
     );
   }
-  
+
   @override
   Future<void> deleteLocal(String id) async {
     final SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString('token');
     url['base'] = ApiEndpoints.baseUrl;
     url['endpoint'] = ApiEndpoints.localById(id);
-    return await client.delete(
-      token: token.toString(),
-      uri: url,
-    );
+    return await client.delete(token: token.toString(), uri: url);
   }
-  
+
   @override
-  Future<void> createLocal(LocalRequest localRequest) async{
+  Future<void> createLocal(LocalRequest localRequest) async {
     final SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString('token');
     url['base'] = ApiEndpoints.baseUrl;
@@ -92,6 +103,6 @@ class LocalRepository implements ILocalRepository {
       token: token.toString(),
       uri: url,
       body: localRequest.toMap(),
-     );
+    );
   }
 }

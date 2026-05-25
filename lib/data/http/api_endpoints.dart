@@ -15,10 +15,13 @@ class ApiEndpoints {
   static const String vacinas = '/api/v1/vacinas';
 
   static String getLocalById(String id) => '/api/v1/locais/id?id=$id';
+  static String getLocalByNome(String nome) => '/api/v1/locais/nome?nome=$nome';
 
   static String localById(String id) => '/api/v1/locais?id=$id';
 
   static String vacinaByLocalId(String id) => '/api/v1/vacinas/locais?id=$id';
+  static String vacinaByLocal(String local) =>
+      '/api/v1/vacinas/local?local=$local';
 
   static String vacinaByLocalName(String name) =>
       '/api/v1/vacinas/locais/name$name';

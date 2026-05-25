@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class UserModel {
   String id;
   String localId;
@@ -36,5 +38,18 @@ class UserModel {
       cpf: map['cpf'],
       role: map['role'],
     );
+  }
+
+  int age() {
+    final now = DateTime.now();
+    final DateTime dateBirth = DateFormat('yyyy-MM-dd').parse(birth);
+    int age = now.year - dateBirth.year;
+
+    if (now.month < dateBirth.month ||
+        now.month == dateBirth.month && now.day < dateBirth.day) {
+      age--;
+    }
+
+    return age;
   }
 }

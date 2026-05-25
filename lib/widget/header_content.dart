@@ -17,7 +17,7 @@ class HeaderContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Olá, ${user.name}'),
-              Text(local.name),
+              Center(child: Text(local.name, style: TextStyle(fontSize: 12))),
             ],
           ),
         ),
