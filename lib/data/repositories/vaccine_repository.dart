@@ -51,7 +51,7 @@ class VaccineRepository implements IVaccineRepository {
   Future<void> postVaccine(VaccineRequest vaccine) async {
     final SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString('token');
-    final response = await client.postAuth(
+    await client.postAuth(
       token: token.toString(),
       uri: url,
       body: vaccine.toMap(),
