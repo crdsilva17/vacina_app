@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:vacina_app/data/dto/register_request.dart';
 import 'package:vacina_app/data/models/user_model.dart';
 import 'package:vacina_app/data/repositories/users_repository.dart';
 
@@ -20,5 +21,20 @@ class UsersStore {
     } catch (e) {
       error.value = e.toString();
     }
+  }
+
+  Future<bool> registerUser(RegisterRequest request) async {
+    isLoading.value = true;
+    try {
+      state.value = await repository.register(request);
+      if (state.value.id.isNotEmpty) {
+        isLoading.value = false;
+        return true;
+      }
+    } catch (e) {
+      error.value = 'Error ao registrar usuario: $e';
+    }
+    isLoading.value = false;
+    return false;
   }
 }

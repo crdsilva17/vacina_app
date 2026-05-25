@@ -10,7 +10,7 @@ import '../http/api_endpoints.dart';
 
 abstract class IUsersRepository {
   Future<UserModel> getUser();
-  Future<bool> register(RegisterRequest request);
+  Future<UserModel> register(RegisterRequest request);
 }
 
 class UsersRepository implements IUsersRepository {
@@ -39,16 +39,18 @@ class UsersRepository implements IUsersRepository {
   }
 
   @override
-  Future<bool> register(RegisterRequest request) async {
+  Future<UserModel> register(RegisterRequest request) async {
     url['endpoint'] = ApiEndpoints.register;
     try {
       final response = await client.post(uri: url, body: request.toMap());
       if (response.statusCode == 200) {
-        return true;
+        final body = response.body;
+        UserModel userModel = UserModel.fromJson(body);
+        return userModel;
       }
-      return false;
+      return UserModel.empty();
     } catch (e) {
-      return false;
+      return UserModel.empty();
     }
   }
 }
