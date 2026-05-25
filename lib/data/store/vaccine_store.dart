@@ -22,6 +22,17 @@ class VaccineStore {
     isLoading.value = false;
   }
 
+  Future<void> getListByLocal(String local) async {
+    isLoading.value = true;
+    try {
+      stateList.value = await repository.getVaccinesByLocal(local);
+    } catch (e) {
+      error.value = 'Error ao buscar vacinas: $e';
+    }
+
+    isLoading.value = false;
+  }
+
   Future<void> post(VaccineRequest vaccine) async {
     isLoading.value = true;
     try {

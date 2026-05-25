@@ -4,6 +4,8 @@ import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
 import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
+import 'package:vacina_app/data/repositories/vaccine_repository.dart';
+import 'package:vacina_app/data/store/vaccine_store.dart';
 import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/users_store.dart';
@@ -28,6 +30,11 @@ class _MainScreenState extends State<MainScreen> {
   final LocalStore localStore = LocalStore(
     repository: LocalRepository(client: HttpClient()),
   );
+
+  final VaccineStore vaccineStore = VaccineStore(
+    repository: VaccineRepository(client: HttpClient()),
+  );
+
   UserModel user = UserModel.empty();
   LocalModel local = LocalModel.empty();
 
@@ -123,6 +130,10 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       local = localStore.state.value[0];
     });
+  }
+
+  Future<void> _loadVaccines() async {
+    await vaccineStore.getListByLocal(user.localId);
   }
 
   void _open(Widget screen) {
