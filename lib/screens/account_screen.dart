@@ -234,6 +234,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: const Text('Cadastrar'),
                 ),
               ),
+              SizedBox(height: 40.0),
             ],
           ),
         ),
