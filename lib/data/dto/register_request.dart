@@ -26,4 +26,16 @@ class RegisterRequest {
       passwd: map['passwd'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'localId': localId,
+      'nome': name,
+      'email': email,
+      'senha': passwd,
+      'dataNscto': dataNsc,
+      'cpf': cpf,
+      'role': role,
+    };
+  }
 }

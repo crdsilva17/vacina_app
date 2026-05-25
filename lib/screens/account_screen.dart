@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:vacina_app/data/dto/register_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/store/local_store.dart';
@@ -194,7 +195,17 @@ class _AccountScreenState extends State<AccountScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Map<String, dynamic> map = {
+                      'name': nomeEditController.text,
+                      'cpf': cpfEditController.text,
+                      'dataNsc': dataNscEditController.text,
+                      'localId': postoEditController.text,
+                      'email': emailEditController.text,
+                      'passwd': senhaEditController.text,
+                    };
+                    RegisterRequest register = RegisterRequest.fromMap(map);
+                  },
                   child: const Text('Cadastrar'),
                 ),
               ),
