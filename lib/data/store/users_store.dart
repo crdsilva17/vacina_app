@@ -27,7 +27,7 @@ class UsersStore {
     isLoading.value = true;
     try {
       state.value = await repository.register(request);
-      if (state.value.id.isNotEmpty) {
+      if (state.value.email.isNotEmpty) {
         isLoading.value = false;
         return true;
       }

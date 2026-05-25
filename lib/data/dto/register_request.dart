@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class RegisterRequest {
   final String name;
   final String cpf;
@@ -28,12 +30,14 @@ class RegisterRequest {
   }
 
   Map<String, dynamic> toMap() {
+    DateTime dateTime = DateFormat('dd/MM/yyyy').parse(dataNsc);
+    String dateFormat = DateFormat('yyyy-MM-dd').format(dateTime);
     return {
       'localId': localId,
       'nome': name,
       'email': email,
       'senha': passwd,
-      'dataNscto': dataNsc,
+      'dataNscto': dateFormat,
       'cpf': cpf,
       'role': role,
     };

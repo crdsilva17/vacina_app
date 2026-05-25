@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vacina_app/data/dto/register_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/user_model.dart';
-import 'package:vacina_app/data/store/users_store.dart';
 
 import '../http/api_endpoints.dart';
 
@@ -43,13 +42,16 @@ class UsersRepository implements IUsersRepository {
     url['endpoint'] = ApiEndpoints.register;
     try {
       final response = await client.post(uri: url, body: request.toMap());
-      if (response.statusCode == 200) {
-        final body = response.body;
-        UserModel userModel = UserModel.fromJson(body);
+      if (response.statusCode == 201) {
+        final body = jsonDecode(response.body);
+        UserModel userModel = UserModel.empty();
+        userModel.email = body['email'];
+        userModel.name = body['nome'];
         return userModel;
       }
       return UserModel.empty();
     } catch (e) {
+      print(e);
       return UserModel.empty();
     }
   }

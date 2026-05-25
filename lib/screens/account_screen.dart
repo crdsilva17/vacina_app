@@ -3,8 +3,12 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:vacina_app/data/dto/register_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
+import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:intl/intl.dart';
+import 'package:vacina_app/data/store/users_store.dart';
+import 'package:vacina_app/screens/login_screen.dart';
+import 'package:vacina_app/util/custom_navigate.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -17,6 +21,11 @@ class _AccountScreenState extends State<AccountScreen> {
   final LocalStore store = LocalStore(
     repository: LocalRepository(client: HttpClient()),
   );
+
+  final UsersStore usersStore = UsersStore(
+    repository: UsersRepository(client: HttpClient()),
+  );
+
   final cpfFormatter = MaskTextInputFormatter(
     mask: '###.###.###-##',
     filter: {"#": RegExp(r'[0-9]')},
@@ -117,6 +126,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       initialValue: null,
                       onChanged: (option) => {
                         dropValue.value = option.toString(),
+                        postoEditController.text = dropValue.value,
                       },
                       items: dropOptions
                           .map(
@@ -195,7 +205,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Map<String, dynamic> map = {
                       'name': nomeEditController.text,
                       'cpf': cpfEditController.text,
@@ -205,6 +215,21 @@ class _AccountScreenState extends State<AccountScreen> {
                       'passwd': senhaEditController.text,
                     };
                     RegisterRequest register = RegisterRequest.fromMap(map);
+                    final response = await usersStore.registerUser(register);
+
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          response
+                              ? 'Usuario Cadastrado com sucesso!'
+                              : 'Não foi possivel cadastrar o usuário.',
+                        ),
+                      ),
+                    );
+                    if (response) {
+                      push(context, LoginScreen(), replace: true);
+                    }
                   },
                   child: const Text('Cadastrar'),
                 ),
