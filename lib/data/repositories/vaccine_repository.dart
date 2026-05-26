@@ -66,8 +66,7 @@ class VaccineRepository implements IVaccineRepository {
 
   @override
   Future<List<VaccineModel>> getVaccinesByLocal(String local) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    final String? token = await storage.read(key: 'token');
     url['endpoint'] = ApiEndpoints.vacinaByLocal(local);
     final response = await client.getAuth(uri: url, token: token.toString());
     List<VaccineModel> vaccines = [];
