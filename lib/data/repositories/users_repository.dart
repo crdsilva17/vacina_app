@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:vacina_app/data/dto/register_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/user_model.dart';
@@ -10,10 +10,12 @@ import '../http/api_endpoints.dart';
 abstract class IUsersRepository {
   Future<UserModel> getUser();
   Future<UserModel> register(RegisterRequest request);
+  Future<void> logout();
 }
 
 class UsersRepository implements IUsersRepository {
   final IHttpClient client;
+  final storage = FlutterSecureStorage();
   final Map<String, String> url = {
     'base': ApiEndpoints.baseUrl,
     'endpoint': ApiEndpoints.user,
@@ -23,8 +25,7 @@ class UsersRepository implements IUsersRepository {
 
   @override
   Future<UserModel> getUser() async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    final String? token = await storage.read(key: 'token');
     final response = await client.getAuth(uri: url, token: token.toString());
     UserModel user = UserModel.empty();
     try {
@@ -54,5 +55,11 @@ class UsersRepository implements IUsersRepository {
       print(e);
       return UserModel.empty();
     }
+  }
+
+  @override
+  Future<void> logout() async {
+    await storage.delete(key: 'token');
+    await storage.delete(key: 'validDate');
   }
 }

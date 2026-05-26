@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:vacina_app/data/dto/local_request.dart';
 import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/http/http_client.dart';
@@ -19,6 +19,7 @@ abstract class ILocalRepository {
 
 class LocalRepository implements ILocalRepository {
   final IHttpClient client;
+  final storage = FlutterSecureStorage();
   final Map<String, String> url = {
     'base': ApiEndpoints.baseUrl,
     'endpoint': ApiEndpoints.locais,
@@ -28,8 +29,7 @@ class LocalRepository implements ILocalRepository {
 
   @override
   Future<LocalModel> getLocalById(String id) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    String? token = await storage.read(key: 'token');
     url['endpoint'] = ApiEndpoints.getLocalById(id);
     final response = await client.getAuth(uri: url, token: token.toString());
 
@@ -57,8 +57,7 @@ class LocalRepository implements ILocalRepository {
 
   @override
   Future<void> updateLocal(LocalModel updatedLocal) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    String? token = await storage.read(key: 'token');
     final LocalRequest localRequest = LocalRequest.fromLocalModel(updatedLocal);
     url['base'] = ApiEndpoints.baseUrl;
     url['endpoint'] = ApiEndpoints.localById(updatedLocal.id);
@@ -68,23 +67,18 @@ class LocalRepository implements ILocalRepository {
       body: localRequest.toMap(),
     );
   }
-  
+
   @override
   Future<void> deleteLocal(String id) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    String? token = await storage.read(key: 'token');
     url['base'] = ApiEndpoints.baseUrl;
     url['endpoint'] = ApiEndpoints.localById(id);
-    return await client.delete(
-      token: token.toString(),
-      uri: url,
-    );
+    return await client.delete(token: token.toString(), uri: url);
   }
-  
+
   @override
-  Future<void> createLocal(LocalRequest localRequest) async{
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+  Future<void> createLocal(LocalRequest localRequest) async {
+    String? token = await storage.read(key: 'token');
     url['base'] = ApiEndpoints.baseUrl;
     url['endpoint'] = ApiEndpoints.locais;
 
@@ -92,6 +86,6 @@ class LocalRepository implements ILocalRepository {
       token: token.toString(),
       uri: url,
       body: localRequest.toMap(),
-     );
+    );
   }
 }

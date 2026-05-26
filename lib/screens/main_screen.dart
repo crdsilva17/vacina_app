@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
@@ -74,9 +73,7 @@ class _MainScreenState extends State<MainScreen> {
               leading: const Icon(Icons.logout),
               title: const Text('Sair'),
               onTap: () async {
-                var shared = await SharedPreferences.getInstance();
-                shared.remove('token');
-                shared.remove('valid');
+                store.repository.logout();
                 _close();
                 _open(CheckScreen());
               },
@@ -100,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
     if (user.role == 'ADMIN') {
       return SliverList(
         delegate: SliverChildListDelegate([
-          Center(child: HeroAdmSection(context:context)),
+          Center(child: HeroAdmSection(context: context)),
         ]),
       );
     } else {

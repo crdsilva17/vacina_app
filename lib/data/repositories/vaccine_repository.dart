@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/http/http_client.dart';
@@ -15,6 +15,7 @@ abstract class IVaccineRepository {
 
 class VaccineRepository implements IVaccineRepository {
   final IHttpClient client;
+  final storage = FlutterSecureStorage();
   final Map<String, String> url = {
     'base': ApiEndpoints.baseUrl,
     'endpoint': ApiEndpoints.vacinas,
@@ -24,16 +25,14 @@ class VaccineRepository implements IVaccineRepository {
 
   @override
   Future<void> deleteVaccine(String id) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    final String? token = await storage.read(key: 'token');
     url['endpoint'] = ApiEndpoints.vacinaById(id);
     await client.delete(token: token.toString(), uri: url);
   }
 
   @override
   Future<List<VaccineModel>> getVaccines() async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    String? token = await storage.read(key: 'token');
     final response = await client.getAuth(uri: url, token: token.toString());
     List<VaccineModel> vaccines = [];
 
@@ -49,8 +48,7 @@ class VaccineRepository implements IVaccineRepository {
 
   @override
   Future<void> postVaccine(VaccineRequest vaccine) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    String? token = await storage.read(key: 'token');
     await client.postAuth(
       token: token.toString(),
       uri: url,
@@ -60,8 +58,7 @@ class VaccineRepository implements IVaccineRepository {
 
   @override
   Future<void> putVaccine(String id, VaccineRequest vaccine) async {
-    final SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString('token');
+    String? token = await storage.read(key: 'token');
     url['endpoint'] = ApiEndpoints.vacinaById(id);
     await client.put(token: token.toString(), uri: url, body: vaccine.toMap());
   }
