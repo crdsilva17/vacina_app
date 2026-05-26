@@ -8,6 +8,7 @@ import 'package:vacina_app/data/models/vaccine_model.dart';
 
 abstract class IVaccineRepository {
   Future<List<VaccineModel>> getVaccines();
+  Future<List<VaccineModel>> getVaccinesByLocal(String local);
   Future<void> postVaccine(VaccineRequest vaccine);
   Future<void> deleteVaccine(String id);
   Future<void> putVaccine(String id, VaccineRequest vaccine);
@@ -61,5 +62,23 @@ class VaccineRepository implements IVaccineRepository {
     String? token = await storage.read(key: 'token');
     url['endpoint'] = ApiEndpoints.vacinaById(id);
     await client.put(token: token.toString(), uri: url, body: vaccine.toMap());
+  }
+
+  @override
+  Future<List<VaccineModel>> getVaccinesByLocal(String local) async {
+    final SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('token');
+    url['endpoint'] = ApiEndpoints.vacinaByLocal(local);
+    final response = await client.getAuth(uri: url, token: token.toString());
+    List<VaccineModel> vaccines = [];
+
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      body.map((vaccine) {
+        VaccineModel vaccineModel = VaccineModel.fromJson(vaccine);
+        vaccines.add(vaccineModel);
+      }).toList();
+    }
+    return vaccines;
   }
 }

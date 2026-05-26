@@ -9,6 +9,7 @@ import 'package:vacina_app/data/models/local_model.dart';
 abstract class ILocalRepository {
   Future<List<LocalModel>> getLocal();
   Future<LocalModel> getLocalById(String id);
+  Future<LocalModel> getLocalByNome(String nome);
 
   Future<void> createLocal(LocalRequest localRequest);
 
@@ -31,6 +32,18 @@ class LocalRepository implements ILocalRepository {
   Future<LocalModel> getLocalById(String id) async {
     String? token = await storage.read(key: 'token');
     url['endpoint'] = ApiEndpoints.getLocalById(id);
+    final response = await client.getAuth(uri: url, token: token.toString());
+
+    if (response.statusCode == 200) {
+      return LocalModel.fromMap(jsonDecode(response.body));
+    }
+    return LocalModel.empty();
+  }
+
+  @override
+  Future<LocalModel> getLocalByNome(String local) async {
+    final String? token = await storage.read(key: 'token');
+    url['endpoint'] = ApiEndpoints.getLocalByNome(local);
     final response = await client.getAuth(uri: url, token: token.toString());
 
     if (response.statusCode == 200) {
