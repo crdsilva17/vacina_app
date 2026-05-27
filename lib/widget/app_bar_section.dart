@@ -10,7 +10,12 @@ class AppBarSection extends StatelessWidget {
   final UserModel user;
   final LocalModel local;
 
-  const AppBarSection({super.key, required this.onAvatarTap, required this.user, required this.local});
+  const AppBarSection({
+    super.key,
+    required this.onAvatarTap,
+    required this.user,
+    required this.local,
+  });
 
   @override
   Widget build(BuildContext context) {

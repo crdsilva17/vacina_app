@@ -111,7 +111,67 @@ class VaccineStatusCard extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: TextButton(onPressed: () {}, child: Text('Info')),
+                  child: TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          icon: Icon(Icons.info_outline),
+                          content: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text('Nome: '),
+                                  Text(vaccineModel.name),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Fabricante: '),
+                                  Text(vaccineModel.manufacturer),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Data Fab: '),
+                                  Text(vaccineModel.manufactureDate),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Validade: '),
+                                  Text(vaccineModel.expiryDate),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Lote: '),
+                                  Text(vaccineModel.lot),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Faixa etária: '),
+                                  Text(
+                                    '${vaccineModel.minRecommendedAge}/${vaccineModel.maxRecommendedAge} anos',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Fechar'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Text('Info'),
+                  ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
