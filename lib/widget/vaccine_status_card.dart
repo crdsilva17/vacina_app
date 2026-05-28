@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/widget/_primary_button.dart';
+import 'package:vacina_app/widget/secundary_button.dart';
 
 class VaccineStatusCard extends StatelessWidget {
   final VaccineModel vaccineModel;
@@ -109,6 +110,15 @@ class VaccineStatusCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 12),
+                Expanded(
+                  child: SecondaryButton(
+                    label: 'Saiba mais',
+                    icon: Icons.info_outline,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/details');
+                    },
+                  ),
+                ),
               ],
             ),
           ),

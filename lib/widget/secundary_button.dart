@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PrimaryButton extends StatelessWidget {
+class SecondaryButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
   final IconData? icon;
   final bool isLoading;
   final bool enabled;
 
-  const PrimaryButton({
+  const SecondaryButton({
     super.key,
     required this.label,
     required this.onPressed,
@@ -22,13 +22,16 @@ class PrimaryButton extends StatelessWidget {
 
     return SizedBox(
       height: 52,
-      child: ElevatedButton(
+      child: OutlinedButton(
         onPressed: canPress ? onPressed : null,
-        style: ElevatedButton.styleFrom(
+        style: OutlinedButton.styleFrom(
           elevation: 0,
-          backgroundColor: const Color(0xFF16A34A),
-          foregroundColor: Colors.white,
-          disabledBackgroundColor: Colors.grey.shade300,
+          foregroundColor: const Color(0xFF16A34A),
+          disabledForegroundColor: Colors.grey.shade400,
+          side: BorderSide(
+            color: enabled ? const Color(0xFF16A34A) : Colors.grey.shade300,
+            width: 1.4,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
@@ -37,13 +40,13 @@ class PrimaryButton extends StatelessWidget {
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
           child: isLoading
-              ? const SizedBox(
-                  key: ValueKey('loading'),
+              ? SizedBox(
+                  key: const ValueKey('loading'),
                   width: 22,
                   height: 22,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: Colors.white,
+                    strokeWidth: 2.2,
+                    color: const Color(0xFF16A34A),
                   ),
                 )
               : Row(
@@ -59,7 +62,7 @@ class PrimaryButton extends StatelessWidget {
                         label,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
