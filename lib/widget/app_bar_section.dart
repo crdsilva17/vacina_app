@@ -9,12 +9,14 @@ class AppBarSection extends StatelessWidget {
   final VoidCallback onAvatarTap;
   final UserModel user;
   final LocalModel local;
+  final String place;
 
   const AppBarSection({
     super.key,
     required this.onAvatarTap,
     required this.user,
     required this.local,
+    required this.place,
   });
 
   @override
@@ -22,7 +24,7 @@ class AppBarSection extends StatelessWidget {
     return SliverAppBar(
       pinned: true,
       elevation: 0,
-      title: HeaderContent(user: user, local: local),
+      title: HeaderContent(user: user, local: local, place: place),
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(

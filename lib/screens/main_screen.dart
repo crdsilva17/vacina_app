@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
@@ -11,6 +12,7 @@ import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/users_store.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
+import 'package:vacina_app/util/location_service.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
 import 'package:vacina_app/widget/hero_adm_section.dart';
 
@@ -25,6 +27,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final locationService = LocationService();
   final UsersStore store = UsersStore(
     repository: UsersRepository(client: HttpClient()),
   );
@@ -36,6 +39,7 @@ class _MainScreenState extends State<MainScreen> {
     repository: VaccineRepository(client: HttpClient()),
   );
 
+  String city = 'Obtendo localização...';
   UserModel user = UserModel.empty();
   LocalModel local = LocalModel.empty();
   List<VaccineModel> vaccines = [];
@@ -48,6 +52,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _loadUser();
+    loadLocation();
   }
 
   @override
@@ -94,7 +99,12 @@ class _MainScreenState extends State<MainScreen> {
         color: Colors.blue[200],
         child: CustomScrollView(
           slivers: [
-            AppBarSection(onAvatarTap: openDrawer, user: user, local: local),
+            AppBarSection(
+              onAvatarTap: openDrawer,
+              user: user,
+              local: local,
+              place: city,
+            ),
             _body(context),
           ],
         ),
@@ -141,6 +151,30 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       vaccines = vaccineStore.stateList.value;
     });
+  }
+
+  Future<void> loadLocation() async {
+    try {
+      final position = await locationService.getCurrentLocation();
+      final placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      final place = placemarks.first;
+
+      if (!mounted) return;
+
+      setState(() {
+        city = place.locality ?? 'Cidade não encontrada!';
+      });
+    } catch (e) {
+      print(e);
+      if (!mounted) return;
+      setState(() {
+        city = 'Localização indisponível!';
+      });
+    }
   }
 
   void _open(Widget screen) {
