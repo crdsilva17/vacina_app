@@ -115,7 +115,6 @@ class _MainScreenState extends State<MainScreen> {
           Center(
             child: HeroSection(user: user, vaccines: vaccines),
           ),
-          const Center(child: Text('Conteúdo para usuários comuns')),
         ]),
       );
     }
