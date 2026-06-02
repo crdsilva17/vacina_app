@@ -32,6 +32,8 @@ class _AccountScreenState extends State<AccountScreen> {
   );
   final TextEditingController nomeEditController = TextEditingController();
   final TextEditingController emailEditController = TextEditingController();
+  final TextEditingController emailConfirmEditController =
+      TextEditingController();
   final TextEditingController cpfEditController = TextEditingController();
   final TextEditingController dataNscEditController = TextEditingController();
   final TextEditingController postoEditController = TextEditingController();
@@ -39,6 +41,7 @@ class _AccountScreenState extends State<AccountScreen> {
   final TextEditingController senhaConfirmEditController =
       TextEditingController();
   final dropValue = ValueNotifier('');
+  final _formKey = GlobalKey<FormState>();
   final dropOptions = [''];
   final dropOptionsId = [''];
   final double spacing = 30;
@@ -72,171 +75,225 @@ class _AccountScreenState extends State<AccountScreen> {
           child: Column(
             children: [
               SizedBox(height: spacing),
-              // Field for input name
-              SizedBox(
-                child: TextField(
-                  controller: nomeEditController,
-                  decoration: InputDecoration(
-                    labelText: 'Nome',
-                    prefixIcon: Icon(Icons.person_outlined),
-                  ),
-                ),
-              ),
-              SizedBox(height: spacing),
-              // Field for input CPF
-              SizedBox(
-                child: TextFormField(
-                  controller: cpfEditController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [cpfFormatter],
-                  decoration: InputDecoration(
-                    labelText: 'CPF',
-                    prefixIcon: Icon(Icons.badge_outlined),
-                  ),
-                ),
-              ),
-              SizedBox(height: spacing),
-              // Field for date of birth
-              SizedBox(
-                child: TextField(
-                  controller: dataNscEditController,
-                  decoration: InputDecoration(
-                    label: Text('Data de Nascimento'),
-                    prefixIcon: Icon(Icons.badge_outlined, color: Colors.black),
-                    labelStyle: TextStyle(color: Colors.black),
-                  ),
-                  readOnly: true,
-                  onTap: () {
-                    _setDate();
-                  },
-                ),
-              ),
-              SizedBox(height: spacing),
-              // field for list of local
-              ValueListenableBuilder(
-                valueListenable: dropValue,
-                builder: (BuildContext context, String value, _) {
-                  return SizedBox(
-                    child: DropdownButtonFormField<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        label: const Text('Posto de Saúde'),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // Field for input name
+                    SizedBox(
+                      child: TextFormField(
+                        controller: nomeEditController,
+                        decoration: InputDecoration(
+                          labelText: 'Nome',
+                          prefixIcon: Icon(Icons.person_outlined),
                         ),
-                        prefixIcon: Icon(Icons.medical_services_outlined),
+                        validator: (value) {
+                          if (nomeEditController.text.isEmpty) {
+                            return 'Insira seu nome.';
+                          }
+                          return null;
+                        },
                       ),
-                      initialValue: null,
-                      onChanged: (option) => {
-                        dropValue.value = option.toString(),
-                        postoEditController.text = dropValue.value,
-                      },
-                      items: dropOptions
-                          .map(
-                            (op) =>
-                                DropdownMenuItem(value: op, child: Text(op)),
-                          )
-                          .toList(),
                     ),
-                  );
-                },
-              ),
-              SizedBox(height: spacing),
-              // Field for input e-mail
-              SizedBox(
-                child: TextFormField(
-                  textCapitalization: TextCapitalization.none,
-                  keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: emailEditController,
-                  decoration: InputDecoration(
-                    labelText: 'E-mail',
-                    hintText: 'example@email.com',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira um e-mail';
-                    }
-                    // Expressão regular simples para validar e-mail
-                    String pattern =
-                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-                    RegExp regex = RegExp(pattern);
-                    if (!regex.hasMatch(value)) {
-                      return 'Insira um e-mail válido';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+                    SizedBox(height: spacing),
+                    // Field for input CPF
+                    SizedBox(
+                      child: TextFormField(
+                        controller: cpfEditController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [cpfFormatter],
+                        decoration: InputDecoration(
+                          labelText: 'CPF',
+                          prefixIcon: Icon(Icons.badge_outlined),
+                        ),
+                        validator: (value) {
+                          if (cpfEditController.text.isEmpty ||
+                              cpfEditController.text.length < 14) {
+                            return 'CPF Inválido.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(height: spacing),
+                    // Field for date of birth
+                    SizedBox(
+                      child: TextFormField(
+                        controller: dataNscEditController,
+                        decoration: InputDecoration(
+                          label: Text('Data de Nascimento'),
+                          prefixIcon: Icon(
+                            Icons.badge_outlined,
+                            color: Colors.black,
+                          ),
+                          labelStyle: TextStyle(color: Colors.black),
+                        ),
+                        validator: (value) {
+                          if (dataNscEditController.text.isEmpty ||
+                              dataNscEditController.text.length < 10) {
+                            return 'Data Inválida.';
+                          }
+                          return null;
+                        },
+                        readOnly: true,
+                        onTap: () {
+                          _setDate();
+                        },
+                      ),
+                    ),
+                    SizedBox(height: spacing),
+                    // field for list of local
+                    ValueListenableBuilder(
+                      valueListenable: dropValue,
+                      builder: (BuildContext context, String value, _) {
+                        return SizedBox(
+                          child: DropdownButtonFormField<String>(
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Selecione a sua UBS';
+                              }
+                              return null;
+                            },
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              label: const Text('Posto de Saúde'),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              prefixIcon: Icon(Icons.medical_services_outlined),
+                            ),
+                            initialValue: null,
+                            onChanged: (option) => {
+                              dropValue.value = option.toString(),
+                              postoEditController.text = dropValue.value,
+                            },
+                            items: dropOptions
+                                .map(
+                                  (op) => DropdownMenuItem(
+                                    value: op,
+                                    child: Text(op),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: spacing),
+                    // Field for input e-mail
+                    SizedBox(
+                      child: TextFormField(
+                        textCapitalization: TextCapitalization.none,
+                        keyboardType: TextInputType.emailAddress,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: emailEditController,
+                        decoration: InputDecoration(
+                          labelText: 'E-mail',
+                          hintText: 'example@email.com',
+                          prefixIcon: Icon(Icons.email_outlined),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira um e-mail';
+                          }
+                          // Expressão regular simples para validar e-mail
+                          String pattern =
+                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                          RegExp regex = RegExp(pattern);
+                          if (!regex.hasMatch(value)) {
+                            return 'Insira um e-mail válido';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(height: spacing),
+                    // Field for input e-mail
+                    SizedBox(
+                      child: TextFormField(
+                        textCapitalization: TextCapitalization.none,
+                        keyboardType: TextInputType.emailAddress,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: emailConfirmEditController,
+                        decoration: InputDecoration(
+                          labelText: 'E-mail (Confirmação)',
+                          hintText: 'example@email.com',
+                          prefixIcon: Icon(Icons.email_outlined),
+                        ),
+                        validator: (value) {
+                          if (value != emailEditController.text) {
+                            return 'Confirmação de e-mail inválida.\nOs e-mails informados são diferentes.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
 
-              SizedBox(height: spacing),
-              // Field for password
-              SizedBox(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _maskPass = !_maskPass;
-                        });
-                      },
-                      icon: Icon(
-                        _maskPass
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
+                    SizedBox(height: spacing),
+                    // Field for password
+                    SizedBox(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _maskPass = !_maskPass;
+                              });
+                            },
+                            icon: Icon(
+                              _maskPass
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                          ),
+                        ),
+                        validator: (value) {
+                          String pattern =
+                              r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
+                          RegExp regex = RegExp(pattern);
+                          if (value == null || !regex.hasMatch(value)) {
+                            return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
+                          }
+                          return null;
+                        },
+                        controller: senhaEditController,
+                        obscureText: _maskPass,
                       ),
                     ),
-                  ),
-                  validator: (value) {
-                    String pattern =
-                        r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
-                    RegExp regex = RegExp(pattern);
-                    if (value == null || !regex.hasMatch(value)) {
-                      return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
-                    }
-                    return null;
-                  },
-                  controller: senhaEditController,
-                  obscureText: _maskPass,
-                ),
-              ),
 
-              SizedBox(height: spacing),
-              // Field for confirm password
-              SizedBox(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _maskConfirmPass = !_maskConfirmPass;
-                        });
-                      },
-                      icon: Icon(
-                        _maskConfirmPass
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
+                    SizedBox(height: spacing),
+                    // Field for confirm password
+                    SizedBox(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Password (Confirmação)',
+                          prefixIcon: Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _maskConfirmPass = !_maskConfirmPass;
+                              });
+                            },
+                            icon: Icon(
+                              _maskConfirmPass
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value != senhaEditController.text) {
+                            return 'Confirmação de Senha inválida.\nAs senhas informadas são diferentes.';
+                          }
+                          return null;
+                        },
+                        controller: senhaConfirmEditController,
+                        obscureText: _maskConfirmPass,
                       ),
                     ),
-                  ),
-                  validator: (value) {
-                    String pattern =
-                        r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
-                    RegExp regex = RegExp(pattern);
-                    if (value == null || !regex.hasMatch(value)) {
-                      return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
-                    } else if (value != senhaEditController.text) {
-                      return 'Os valores de senha e confirmação \ndevem ser iguais!';
-                    }
-                    return null;
-                  },
-                  controller: senhaConfirmEditController,
-                  obscureText: _maskConfirmPass,
+                  ],
                 ),
               ),
 
@@ -254,6 +311,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
+                    if (!_formKey.currentState!.validate()) return;
+                    _formKey.currentState!.save();
+                    _formKey.currentState!.reset();
                     if (senhaConfirmEditController.text !=
                         senhaEditController.text) {
                       if (!mounted) return;
