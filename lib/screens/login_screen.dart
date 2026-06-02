@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TokenStore token = TokenStore(
     repository: TokenRepository(client: HttpClient()),
   );
-  var _maskPass = false;
+  var _maskPass = true;
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             String pattern =
                                 r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
                             RegExp regex = RegExp(pattern);
-                           /* if (value == null || !regex.hasMatch(value)) {
+                            if (value == null || !regex.hasMatch(value)) {
                               return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
-                            }*/
+                            }
                             return null;
                           },
                           controller: passwordController,

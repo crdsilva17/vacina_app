@@ -36,11 +36,14 @@ class _AccountScreenState extends State<AccountScreen> {
   final TextEditingController dataNscEditController = TextEditingController();
   final TextEditingController postoEditController = TextEditingController();
   final TextEditingController senhaEditController = TextEditingController();
+  final TextEditingController senhaConfirmEditController =
+      TextEditingController();
   final dropValue = ValueNotifier('');
   final dropOptions = [''];
   final dropOptionsId = [''];
   final double spacing = 30;
   var _maskPass = true;
+  var _maskConfirmPass = true;
 
   @override
   void initState() {
@@ -170,7 +173,7 @@ class _AccountScreenState extends State<AccountScreen> {
               SizedBox(height: spacing),
               // Field for password
               SizedBox(
-                child: TextField(
+                child: TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: Icon(Icons.lock_outline),
@@ -187,8 +190,53 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                     ),
                   ),
+                  validator: (value) {
+                    String pattern =
+                        r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
+                    RegExp regex = RegExp(pattern);
+                    if (value == null || !regex.hasMatch(value)) {
+                      return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
+                    }
+                    return null;
+                  },
                   controller: senhaEditController,
                   obscureText: _maskPass,
+                ),
+              ),
+
+              SizedBox(height: spacing),
+              // Field for confirm password
+              SizedBox(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _maskConfirmPass = !_maskConfirmPass;
+                        });
+                      },
+                      icon: Icon(
+                        _maskConfirmPass
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    String pattern =
+                        r'^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$$';
+                    RegExp regex = RegExp(pattern);
+                    if (value == null || !regex.hasMatch(value)) {
+                      return 'Sua senha deve conter no minimo 8 caracteres\nUma letra maiuscula\nUma letra minuscula\nUm caracter especial.';
+                    } else if (value != senhaEditController.text) {
+                      return 'Os valores de senha e confirmação \ndevem ser iguais!';
+                    }
+                    return null;
+                  },
+                  controller: senhaConfirmEditController,
+                  obscureText: _maskConfirmPass,
                 ),
               ),
 
@@ -206,6 +254,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
+                    if (senhaConfirmEditController.text !=
+                        senhaEditController.text) {
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Valor da senha diferente!')),
+                      );
+                      return;
+                    }
                     Map<String, dynamic> map = {
                       'name': nomeEditController.text,
                       'cpf': cpfEditController.text,

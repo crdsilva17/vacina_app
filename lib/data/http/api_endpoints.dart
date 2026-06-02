@@ -1,10 +1,11 @@
-import 'package:flutter/foundation.dart';
-
 class ApiEndpoints {
+  static final String baseUrl = 'https://vacinas-api-production.up.railway.app';
+  /*
   static final String baseUrl = kIsWeb
       ? 'http://localhost:8080'
       : 'http://10.0.2.2:8080';
   //: 'http://192.168.18.123:8080';
+  */
 
   static const String baseCep = 'https://brasilapi.com.br';
 
