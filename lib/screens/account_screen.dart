@@ -271,19 +271,19 @@ class _AccountScreenState extends State<AccountScreen> {
                       'passwd': senhaEditController.text,
                     };
                     RegisterRequest register = RegisterRequest.fromMap(map);
-                    final response = await usersStore.registerUser(register);
+                    await usersStore.registerUser(register);
 
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          response
+                          usersStore.state.value.email.isNotEmpty
                               ? 'Usuario Cadastrado com sucesso!'
-                              : 'Não foi possivel cadastrar o usuário.',
+                              : usersStore.error.value,
                         ),
                       ),
                     );
-                    if (response) {
+                    if (usersStore.state.value.email.isNotEmpty) {
                       push(context, LoginScreen(), replace: true);
                     }
                   },

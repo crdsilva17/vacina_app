@@ -49,11 +49,12 @@ class UsersRepository implements IUsersRepository {
         userModel.email = body['email'];
         userModel.name = body['nome'];
         return userModel;
+      } else if (response.statusCode == 409) {
+        throw Exception(jsonDecode(response.body)["message"]);
       }
-      return UserModel.empty();
+      throw Exception("Error ao registrar usuário.");
     } catch (e) {
-      print(e);
-      return UserModel.empty();
+      rethrow;
     }
   }
 

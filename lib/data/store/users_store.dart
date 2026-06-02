@@ -23,18 +23,15 @@ class UsersStore {
     }
   }
 
-  Future<bool> registerUser(RegisterRequest request) async {
+  Future<void> registerUser(RegisterRequest request) async {
     isLoading.value = true;
     try {
       state.value = await repository.register(request);
-      if (state.value.email.isNotEmpty) {
-        isLoading.value = false;
-        return true;
-      }
+      error.value = '';
     } catch (e) {
-      error.value = 'Error ao registrar usuario: $e';
+      error.value = e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      isLoading.value = false;
     }
-    isLoading.value = false;
-    return false;
   }
 }
