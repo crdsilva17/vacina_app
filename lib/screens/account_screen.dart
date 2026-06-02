@@ -312,8 +312,6 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
-                    _formKey.currentState!.save();
-                    _formKey.currentState!.reset();
                     if (senhaConfirmEditController.text !=
                         senhaEditController.text) {
                       if (!mounted) return;
@@ -346,6 +344,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     if (usersStore.state.value.email.isNotEmpty) {
                       push(context, LoginScreen(), replace: true);
                     }
+                    _formKey.currentState!.save();
+                    _formKey.currentState!.reset();
                   },
                   child: const Text('Cadastrar'),
                 ),
