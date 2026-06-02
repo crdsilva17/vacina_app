@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:intl/intl.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
@@ -11,6 +12,7 @@ import 'package:vacina_app/data/store/vaccine_store.dart';
 import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/users_store.dart';
+import 'package:vacina_app/util/change_name_page.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/util/location_service.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
@@ -75,18 +77,71 @@ class _MainScreenState extends State<MainScreen> {
               decoration: BoxDecoration(color: Colors.blue),
             ),
 
+            const ListTile(
+              title: Text(
+                'Dados Pessoais',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Configurações'),
+              leading: const Icon(Icons.person),
+              title: const Text('Nome'),
+              subtitle: Text(user.name),
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_month_outlined),
+              title: const Text('Data de Nascimento'),
+              subtitle: Text(
+                user.birth.isNotEmpty
+                    ? DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(DateTime.parse(user.birth))
+                    : '',
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_hospital_outlined),
+              title: const Text('UBS'),
+              subtitle: Text(user.localId),
+            ),
+            ListTile(
+              title: const Text('Editar perfil'),
+              trailing: const Icon(Icons.keyboard_arrow_right_outlined),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChangeNamePage(
+                      currentName: user.name,
+                      currentDate: DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(DateTime.parse(user.birth)),
+                      currentUBS: user.localId,
+                    ),
+                  ),
+                );
               },
             ),
+
+            const Divider(),
+
+            const ListTile(
+              title: Text(
+                'Segurança',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.lock),
+              title: const Text('Alterar Senha'),
+            ),
+
+            const Divider(),
 
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Sair'),
-              onTap: () async {
+              onTap: () {
                 store.repository.logout();
                 _close();
                 _open(CheckScreen());
@@ -169,7 +224,6 @@ class _MainScreenState extends State<MainScreen> {
         city = place.locality ?? 'Cidade não encontrada!';
       });
     } catch (e) {
-      print(e);
       if (!mounted) return;
       setState(() {
         city = 'Localização indisponível!';

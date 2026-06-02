@@ -25,7 +25,7 @@ class HeaderContent extends StatelessWidget {
                 'Olá, ${user.name.split(' ')[0]}!',
                 style: TextStyle(fontSize: 18),
               ),
-              Text(place, style: TextStyle(fontSize: 12)),
+              Text(place, style: TextStyle(fontSize: 14)),
             ],
           ),
         ),

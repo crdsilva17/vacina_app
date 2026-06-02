@@ -7,7 +7,6 @@ class NotificationIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Substituir por seu gerenciador de estado (Riverpod, Bloc, etc.)
     final int notificationCount = 3;
 
     return Padding(
