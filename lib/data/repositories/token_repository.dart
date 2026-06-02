@@ -22,17 +22,21 @@ class TokenRepository implements ITokenRepository {
 
   @override
   Future<Map<String, dynamic>> getToken(Map<String, String> map) async {
-    final response = await client.post(uri: urlLogin, body: map);
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      await storage.write(key: 'token', value: 'Bearer ${body['token']}');
-      await storage.write(
-        key: 'validDate',
-        value: '${DateTime.now().add(const Duration(hours: 24))}',
-      );
-      return body;
+    try {
+      final response = await client.post(uri: urlLogin, body: map);
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        await storage.write(key: 'token', value: 'Bearer ${body['token']}');
+        await storage.write(
+          key: 'validDate',
+          value: '${DateTime.now().add(const Duration(hours: 24))}',
+        );
+        return body;
+      }
+      throw Exception('Acesso negado.\nVerifique o e-mail e a senha.');
+    } catch (e) {
+      rethrow;
     }
-    return {};
   }
 
   @override

@@ -334,11 +334,21 @@ class _AccountScreenState extends State<AccountScreen> {
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(
-                          usersStore.state.value.email.isNotEmpty
-                              ? 'Usuario Cadastrado com sucesso!'
-                              : usersStore.error.value,
+                        content: Center(
+                          child: Text(
+                            usersStore.state.value.email.isNotEmpty
+                                ? 'Usuario Cadastrado com sucesso!'
+                                : usersStore.error.value,
+                            style: TextStyle(
+                              color: usersStore.state.value.email.isNotEmpty
+                                  ? const Color.fromARGB(255, 117, 239, 121)
+                                  : const Color.fromARGB(255, 255, 255, 9),
+                            ),
+                          ),
                         ),
+                        backgroundColor: usersStore.state.value.email.isNotEmpty
+                            ? const Color.fromARGB(255, 2, 121, 6)
+                            : const Color.fromARGB(255, 255, 23, 6),
                       ),
                     );
                     if (usersStore.state.value.email.isNotEmpty) {

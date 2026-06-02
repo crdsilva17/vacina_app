@@ -179,7 +179,25 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       final String email = emailController.text;
       final String senha = passwordController.text;
-      await token.getToken({'email': email, 'senha': senha});
+      try {
+        await token.getToken({'email': email, 'senha': senha});
+      } catch (exception) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                exception.toString().replaceFirst("Exception: ", ""),
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 244, 228, 16),
+                ),
+              ),
+            ),
+            backgroundColor: const Color.fromARGB(255, 215, 22, 9),
+          ),
+        );
+        return;
+      }
       setState(() {
         push(context, CheckScreen(), replace: true);
       });
