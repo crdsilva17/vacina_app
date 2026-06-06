@@ -61,7 +61,9 @@ class _LocaisScreenState extends State<LocaisScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue[900],
       ),
-      body: _body(),
+      body: localStore.isLoading.value
+          ? Center(child: CircularProgressIndicator())
+          : _body(),
     );
   }
 

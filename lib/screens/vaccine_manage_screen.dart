@@ -44,7 +44,9 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue[900],
       ),
-      body: _body(),
+      body: store.isLoading.value
+          ? Center(child: CircularProgressIndicator())
+          : _body(),
     );
   }
 
