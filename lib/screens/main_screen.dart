@@ -144,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
               onTap: () {
                 store.repository.logout();
                 _close();
-                _open(CheckScreen());
+                _open(CheckScreen(), true);
               },
             ),
           ],
@@ -231,8 +231,8 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _open(Widget screen) {
-    push(context, screen);
+  void _open(Widget screen, bool repl) {
+    push(context, screen, replace: repl);
   }
 
   void _close() {
