@@ -25,11 +25,11 @@ class HeroAdmSection extends StatelessWidget {
               child: InkWell(
                 onTap: () => push(context, LocaisScreen()),
                 child: CustomButtom(
-                    text: 'Postos de Saúde',
-                    icon: Icons.location_on_outlined,
-                  ),
+                  text: 'Gerenciar UBS',
+                  icon: Icons.location_on_outlined,
                 ),
               ),
+            ),
             const SizedBox(width: 10),
             SizedBox(
               width: screenWidth * 0.45,
@@ -54,7 +54,7 @@ class HeroAdmSection extends StatelessWidget {
               child: InkWell(
                 onTap: () => print('Campanhas'),
                 child: CustomButtom(
-                  text: 'Campanhas',
+                  text: 'Gerenciar Campanhas de Vacinação',
                   icon: Icons.campaign_outlined,
                 ),
               ),
@@ -65,8 +65,8 @@ class HeroAdmSection extends StatelessWidget {
               child: InkWell(
                 onTap: () => print('Gerenciar Usuários'),
                 child: CustomButtom(
-                  text: 'Gerenciar Usuários',
-                  icon: Icons.people_outline,
+                  text: 'Gerenciar Conteúdo Informativo',
+                  icon: Icons.newspaper_outlined,
                 ),
               ),
             ),
