@@ -10,9 +10,18 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<VaccineStatusCard> cards = _getList(vaccines);
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: RepaintBoundary(child: Column(children: [..._getList(vaccines)])),
+      child: RepaintBoundary(
+        child: Column(
+          children: [
+            ...cards.isEmpty
+                ? [Center(child: Text('Sem Vacinas disponíveis'))]
+                : cards,
+          ],
+        ),
+      ),
     );
   }
 

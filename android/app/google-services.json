@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584437281284",
+    "project_id": "notification-app-7c143",
+    "storage_bucket": "notification-app-7c143.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584437281284:android:a17db27477dfc309783b51",
+        "android_client_info": {
+          "package_name": "br.com.municipio.vacinas.vacina_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSXSYjnt4dMaXCRSe16hiCrftTs8zZ12A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
