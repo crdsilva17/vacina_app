@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'notification_badge.dart';
 
 class NotificationIcon extends StatelessWidget {
-  const NotificationIcon({super.key});
+  final int count;
+  const NotificationIcon({super.key, required this.count});
 
   @override
   Widget build(BuildContext context) {
-    final int notificationCount = 3;
+    final int notificationCount = count;
 
     return Padding(
       padding: const EdgeInsets.only(right: 16),
@@ -17,7 +18,7 @@ class NotificationIcon extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
-              Navigator.pushNamed(context, '/notifications');
+              print('Notification');
             },
           ),
           if (notificationCount > 0)

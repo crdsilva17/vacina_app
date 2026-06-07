@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart';
+import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
@@ -30,6 +32,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final locationService = LocationService();
+  int count = 0;
   final UsersStore store = UsersStore(
     repository: UsersRepository(client: HttpClient()),
   );
@@ -55,6 +58,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _loadUser();
     loadLocation();
+    _getCount();
   }
 
   @override
@@ -159,6 +163,7 @@ class _MainScreenState extends State<MainScreen> {
               user: user,
               local: local,
               place: city,
+              count: count,
             ),
             _body(context),
           ],
@@ -208,6 +213,25 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<int> getNotificationCount() async {
+    HttpClient client = HttpClient();
+    FlutterSecureStorage storage = FlutterSecureStorage();
+    String? token = await storage.read(key: 'token');
+
+    Map<String, String> uri = {
+      'base': ApiEndpoints.baseUrl,
+      'endpoint': ApiEndpoints.count,
+    };
+
+    final response = await client.getAuth(uri: uri, token: token!);
+    try {
+      print(response.body);
+      return int.parse(response.body);
+    } catch (e) {
+      return 0;
+    }
+  }
+
   Future<void> loadLocation() async {
     try {
       final position = await locationService.getCurrentLocation();
@@ -233,6 +257,10 @@ class _MainScreenState extends State<MainScreen> {
 
   void _open(Widget screen, bool repl) {
     push(context, screen, replace: repl);
+  }
+
+  void _getCount() async {
+    count = await getNotificationCount();
   }
 
   void _close() {

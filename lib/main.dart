@@ -5,7 +5,7 @@ import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/util/my_custom_scroll_behavior.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
@@ -13,7 +13,6 @@ void main() async {
   FirebaseMessaging.onMessage.listen((message) {
     print(message.notification?.title);
   });
-
   runApp(const MyApp());
 }
 

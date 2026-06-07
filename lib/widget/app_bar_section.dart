@@ -10,6 +10,7 @@ class AppBarSection extends StatelessWidget {
   final UserModel user;
   final LocalModel local;
   final String place;
+  final int count;
 
   const AppBarSection({
     super.key,
@@ -17,6 +18,7 @@ class AppBarSection extends StatelessWidget {
     required this.user,
     required this.local,
     required this.place,
+    required this.count,
   });
 
   @override
@@ -37,7 +39,7 @@ class AppBarSection extends StatelessWidget {
           ),
         ),
       ),
-      actions: const [NotificationIcon()],
+      actions: [NotificationIcon(count: count)],
     );
   }
 }
