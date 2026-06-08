@@ -8,10 +8,12 @@ import 'notification_badge.dart';
 class NotificationIcon extends StatelessWidget {
   final int count;
   final FlutterSecureStorage storage;
+  final Function() setState;
   const NotificationIcon({
     super.key,
     required this.count,
     required this.storage,
+    required this.setState,
   });
 
   @override
@@ -32,7 +34,7 @@ class NotificationIcon extends StatelessWidget {
 
               final notifications = await NotificationService()
                   .getNotifications(token);
-
+              if (!context.mounted) return;
               _showNotifications(context, notifications, token);
             },
           ),
@@ -48,16 +50,16 @@ class NotificationIcon extends StatelessWidget {
   }
 
   void _showNotifications(
-    BuildContext context,
+    BuildContext parentContext,
     List<NotificationModel> notifications,
     String accessToken,
   ) {
     showModalBottomSheet(
-      context: context,
+      context: parentContext,
       isScrollControlled: true,
       builder: (_) {
         return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(parentContext).size.height * 0.7,
 
           child: ListView.builder(
             itemCount: notifications.length,
@@ -83,7 +85,7 @@ class NotificationIcon extends StatelessWidget {
                 onTap: () async {
                   Navigator.pop(context);
 
-                  await _showDetail(context, notification, accessToken);
+                  await _showDetail(parentContext, notification, accessToken);
                 },
               );
             },
@@ -99,6 +101,7 @@ class NotificationIcon extends StatelessWidget {
     String accessToken,
   ) async {
     await NotificationService().markAsRead(notification.id, accessToken);
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (_) {
@@ -111,6 +114,7 @@ class NotificationIcon extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                setState();
               },
               child: const Text("Fechar"),
             ),

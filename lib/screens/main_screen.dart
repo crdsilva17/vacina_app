@@ -168,6 +168,7 @@ class _MainScreenState extends State<MainScreen> {
               place: city,
               count: count,
               storage: storage,
+              setState: _getCount,
             ),
             _body(context),
           ],
@@ -248,6 +249,7 @@ class _MainScreenState extends State<MainScreen> {
     final String? token = await storage.read(key: 'token');
     if (token == null) return;
     count = await notificationService.getCount(token);
+    setState(() {});
   }
 
   void _close() {

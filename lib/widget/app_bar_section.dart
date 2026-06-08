@@ -13,6 +13,7 @@ class AppBarSection extends StatelessWidget {
   final String place;
   final int count;
   final FlutterSecureStorage storage;
+  final Function() setState;
 
   const AppBarSection({
     super.key,
@@ -22,6 +23,7 @@ class AppBarSection extends StatelessWidget {
     required this.place,
     required this.count,
     required this.storage,
+    required this.setState,
   });
 
   @override
@@ -42,7 +44,9 @@ class AppBarSection extends StatelessWidget {
           ),
         ),
       ),
-      actions: [NotificationIcon(count: count, storage: storage)],
+      actions: [
+        NotificationIcon(count: count, storage: storage, setState: setState),
+      ],
     );
   }
 }
