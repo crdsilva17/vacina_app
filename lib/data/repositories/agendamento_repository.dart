@@ -52,4 +52,28 @@ class AgendamentoRepository {
       throw Exception('Erro ao realizar agendamento');
     }
   }
+
+  Future<void> cancelar(String vacinaId, String token) async {
+    final url = Uri.parse('$baseUrl/api/v1/agendamentos/cancelar/$vacinaId');
+
+    final response = await http.put(url, headers: {'Authorization': token});
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao cancelar agendamento');
+    }
+  }
+
+  Future<bool> isScheduled(String vacinaId, String token) async {
+    final url = Uri.parse(
+      '$baseUrl/api/v1/agendamentos/vacina/$vacinaId/agendado',
+    );
+
+    final response = await http.get(url, headers: {'Authorization': token});
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao verificar agendamento');
+    }
+
+    return jsonDecode(response.body);
+  }
 }
