@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:vacina_app/data/dto/register_request.dart';
+import 'package:vacina_app/data/dto/user_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/user_model.dart';
 
@@ -10,6 +11,7 @@ import '../http/api_endpoints.dart';
 abstract class IUsersRepository {
   Future<UserModel> getUser();
   Future<UserModel> register(RegisterRequest request);
+  Future<void> update(UserRequest request);
   Future<void> logout();
 }
 
@@ -62,5 +64,19 @@ class UsersRepository implements IUsersRepository {
   Future<void> logout() async {
     await storage.delete(key: 'token');
     await storage.delete(key: 'validDate');
+  }
+
+  @override
+  Future<UserModel> update(UserRequest request) async {
+    final String? token = await storage.read(key: 'token');
+    UserModel userModel = UserModel.empty();
+    if (token == null) return userModel;
+    final response = await client.put(
+      uri: url,
+      token: token,
+      body: request.toMap(),
+    );
+    userModel = UserModel.fromJson(jsonDecode(response.body));
+    return userModel;
   }
 }

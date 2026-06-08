@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vacina_app/data/dto/user_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
+import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/store/local_store.dart';
+import 'package:vacina_app/data/store/users_store.dart';
+import 'package:vacina_app/screens/main_screen.dart';
+import 'package:vacina_app/util/custom_navigate.dart';
 
 class ChangeNamePage extends StatefulWidget {
   final String currentName;
   final String currentDate;
   final String currentUBS;
+  final String email;
 
   const ChangeNamePage({
     super.key,
     required this.currentName,
     required this.currentDate,
     required this.currentUBS,
+    required this.email,
   });
 
   @override
@@ -24,6 +31,7 @@ class _ChangeNamePageState extends State<ChangeNamePage> {
   late TextEditingController controllerName;
   late TextEditingController controllerDate;
   late TextEditingController controllerUBS;
+  late TextEditingController controllerEmail;
   final _formKey = GlobalKey<FormState>();
   final dropOptions = [''];
   final dropOptionsId = [''];
@@ -39,6 +47,7 @@ class _ChangeNamePageState extends State<ChangeNamePage> {
     controllerName = TextEditingController(text: widget.currentName);
     controllerDate = TextEditingController(text: widget.currentDate);
     controllerUBS = TextEditingController(text: widget.currentUBS);
+    controllerEmail = TextEditingController(text: widget.email);
     _getlocalId();
   }
 
@@ -121,7 +130,13 @@ class _ChangeNamePageState extends State<ChangeNamePage> {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: save, child: const Text('Salvar')),
+            ElevatedButton(
+              onPressed: () {
+                save();
+                setState(() {});
+              },
+              child: const Text('Salvar'),
+            ),
           ],
         ),
       ),
@@ -130,9 +145,25 @@ class _ChangeNamePageState extends State<ChangeNamePage> {
 
   Future<void> save() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      _formKey.currentState!.reset();
+      final DateTime birthDate = DateFormat(
+        'dd/MM/yyyy',
+      ).parse(controllerDate.text);
+
+      Map<String, dynamic> map = {
+        'email': controllerEmail.text,
+        'name': controllerName.text,
+        'local': controllerUBS.text,
+        'birth': DateFormat('yyyy-MM-dd').format(birthDate),
+      };
+      UserRequest userRequest = UserRequest.fromMap(map);
+      UsersStore usersStore = UsersStore(
+        repository: UsersRepository(client: HttpClient()),
+      );
+      await usersStore.update(userRequest);
     }
+    if (!mounted) return;
+    Navigator.pop(context);
+    push(context, MainScreen(), replace: true);
   }
 
   Future<void> _getlocalId() async {

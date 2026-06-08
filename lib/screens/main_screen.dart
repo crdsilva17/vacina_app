@@ -114,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
             ListTile(
               title: const Text('Editar perfil'),
               trailing: const Icon(Icons.keyboard_arrow_right_outlined),
-              onTap: () {
+              onTap: () async {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -124,6 +124,7 @@ class _MainScreenState extends State<MainScreen> {
                         'dd/MM/yyyy',
                       ).format(DateTime.parse(user.birth)),
                       currentUBS: user.localId,
+                      email: user.email,
                     ),
                   ),
                 );

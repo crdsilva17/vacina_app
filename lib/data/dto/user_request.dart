@@ -2,7 +2,7 @@ class UserRequest {
   final String email;
   final String name;
   final String local;
-  final DateTime birth;
+  final String birth;
 
   const UserRequest({
     required this.email,
@@ -18,5 +18,9 @@ class UserRequest {
       local: map['local'],
       birth: map['birth'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {'email': email, 'nome': name, 'local': local, 'dataNscto': birth};
   }
 }
