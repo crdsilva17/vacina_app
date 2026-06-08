@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:vacina_app/data/http/api_endpoints.dart';
+import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
+import 'package:vacina_app/data/repositories/agendamento_repository.dart';
+import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/widget/_primary_button.dart';
 import 'package:vacina_app/widget/secundary_button.dart';
 
@@ -104,7 +110,17 @@ class VaccineStatusCard extends StatelessWidget {
                   child: PrimaryButton(
                     label: 'Agendar agora',
                     icon: Icons.calendar_month,
-                    onPressed: () {},
+                    onPressed: () async {
+                      final data = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 90)),
+                      );
+
+                      if (data == null) return;
+
+                      await _selecionarHorario(context, data);
+                    },
                   ),
                 ),
                 SizedBox(width: 12),
@@ -211,5 +227,81 @@ class VaccineStatusCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _selecionarHorario(BuildContext context, DateTime data) async {
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+
+    final token = await storage.read(key: 'token');
+
+    if (token == null) return;
+
+    LocalModel local = await LocalRepository(
+      client: HttpClient(),
+    ).getLocalByNome(vaccineModel.posto);
+
+    final horarios = await AgendamentoRepository(
+      baseUrl: ApiEndpoints.baseUrl,
+    ).getHorariosDisponiveis(local.id, data, token);
+
+    if (!context.mounted) return;
+    final parentContext = context;
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return ListView.builder(
+          itemCount: horarios.length,
+
+          itemBuilder: (context, index) {
+            final horario = horarios[index];
+
+            return ListTile(
+              leading: const Icon(Icons.access_time),
+
+              title: Text(horario),
+
+              onTap: () async {
+                Navigator.pop(context);
+
+                await _agendar(parentContext, data, horario);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _agendar(
+    BuildContext context,
+    DateTime data,
+    String horario,
+  ) async {
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+
+    try {
+      final token = await storage.read(key: 'token');
+
+      if (token == null) return;
+      LocalModel local = await LocalRepository(
+        client: HttpClient(),
+      ).getLocalByNome(vaccineModel.posto);
+
+      await AgendamentoRepository(
+        baseUrl: ApiEndpoints.baseUrl,
+      ).agendar(vaccineModel.id, local.id, data, horario, token);
+
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Agendamento realizado com sucesso')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 }
