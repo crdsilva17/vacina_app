@@ -104,9 +104,7 @@ class VaccineStatusCard extends StatelessWidget {
                   child: PrimaryButton(
                     label: 'Agendar agora',
                     icon: Icons.calendar_month,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/schedule');
-                    },
+                    onPressed: () {},
                   ),
                 ),
                 SizedBox(width: 12),
@@ -115,7 +113,95 @@ class VaccineStatusCard extends StatelessWidget {
                     label: 'Saiba mais',
                     icon: Icons.info_outline,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/details');
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (_) {
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            width: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      vaccineModel.name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 22.0),
+                                  Text(
+                                    'Descrição',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(vaccineModel.description),
+                                  Text(
+                                    'Fabricante',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(vaccineModel.manufacturer),
+                                  Text(
+                                    'Data de Fabricação',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(vaccineModel.manufactureDate),
+                                  Text(
+                                    'Validade',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(vaccineModel.expiryDate),
+                                  Text(
+                                    'Doses',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(vaccineModel.doses),
+                                  Text(
+                                    'Idade mínima',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    vaccineModel.minRecommendedAge.toString(),
+                                  ),
+                                  Text(
+                                    'Idade máxima',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    vaccineModel.maxRecommendedAge.toString(),
+                                  ),
+                                  Text(
+                                    'Número do Lote',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(vaccineModel.lot),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     },
                   ),
                 ),
