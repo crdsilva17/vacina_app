@@ -25,6 +25,8 @@ abstract class IHttpClient {
     required Map<String, dynamic> body,
   });
 
+  Future patch({required Map<String, String> uri, required String token});
+
   Future delete({required String token, required Map<String, String> uri});
 }
 
@@ -98,6 +100,22 @@ class HttpClient implements IHttpClient {
       );
     } catch (e) {
       print(e);
+    }
+  }
+
+  @override
+  Future<void> patch({
+    required Map<String, String> uri,
+    required String token,
+  }) async {
+    try {
+      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
+      await client.patch(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (ex) {
+      Exception(ex);
     }
   }
 

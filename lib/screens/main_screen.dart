@@ -17,6 +17,7 @@ import 'package:vacina_app/data/store/users_store.dart';
 import 'package:vacina_app/util/change_name_page.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/util/location_service.dart';
+import 'package:vacina_app/util/notification_service.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
 import 'package:vacina_app/widget/hero_adm_section.dart';
 
@@ -32,6 +33,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final locationService = LocationService();
+  final FlutterSecureStorage storage = FlutterSecureStorage();
   int count = 0;
   final UsersStore store = UsersStore(
     repository: UsersRepository(client: HttpClient()),
@@ -39,6 +41,8 @@ class _MainScreenState extends State<MainScreen> {
   final LocalStore localStore = LocalStore(
     repository: LocalRepository(client: HttpClient()),
   );
+
+  final NotificationService notificationService = NotificationService();
 
   final VaccineStore vaccineStore = VaccineStore(
     repository: VaccineRepository(client: HttpClient()),
@@ -164,6 +168,7 @@ class _MainScreenState extends State<MainScreen> {
               local: local,
               place: city,
               count: count,
+              storage: storage,
             ),
             _body(context),
           ],
@@ -213,25 +218,6 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  Future<int> getNotificationCount() async {
-    HttpClient client = HttpClient();
-    FlutterSecureStorage storage = FlutterSecureStorage();
-    String? token = await storage.read(key: 'token');
-
-    Map<String, String> uri = {
-      'base': ApiEndpoints.baseUrl,
-      'endpoint': ApiEndpoints.count,
-    };
-
-    final response = await client.getAuth(uri: uri, token: token!);
-    try {
-      print(response.body);
-      return int.parse(response.body);
-    } catch (e) {
-      return 0;
-    }
-  }
-
   Future<void> loadLocation() async {
     try {
       final position = await locationService.getCurrentLocation();
@@ -260,7 +246,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _getCount() async {
-    count = await getNotificationCount();
+    final String? token = await storage.read(key: 'token');
+    if (token == null) return;
+    count = await notificationService.getCount(token);
   }
 
   void _close() {

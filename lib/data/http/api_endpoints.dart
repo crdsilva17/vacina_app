@@ -15,8 +15,11 @@ class ApiEndpoints {
   static const String user = '/api/v1/usuarios';
   static const String vacinas = '/api/v1/vacinas';
   static const String registerToken = '/api/v1/device-token';
+  static const String notifications = '/api/v1/notifications';
   static const String count = '/api/v1/notifications/count';
 
+  static String setNotificationRead(String id) =>
+      '/api/v1/notifications/$id/read';
   static String getLocalById(String id) => '/api/v1/locais/id?id=$id';
   static String getLocalByNome(String nome) => '/api/v1/locais/nome?nome=$nome';
 

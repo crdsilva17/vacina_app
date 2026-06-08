@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
 
@@ -11,6 +12,7 @@ class AppBarSection extends StatelessWidget {
   final LocalModel local;
   final String place;
   final int count;
+  final FlutterSecureStorage storage;
 
   const AppBarSection({
     super.key,
@@ -19,6 +21,7 @@ class AppBarSection extends StatelessWidget {
     required this.local,
     required this.place,
     required this.count,
+    required this.storage,
   });
 
   @override
@@ -39,7 +42,7 @@ class AppBarSection extends StatelessWidget {
           ),
         ),
       ),
-      actions: [NotificationIcon(count: count)],
+      actions: [NotificationIcon(count: count, storage: storage)],
     );
   }
 }
