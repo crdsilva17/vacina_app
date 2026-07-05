@@ -1,3 +1,4 @@
+import 'package:device_calendar_plus/device_calendar_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,6 +10,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+
+  DeviceCalendar.instance.autoPermissions = AutoPermissionMode.full;
 
   FirebaseMessaging.onMessage.listen((message) {
     print(message.notification?.title);

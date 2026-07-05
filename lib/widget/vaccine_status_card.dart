@@ -8,6 +8,7 @@ import 'package:vacina_app/data/repositories/agendamento_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/widget/_primary_button.dart';
 import 'package:vacina_app/widget/secundary_button.dart';
+import 'package:device_calendar_plus/device_calendar_plus.dart';
 
 class VaccineStatusCard extends StatefulWidget {
   final VaccineModel vaccineModel;
@@ -326,6 +327,43 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
         client: HttpClient(),
       ).getLocalByNome(widget.vaccineModel.posto);
 
+      // Create appointment in calendar
+      DateTime appointment = DateTime(
+        data.year,
+        data.month,
+        data.day,
+        int.parse(horario.split(":")[0]),
+        int.parse(horario.split(":")[1]),
+        int.parse(horario.split(":")[2]),
+      );
+
+      final plugin = DeviceCalendar.instance;
+      final listCalendarId = await plugin.listCalendars();
+      String? calendarId = '0';
+
+      for (final c in listCalendarId) {
+        if (c.isPrimary) {
+          calendarId = c.id;
+          break;
+        }
+      }
+
+      // 1. Permissions - either ask for them yourself...
+      final status = await plugin.requestPermissions();
+      if (status != CalendarPermissionStatus.granted) return;
+
+      final eventId = await plugin.createEvent(
+        calendarId: calendarId,
+        title: 'Vacinação',
+        description: 'Agendamento para vacina ${widget.vaccineModel.name}',
+        location:
+            '${local.rua} ${local.numero}, ${local.bairro} - ${local.cidade} ${local.estado} - ${local.cep}; ${local.name}',
+        startDate: appointment,
+        endDate: appointment.add(const Duration(minutes: 30)),
+        reminders: [Duration(hours: 1)],
+      );
+      await storage.write(key: widget.vaccineModel.id, value: eventId);
+
       await AgendamentoRepository(
         baseUrl: ApiEndpoints.baseUrl,
       ).agendar(widget.vaccineModel.id, local.id, data, horario, token);
@@ -374,6 +412,16 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
       final token = await storage.read(key: 'token');
 
       if (token == null) return;
+
+      final id = await storage.read(key: widget.vaccineModel.id);
+      final plugin = DeviceCalendar.instance;
+      final event = await plugin.getEvent(id!);
+
+      // 1. Permissions - either ask for them yourself...
+
+      final status = await plugin.requestPermissions();
+      if (status != CalendarPermissionStatus.granted) return;
+      await plugin.deleteEvent(eventId: event!.eventId);
 
       await AgendamentoRepository(
         baseUrl: ApiEndpoints.baseUrl,

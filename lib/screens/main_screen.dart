@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
@@ -16,6 +15,7 @@ import 'package:vacina_app/data/store/users_store.dart';
 import 'package:vacina_app/util/change_name_page.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/util/location_service.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:vacina_app/util/notification_service.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
 import 'package:vacina_app/widget/hero_adm_section.dart';
