@@ -144,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
               leading: const Icon(Icons.lock),
               title: const Text('Alterar Senha'),
               onTap: () {
-                push(context, ChangePassScreen());
+                push(context, ChangePassScreen(email: user.email));
               },
             ),
 

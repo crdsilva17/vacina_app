@@ -4,7 +4,8 @@ import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/store/users_store.dart';
 
 class ChangePassScreen extends StatefulWidget {
-  const ChangePassScreen({super.key});
+  final String email;
+  const ChangePassScreen({super.key, required this.email});
 
   @override
   State<StatefulWidget> createState() => _ChangePassScreenState();
@@ -145,8 +146,9 @@ class _ChangePassScreenState extends State<ChangePassScreen> {
                         if (!_formKey.currentState!.validate()) return;
 
                         Map<String, String> map = {
-                          'oldPass': passAtual.text,
-                          'newPass': passNova.text,
+                          'email': widget.email,
+                          'oldPassword': passAtual.text,
+                          'newPassword': passNova.text,
                         };
 
                         await usersStore.changePassword(map);
