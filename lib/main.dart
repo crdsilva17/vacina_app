@@ -1,5 +1,6 @@
 import 'package:device_calendar_plus/device_calendar_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vacina_app/screens/check_screen.dart';
@@ -8,14 +9,15 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
 
-  await Firebase.initializeApp();
+    DeviceCalendar.instance.autoPermissions = AutoPermissionMode.full;
 
-  DeviceCalendar.instance.autoPermissions = AutoPermissionMode.full;
-
-  FirebaseMessaging.onMessage.listen((message) {
-    print(message.notification?.title);
-  });
+    FirebaseMessaging.onMessage.listen((message) {
+      print(message.notification?.title);
+    });
+  }
   runApp(const MyApp());
 }
 
