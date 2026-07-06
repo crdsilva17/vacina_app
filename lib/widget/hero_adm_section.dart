@@ -66,7 +66,7 @@ class HeroAdmSection extends StatelessWidget {
             SizedBox(
               width: screenWidth * 0.45,
               child: InkWell(
-                onTap: () => print('Gerenciar Usuários'),
+                onTap: () => print('Conteudo Informativo'),
                 child: CustomButtom(
                   text: 'Gerenciar Conteúdo Informativo',
                   icon: Icons.newspaper_outlined,
