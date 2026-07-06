@@ -1,13 +1,17 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class CustomButtom extends StatelessWidget {
   final String text;
   final IconData icon;
+  final bool isEnabled;
 
   const CustomButtom({
     super.key,
     required this.text,
     required this.icon,
+    required this.isEnabled,
   });
 
   @override
@@ -18,7 +22,7 @@ class CustomButtom extends StatelessWidget {
         width: 170,
         height: 170,
         decoration: BoxDecoration(
-          color: Colors.blue[800],
+          color: isEnabled ? Colors.blue[800] : Colors.blueGrey,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -30,7 +34,8 @@ class CustomButtom extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                text, textAlign: TextAlign.center,
+                text,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,

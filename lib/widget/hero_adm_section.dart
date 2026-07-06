@@ -27,6 +27,7 @@ class HeroAdmSection extends StatelessWidget {
                 child: CustomButtom(
                   text: 'Gerenciar UBS',
                   icon: Icons.location_on_outlined,
+                  isEnabled: true,
                 ),
               ),
             ),
@@ -40,6 +41,7 @@ class HeroAdmSection extends StatelessWidget {
                 child: CustomButtom(
                   text: 'Gerenciar Vacinas',
                   icon: Icons.vaccines,
+                  isEnabled: true,
                 ),
               ),
             ),
@@ -56,6 +58,7 @@ class HeroAdmSection extends StatelessWidget {
                 child: CustomButtom(
                   text: 'Gerenciar Campanhas de Vacinação',
                   icon: Icons.campaign_outlined,
+                  isEnabled: false,
                 ),
               ),
             ),
@@ -67,6 +70,7 @@ class HeroAdmSection extends StatelessWidget {
                 child: CustomButtom(
                   text: 'Gerenciar Conteúdo Informativo',
                   icon: Icons.newspaper_outlined,
+                  isEnabled: false,
                 ),
               ),
             ),
