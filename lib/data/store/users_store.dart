@@ -55,7 +55,7 @@ class UsersStore {
       state.value = await repository.changePassword(map);
       error.value = '';
     } catch (e) {
-      error.value = e.toString().replaceFirst('Exception: ', '');
+      error.value = "Alteração de Senha Falhou!";
     } finally {
       isLoading.value = false;
     }
