@@ -3,7 +3,7 @@ name: Build Flutter Web
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -33,5 +33,5 @@ jobs:
         with:
           personal_token: ${{ secrets.WEBIMUNE_TOKEN }}
           external_repository: crdsilva17/webImune
-          publish_branch: main
+          publish_branch: master
           publish_dir: build/web
