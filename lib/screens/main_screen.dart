@@ -9,6 +9,7 @@ import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
 import 'package:vacina_app/data/store/vaccine_store.dart';
+import 'package:vacina_app/screens/change_pass_screen.dart';
 import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/users_store.dart';
@@ -142,6 +143,9 @@ class _MainScreenState extends State<MainScreen> {
             ListTile(
               leading: const Icon(Icons.lock),
               title: const Text('Alterar Senha'),
+              onTap: () {
+                push(context, ChangePassScreen());
+              },
             ),
 
             const Divider(),

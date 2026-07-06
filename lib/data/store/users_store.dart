@@ -48,4 +48,16 @@ class UsersStore {
       isLoading.value = false;
     }
   }
+
+  Future<void> changePassword(Map<String, String> map) async {
+    isLoading.value = true;
+    try {
+      state.value = await repository.changePassword(map);
+      error.value = '';
+    } catch (e) {
+      error.value = e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

@@ -13,6 +13,7 @@ abstract class IUsersRepository {
   Future<UserModel> register(RegisterRequest request);
   Future<void> update(UserRequest request);
   Future<void> logout();
+  Future<UserModel> changePassword(Map<String, String> body);
 }
 
 class UsersRepository implements IUsersRepository {
@@ -76,6 +77,18 @@ class UsersRepository implements IUsersRepository {
       token: token,
       body: request.toMap(),
     );
+    userModel = UserModel.fromJson(jsonDecode(response.body));
+    return userModel;
+  }
+
+  @override
+  Future<UserModel> changePassword(Map<String, String> body) async {
+    final String? token = await storage.read(key: 'token');
+    UserModel userModel = UserModel.empty();
+    if (token == null) return userModel;
+    url['endpoint'] = ApiEndpoints.change;
+
+    final response = await client.put(token: token, uri: url, body: body);
     userModel = UserModel.fromJson(jsonDecode(response.body));
     return userModel;
   }

@@ -15,6 +15,7 @@ class ApiEndpoints {
   static const String user = '/api/v1/usuarios';
   static const String vacinas = '/api/v1/vacinas';
   static const String registerToken = '/api/v1/device-token';
+  static const String change = '/api/v1/change-password';
   static const String notifications = '/api/v1/notifications';
   static const String count = '/api/v1/notifications/count';
 
