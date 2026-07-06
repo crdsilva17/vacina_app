@@ -28,6 +28,42 @@ jobs:
       - name: Build Web
         run: flutter build web
 
+      - name: Injetar arquivos do Servidor Node para o Railway
+        run: |
+          cd build/web
+          
+          # Cria o package.json necessário para o Railway ativar o Node.js
+          echo '{
+            "name": "flutter-web-railway",
+            "version": "1.0.0",
+            "main": "server.js",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "dependencies": {
+              "express": "^4.19.2"
+            }
+          }' > package.json
+          
+          # Cria o servidor que entrega os arquivos e corrige o erro do WebAssembly
+          echo "const express = require('express');
+          const path = require('path');
+          const app = express();
+          const PORT = process.env.PORT || 3000;
+          
+          app.use((req, res, next) => {
+              res.setHeader('Content-Security-Policy', \"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https: *;\");
+              next();
+          });
+          
+          app.use(express.static(__dirname));
+          
+          app.get('*', (req, res) => {
+              res.sendFile(path.join(__dirname, 'index.html'));
+          });
+          
+          app.listen(PORT, () => console.log('Servidor rodando na porta ' + PORT));" > server.js
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -35,3 +71,4 @@ jobs:
           external_repository: crdsilva17/webImune
           publish_branch: main
           publish_dir: build/web
+          keep_files: false
