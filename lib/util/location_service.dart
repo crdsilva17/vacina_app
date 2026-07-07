@@ -31,8 +31,20 @@ class LocationService {
     }
 
     // Obtém posição atual
-    return await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    );
+    try {
+      return await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(
+            seconds: 10,
+          ), // Evita travar o app se o GPS demorar
+        ),
+      );
+    } catch (e) {
+      // Backup: busca a última posição conhecida se o GPS falhar por timeout
+      final lastPosition = await Geolocator.getLastKnownPosition();
+      if (lastPosition != null) return lastPosition;
+      rethrow;
+    }
   }
 }

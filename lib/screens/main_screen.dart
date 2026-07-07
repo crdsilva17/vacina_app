@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
@@ -20,6 +21,10 @@ import 'package:geocoding/geocoding.dart';
 import 'package:vacina_app/util/notification_service.dart';
 import 'package:vacina_app/widget/app_bar_section.dart';
 import 'package:vacina_app/widget/hero_adm_section.dart';
+
+import 'package:flutter/foundation.dart'; // Obrigatório para usar kIsWeb
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../widget/hero_section.dart';
 
@@ -223,6 +228,7 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  /*
   Future<void> loadLocation() async {
     try {
       final position = await locationService.getCurrentLocation();
@@ -241,6 +247,55 @@ class _MainScreenState extends State<MainScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
+        city = 'Localização indisponível!';
+      });
+    }
+  }
+  */
+
+  Future<void> loadLocation() async {
+    try {
+      final position = await locationService.getCurrentLocation();
+      String? detectedCity;
+
+      if (kIsWeb) {
+        // Solução para Web: Geocodificação via API HTTP gratuita (Nominatim)
+        final url = Uri.parse(ApiEndpoints.openStreetMap(position.longitude));
+
+        // O Nominatim exige um User-Agent válido no cabeçalho
+        final response = await http.get(
+          url,
+          headers: {'User-Agent': 'MeuAppFlutter'},
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          final address = data['address'] ?? {};
+          detectedCity =
+              address['city'] ??
+              address['town'] ??
+              address['village'] ??
+              address['suburb'];
+        }
+      } else {
+        // Solução para Android APK (Usa o pacote geocoding nativo)
+        final placemarks = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+        detectedCity = placemarks.first.locality;
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+        city = detectedCity ?? 'Cidade não encontrada!';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        // Exibe o erro real no console para ajudar no seu debug
+        print('Erro ao carregar localização: $e');
         city = 'Localização indisponível!';
       });
     }

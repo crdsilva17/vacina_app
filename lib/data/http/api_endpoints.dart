@@ -38,4 +38,7 @@ class ApiEndpoints {
   static String vacinaByName(String name) => '/api/v1/vacinas/$name';
 
   static String getCep(String cep) => '/api/cep/v1/$cep';
+
+  static String openStreetMap(double position) =>
+      'https://openstreetmap.org{position.latitude}&lon=$position';
 }
