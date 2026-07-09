@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/screens/locais_screen.dart';
 import 'package:vacina_app/screens/vaccine_manage_screen.dart';
+import 'package:vacina_app/util/app_logger.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/widget/custom_buttom.dart';
 
@@ -54,7 +55,7 @@ class HeroAdmSection extends StatelessWidget {
             SizedBox(
               width: screenWidth * 0.45,
               child: InkWell(
-                onTap: () => print('Campanhas'),
+                onTap: () => ('Campanhas'), //TODO Chamar tela de campanha,
                 child: CustomButtom(
                   text: 'Gerenciar Campanhas de Vacinação',
                   icon: Icons.campaign_outlined,
@@ -66,7 +67,13 @@ class HeroAdmSection extends StatelessWidget {
             SizedBox(
               width: screenWidth * 0.45,
               child: InkWell(
-                onTap: () => print('Conteudo Informativo'),
+                onTap:
+                    () => // TODO Tela de Conteudo informativo.
+                    AppLogger.log(
+                      'Tela de Informação',
+                      name: 'http_client',
+                      error: '',
+                    ),
                 child: CustomButtom(
                   text: 'Gerenciar Conteúdo Informativo',
                   icon: Icons.newspaper_outlined,

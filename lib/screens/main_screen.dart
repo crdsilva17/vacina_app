@@ -17,6 +17,7 @@ import 'package:vacina_app/screens/change_pass_screen.dart';
 import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/users_store.dart';
+import 'package:vacina_app/util/app_logger.dart';
 import 'package:vacina_app/util/change_name_page.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 import 'package:vacina_app/util/location_service.dart';
@@ -338,11 +339,16 @@ class _MainScreenState extends State<MainScreen> {
       setState(() {
         city = detectedCity ?? 'Cidade não encontrada!';
       });
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (!mounted) return;
       setState(() {
         // Exibe o erro real no console para ajudar no seu debug
-        print('Erro ao carregar localização: $e');
+        AppLogger.log(
+          'Erro ao carregar localização',
+          name: 'main_screen',
+          error: e,
+          stackTrace: stackTrace,
+        );
         city = 'Localização indisponível!';
       });
     }

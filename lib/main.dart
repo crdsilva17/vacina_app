@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vacina_app/screens/check_screen.dart';
+import 'package:vacina_app/util/app_logger.dart';
 import 'package:vacina_app/util/my_custom_scroll_behavior.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -15,7 +16,11 @@ Future<void> main() async {
     DeviceCalendar.instance.autoPermissions = AutoPermissionMode.full;
 
     FirebaseMessaging.onMessage.listen((message) {
-      print(message.notification?.title);
+      AppLogger.log(
+        'Notificação titulo: ${message.notification?.title}',
+        name: 'main',
+        error: '',
+      );
     });
   }
   runApp(const MyApp());

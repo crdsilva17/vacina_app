@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:vacina_app/util/app_logger.dart';
 
 abstract class IHttpClient {
   Future get({required Map<String, String> uri});
@@ -38,8 +39,13 @@ class HttpClient implements IHttpClient {
     var url = Uri.parse("${uri['base']}${uri['endpoint']}");
     try {
       return await client.get(url);
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição GET para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
     return null;
   }
@@ -49,8 +55,8 @@ class HttpClient implements IHttpClient {
     required Map<String, String> uri,
     required Map<String, dynamic> body,
   }) async {
+    var url = Uri.parse("${uri['base']}${uri['endpoint']}");
     try {
-      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
       return await client.post(
         url,
         headers: <String, String>{
@@ -58,8 +64,13 @@ class HttpClient implements IHttpClient {
         },
         body: json.encode(body),
       );
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição POST para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
 
     return null;
@@ -76,8 +87,13 @@ class HttpClient implements IHttpClient {
         url,
         headers: {HttpHeaders.authorizationHeader: token},
       );
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição GET Auth para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
     return null;
   }
@@ -88,8 +104,8 @@ class HttpClient implements IHttpClient {
     required Map<String, String> uri,
     required Map<String, dynamic> body,
   }) async {
+    var url = Uri.parse("${uri['base']}${uri['endpoint']}");
     try {
-      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
       return await client.put(
         url,
         headers: {
@@ -98,8 +114,13 @@ class HttpClient implements IHttpClient {
         },
         body: json.encode(body),
       );
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição PUT para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -124,14 +145,19 @@ class HttpClient implements IHttpClient {
     required String token,
     required Map<String, String> uri,
   }) async {
+    var url = Uri.parse("${uri['base']}${uri['endpoint']}");
     try {
-      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
       await client.delete(
         url,
         headers: {HttpHeaders.authorizationHeader: token},
       );
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição DELETE para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -141,8 +167,8 @@ class HttpClient implements IHttpClient {
     required Map<String, String> uri,
     required Map<String, dynamic> body,
   }) async {
+    var url = Uri.parse("${uri['base']}${uri['endpoint']}");
     try {
-      var url = Uri.parse("${uri['base']}${uri['endpoint']}");
       await client.post(
         url,
         headers: {
@@ -151,8 +177,13 @@ class HttpClient implements IHttpClient {
         },
         body: json.encode(body),
       );
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição POST Auth para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

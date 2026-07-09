@@ -7,6 +7,7 @@ import 'package:vacina_app/data/repositories/address_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/store/address_store.dart';
 import 'package:vacina_app/data/store/local_store.dart';
+import 'package:vacina_app/util/app_logger.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_data_row.dart';
 
@@ -77,8 +78,13 @@ class _LocaisScreenState extends State<LocaisScreen> {
           LocalModel.empty(),
         );
       });
-    } catch (e) {
-      print('Erro ao obter locais: $e');
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição getLocal',
+        name: 'locais_screen',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 

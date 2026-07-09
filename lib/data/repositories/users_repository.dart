@@ -5,6 +5,7 @@ import 'package:vacina_app/data/dto/register_request.dart';
 import 'package:vacina_app/data/dto/user_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/user_model.dart';
+import 'package:vacina_app/util/app_logger.dart';
 
 import '../http/api_endpoints.dart';
 
@@ -35,8 +36,13 @@ class UsersRepository implements IUsersRepository {
       if (response.statusCode == 200) {
         user = UserModel.fromJson(jsonDecode(response.body));
       }
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      AppLogger.log(
+        'Erro na requisição GET User para: $url',
+        name: 'http_client',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
     return user;
   }
