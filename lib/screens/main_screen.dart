@@ -222,7 +222,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _loadVaccines() async {
-    await vaccineStore.getListByLocal(local.name);
+    // TODO get Campanhas
+
+    await vaccineStore.getVaccine(local.name);
     setState(() {
       vaccines = vaccineStore.stateList.value;
     });

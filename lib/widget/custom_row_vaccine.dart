@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
-import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 
 class CustomRowVaccine {
@@ -14,14 +13,11 @@ class CustomRowVaccine {
     Function(VaccineRequest vaccine) onCreate,
     Function() setState,
     Function(TextEditingController edit) setDate,
-    Function() getLocalId,
   ) {
     Map<String, int> idToIndex = {
       for (var i = 0; i < controllers.length; i++)
         controllers.keys.elementAt(i): i,
     };
-
-    LocalModel local = LocalModel.empty();
 
     Widget btnDelete(MapEntry entry) {
       return IconButton(
@@ -149,55 +145,6 @@ class CustomRowVaccine {
               Center(
                 child: isEditing[idToIndex[entry.key]!]
                     ? TextField(
-                        controller: entry.value['minRecommendedAge'],
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                      )
-                    : Text(
-                        entry.key == 'add_new'
-                            ? 'add_new'
-                            : entry.value['minRecommendedAge']!.text,
-                      ),
-              ),
-            ),
-            DataCell(
-              Center(
-                child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(
-                        controller: entry.value['maxRecommendedAge'],
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                      )
-                    : Text(
-                        entry.key == 'add_new'
-                            ? 'add_new'
-                            : entry.value['maxRecommendedAge']!.text,
-                      ),
-              ),
-            ),
-            DataCell(
-              Center(
-                child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(
-                        controller: entry.value['posto'],
-                        readOnly: true,
-                        onTap: () async {
-                          local = await getLocalId();
-                          entry.value['posto']!.text = local.name;
-                          //setState();
-                        },
-                      )
-                    : Text(
-                        entry.key == 'add_new'
-                            ? 'add_new'
-                            : entry.value['posto']!.text,
-                      ),
-              ),
-            ),
-            DataCell(
-              Center(
-                child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(
                         controller: entry.value['doses'],
                         readOnly: true,
                         onTap: () async {
@@ -244,21 +191,6 @@ class CustomRowVaccine {
                         entry.key == 'add_new'
                             ? 'add_new'
                             : entry.value['description']!.text,
-                      ),
-              ),
-            ),
-            DataCell(
-              Center(
-                child: isEditing[idToIndex[entry.key]!]
-                    ? TextField(
-                        controller: entry.value['stockQuantity'],
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                      )
-                    : Text(
-                        entry.key == 'add_new'
-                            ? 'add_new'
-                            : entry.value['stockQuantity']!.text,
                       ),
               ),
             ),

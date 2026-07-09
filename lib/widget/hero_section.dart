@@ -27,11 +27,10 @@ class HeroSection extends StatelessWidget {
 
   List<VaccineStatusCard> _getList(List<VaccineModel> vaccines) {
     List<VaccineStatusCard> cards = [];
+    // TODO getVaccines in Campanha for age
+
     for (VaccineModel vaccine in vaccines) {
-      if (vaccine.minRecommendedAge <= user.age() &&
-          user.age() <= vaccine.maxRecommendedAge) {
-        cards.add(VaccineStatusCard(vaccineModel: vaccine));
-      }
+      cards.add(VaccineStatusCard(vaccineModel: vaccine, ubs: "PREENCHER"));
     }
     return cards;
   }

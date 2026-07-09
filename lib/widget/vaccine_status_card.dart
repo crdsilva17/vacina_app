@@ -12,7 +12,12 @@ import 'package:device_calendar_plus/device_calendar_plus.dart';
 
 class VaccineStatusCard extends StatefulWidget {
   final VaccineModel vaccineModel;
-  const VaccineStatusCard({super.key, required this.vaccineModel});
+  final String ubs;
+  const VaccineStatusCard({
+    super.key,
+    required this.vaccineModel,
+    required this.ubs,
+  });
 
   @override
   State<VaccineStatusCard> createState() => _VaccineStatusCardState();
@@ -103,10 +108,6 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
                                   size: 16,
                                 ),
                               ),
-                              TextSpan(
-                                text: widget.vaccineModel.posto,
-                                style: TextStyle(color: Colors.black),
-                              ),
                             ],
                           ),
                         ),
@@ -129,17 +130,6 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
                         : 'Agendar Agora',
                     icon: hasAppointment ? Icons.cancel : Icons.calendar_month,
                     onPressed: () async {
-                      /*
-                      final data = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 90)),
-                      );
-
-                      if (data == null) return;
-
-                      await _selecionarHorario(context, data);
-                      */
                       if (loadingAppointment) {
                         return;
                       }
@@ -149,6 +139,7 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
                       }
                       final data = await showDatePicker(
                         context: context,
+                        // TODO Date for campanha
                         firstDate: DateTime.now(),
                         lastDate: DateTime.now().add(const Duration(days: 90)),
                       );
@@ -226,26 +217,6 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
                                   ),
                                   Text(widget.vaccineModel.doses),
                                   Text(
-                                    'Idade mínima',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    widget.vaccineModel.minRecommendedAge
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    'Idade máxima',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    widget.vaccineModel.maxRecommendedAge
-                                        .toString(),
-                                  ),
-                                  Text(
                                     'Número do Lote',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -278,7 +249,7 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
 
     LocalModel local = await LocalRepository(
       client: HttpClient(),
-    ).getLocalByNome(widget.vaccineModel.posto);
+    ).getLocalByNome(widget.ubs);
 
     final horarios = await AgendamentoRepository(
       baseUrl: ApiEndpoints.baseUrl,
@@ -325,7 +296,7 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
       if (token == null) return;
       LocalModel local = await LocalRepository(
         client: HttpClient(),
-      ).getLocalByNome(widget.vaccineModel.posto);
+      ).getLocalByNome(widget.ubs);
 
       // Create appointment in calendar
       DateTime appointment = DateTime(

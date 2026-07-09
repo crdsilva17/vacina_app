@@ -7,12 +7,8 @@ class VaccineModel {
   final String manufactureDate;
   final String expiryDate;
   final String lot;
-  final int minRecommendedAge;
-  final int maxRecommendedAge;
-  final String posto;
   final String doses;
   final String description;
-  final int stockQuantity;
 
   VaccineModel({
     required this.id,
@@ -21,12 +17,8 @@ class VaccineModel {
     required this.manufactureDate,
     required this.expiryDate,
     required this.lot,
-    required this.minRecommendedAge,
-    required this.maxRecommendedAge,
-    required this.posto,
     required this.doses,
     required this.description,
-    required this.stockQuantity,
   });
 
   factory VaccineModel.fromJson(Map<String, dynamic> json) {
@@ -47,12 +39,8 @@ class VaccineModel {
       manufactureDate: formattedDate1,
       expiryDate: formattedDate2,
       lot: json['lote'] ?? '0',
-      minRecommendedAge: json['idadeMinima'] ?? 0,
-      maxRecommendedAge: json['idadeMaxima'] ?? 1,
-      posto: json['localId'] ?? 'Não informado.',
       doses: json['doses'] ?? 0,
       description: json['descricao'] ?? 'Sem descrição.',
-      stockQuantity: json['quantidadeDisponivel'] ?? 0,
     );
   }
 }

@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
-import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
-import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
-import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/vaccine_store.dart';
 import 'package:vacina_app/widget/custom_data_column.dart';
 import 'package:vacina_app/widget/custom_row_vaccine.dart';
@@ -21,10 +18,6 @@ class VaccineManageScreen extends StatefulWidget {
 class _VaccineManageScreenState extends State<VaccineManageScreen> {
   VaccineStore store = VaccineStore(
     repository: VaccineRepository(client: HttpClient()),
-  );
-
-  LocalStore storeLocal = LocalStore(
-    repository: LocalRepository(client: HttpClient()),
   );
 
   final Map<String, Map<String, TextEditingController>> controllers = {};
@@ -69,7 +62,6 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
                 _onCreate,
                 _setState,
                 _setDate,
-                _getLocal,
               ),
             ),
           ),
@@ -92,30 +84,6 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
       isEditing.add(false);
     }
     setState(() {});
-  }
-
-  Future<LocalModel> _getLocalId() async {
-    await storeLocal.getLocal();
-    List<LocalModel> items = storeLocal.state.value;
-    if (!mounted) return LocalModel.empty();
-    final option = await showModalBottomSheet<LocalModel>(
-      context: context,
-      builder: (context) {
-        return ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(items[index].name),
-              onTap: () {
-                Navigator.pop(context, items[index]);
-              },
-            );
-          },
-        );
-      },
-    );
-
-    return option!;
   }
 
   Future<void> _onPost(VaccineRequest vaccine) async {
@@ -149,10 +117,6 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
     }
   }
 
-  Future<LocalModel> _getLocal() async {
-    return await _getLocalId();
-  }
-
   void _onCreate(VaccineRequest vaccine) {
     _onPost(vaccine);
   }
@@ -178,12 +142,8 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
       'manufactureDate': TextEditingController(text: ''),
       'expiryDate': TextEditingController(text: ''),
       'lot': TextEditingController(text: ''),
-      'minRecommendedAge': TextEditingController(text: ''),
-      'maxRecommendedAge': TextEditingController(text: ''),
-      'posto': TextEditingController(text: ''),
       'doses': TextEditingController(text: ''),
       'description': TextEditingController(text: ''),
-      'stockQuantity': TextEditingController(text: ''),
     };
 
     for (var vaccine in vaccines) {
@@ -193,18 +153,8 @@ class _VaccineManageScreenState extends State<VaccineManageScreen> {
         'manufactureDate': TextEditingController(text: vaccine.manufactureDate),
         'expiryDate': TextEditingController(text: vaccine.expiryDate),
         'lot': TextEditingController(text: vaccine.lot),
-        'minRecommendedAge': TextEditingController(
-          text: vaccine.minRecommendedAge.toString(),
-        ),
-        'maxRecommendedAge': TextEditingController(
-          text: vaccine.maxRecommendedAge.toString(),
-        ),
-        'posto': TextEditingController(text: vaccine.posto),
         'doses': TextEditingController(text: vaccine.doses),
         'description': TextEditingController(text: vaccine.description),
-        'stockQuantity': TextEditingController(
-          text: vaccine.stockQuantity.toString(),
-        ),
       };
     }
   }
