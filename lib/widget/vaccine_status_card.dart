@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/campanha_model.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/data/repositories/agendamento_repository.dart';
@@ -13,10 +15,12 @@ import 'package:device_calendar_plus/device_calendar_plus.dart';
 class VaccineStatusCard extends StatefulWidget {
   final VaccineModel vaccineModel;
   final String ubs;
+  final CampanhaModel campanhaModel;
   const VaccineStatusCard({
     super.key,
     required this.vaccineModel,
     required this.ubs,
+    required this.campanhaModel,
   });
 
   @override
@@ -137,11 +141,18 @@ class _VaccineStatusCardState extends State<VaccineStatusCard> {
                         await _cancelarAgendamento();
                         return;
                       }
+
+                      DateFormat formatoData = DateFormat('dd/MM/yyy');
+                      DateTime firstDate = formatoData.parse(
+                        widget.campanhaModel.dataInicio,
+                      );
+                      DateTime endDate = formatoData.parse(
+                        widget.campanhaModel.dataFim,
+                      );
                       final data = await showDatePicker(
                         context: context,
-                        // TODO Date for campanha
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 90)),
+                        firstDate: firstDate,
+                        lastDate: endDate,
                       );
 
                       if (data == null) return;

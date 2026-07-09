@@ -64,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
   UserModel user = UserModel.empty();
   LocalModel local = LocalModel.empty();
   List<VaccineModel> vaccines = [];
+  List<CampanhaModel> campanhas = [];
 
   void openDrawer() {
     _scaffoldKey.currentState?.openDrawer();
@@ -205,7 +206,12 @@ class _MainScreenState extends State<MainScreen> {
       return SliverList(
         delegate: SliverChildListDelegate([
           Center(
-            child: HeroSection(user: user, vaccines: vaccines),
+            child: HeroSection(
+              user: user,
+              local: local,
+              vaccines: vaccines,
+              campanhas: campanhas,
+            ),
           ),
         ]),
       );
@@ -228,19 +234,45 @@ class _MainScreenState extends State<MainScreen> {
     await _loadVaccines();
   }
 
+  int userAge(String dataNascimentoStr, {String formato = 'dd/MM/yyyy'}) {
+    // 1. Converte a String para DateTime
+    DateFormat formatoData = DateFormat(formato);
+    DateTime dataNascimento = formatoData.parse(dataNascimentoStr);
+
+    // 2. Pega a data atual
+    DateTime hoje = DateTime.now();
+
+    // 3. Calcula a diferença de anos
+    int idade = hoje.year - dataNascimento.year;
+
+    // 4. Ajusta caso o aniversário ainda não tenha ocorrido este ano
+    if (hoje.month < dataNascimento.month ||
+        (hoje.month == dataNascimento.month && hoje.day < dataNascimento.day)) {
+      idade--;
+    }
+
+    return idade;
+  }
+
   /*
     Verifica se existe campanha cadastrada para a UBS
     se existir, carrega as vacinas ofertadas.
   */
   Future<void> _loadVaccines() async {
+    final int idade = userAge(user.birth);
     await campanhaStore.getByLocalId(local.id);
-    List<VaccineModel> vaccines = [];
+    List<VaccineModel> vaccineList = [];
     for (CampanhaModel c in campanhaStore.stateList.value) {
-      await vaccineStore.getVaccine(c.vacinaId);
-      vaccines.add(vaccineStore.stateList.value.first);
+      if (int.parse(c.ageMin) <= idade && int.parse(c.ageMax) >= idade) {
+        await vaccineStore.getVaccine(c.vacinaId);
+        vaccineList.add(vaccineStore.stateList.value.first);
+        campanhas.add(c);
+      }
     }
 
-    setState(() {});
+    setState(() {
+      vaccines = vaccineList;
+    });
   }
 
   /*
