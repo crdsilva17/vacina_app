@@ -18,27 +18,26 @@ class ApiEndpoints {
   static const String change = '/api/v1/usuarios/change-password';
   static const String notifications = '/api/v1/notifications';
   static const String count = '/api/v1/notifications/count';
+  static const String campanha = '/api/v1/campanha';
+  static const String uriCep = '/api/cep/v1';
+  static const String openMap =
+      'https://openstreetmap.org{position.latitude}&lon=';
 
-  static String setNotificationRead(String id) =>
-      '/api/v1/notifications/$id/read';
-  static String getLocalById(String id) => '/api/v1/locais/id?id=$id';
-  static String getLocalByNome(String nome) => '/api/v1/locais/nome?nome=$nome';
+  static String setNotificationRead(String id) => '$notifications/$id/read';
+  static String getLocalById(String id) => '$locais/id?id=$id';
+  static String getLocalByNome(String nome) => '$locais/nome?nome=$nome';
 
-  static String localById(String id) => '/api/v1/locais?id=$id';
+  static String localById(String id) => '$locais?id=$id';
 
-  static String vacinaByLocalId(String id) => '/api/v1/vacinas/locais?id=$id';
-  static String vacinaByLocal(String local) =>
-      '/api/v1/vacinas/local?local=$local';
+  static String vacinaById(String id) => '$vacinas?id=$id';
 
-  static String vacinaByLocalName(String name) =>
-      '/api/v1/vacinas/locais/name$name';
+  static String vacinaByName(String name) => '$vacinas/$name';
 
-  static String vacinaById(String id) => '/api/v1/vacinas?id=$id';
+  static String campanhaById(String id) => '$campanha/$id';
 
-  static String vacinaByName(String name) => '/api/v1/vacinas/$name';
+  static String campanhaByLocalId(String localId) => '$campanha/$localId';
 
-  static String getCep(String cep) => '/api/cep/v1/$cep';
+  static String getCep(String cep) => '$uriCep/$cep';
 
-  static String openStreetMap(double position) =>
-      'https://openstreetmap.org{position.latitude}&lon=$position';
+  static String openStreetMap(double position) => '$openMap$position';
 }
