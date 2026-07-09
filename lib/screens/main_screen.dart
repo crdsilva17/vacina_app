@@ -3,12 +3,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/http/http_client.dart';
+import 'package:vacina_app/data/models/campanha_model.dart';
 import 'package:vacina_app/data/models/local_model.dart';
 import 'package:vacina_app/data/models/user_model.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
+import 'package:vacina_app/data/repositories/campanha_repository.dart';
 import 'package:vacina_app/data/repositories/users_repository.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
+import 'package:vacina_app/data/store/campanha_store.dart';
 import 'package:vacina_app/data/store/vaccine_store.dart';
 import 'package:vacina_app/screens/change_pass_screen.dart';
 import 'package:vacina_app/screens/check_screen.dart';
@@ -45,6 +48,10 @@ class _MainScreenState extends State<MainScreen> {
   );
   final LocalStore localStore = LocalStore(
     repository: LocalRepository(client: HttpClient()),
+  );
+
+  final CampanhaStore campanhaStore = CampanhaStore(
+    repository: CampanhaRepository(client: HttpClient()),
   );
 
   final NotificationService notificationService = NotificationService();
@@ -221,13 +228,19 @@ class _MainScreenState extends State<MainScreen> {
     await _loadVaccines();
   }
 
+  /*
+    Verifica se existe campanha cadastrada para a UBS
+    se existir, carrega as vacinas ofertadas.
+  */
   Future<void> _loadVaccines() async {
-    // TODO get Campanhas
+    await campanhaStore.getByLocalId(local.id);
+    List<VaccineModel> vaccines = [];
+    for (CampanhaModel c in campanhaStore.stateList.value) {
+      await vaccineStore.getVaccine(c.vacinaId);
+      vaccines.add(vaccineStore.stateList.value.first);
+    }
 
-    await vaccineStore.getVaccine(local.name);
-    setState(() {
-      vaccines = vaccineStore.stateList.value;
-    });
+    setState(() {});
   }
 
   /*
