@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:vacina_app/widget/vaccine_status_card.dart';
 
 class CampanhaModel {
   final String id;
