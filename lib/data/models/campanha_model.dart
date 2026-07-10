@@ -36,7 +36,9 @@ class CampanhaModel {
       id: json['id'],
       nome: json['nome'],
       vacinaId: json['vacinaId'],
-      localIds: json['localIds'],
+      localIds: json['localIds'] != null
+          ? List<String>.from(json['localIds'])
+          : [],
       dataInicio: formattedDate1,
       dataFim: formattedDate2,
       ageMin: json['ageMin'] ?? '0',

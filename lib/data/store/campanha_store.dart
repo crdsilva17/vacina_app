@@ -16,8 +16,14 @@ class CampanhaStore {
     isLoading.value = true;
     try {
       stateList.value = await repository.buscarTodos();
-    } catch (e) {
+    } catch (e, stackTrace) {
       error.value = 'Error ao buscar Campanhas';
+      AppLogger.log(
+        'Error ao buscar Campanhas',
+        name: 'CampanhaStore',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       isLoading.value = false;
     }

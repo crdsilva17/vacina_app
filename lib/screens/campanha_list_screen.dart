@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacina_app/data/dto/campanha_request.dart';
 import 'package:vacina_app/data/http/http_client.dart';
-import 'package:vacina_app/data/models/campanha_model.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
 import 'package:vacina_app/data/repositories/campanha_repository.dart';
@@ -37,6 +36,7 @@ class _CampanhaListScreenState extends State<CampanhaListScreen> {
 
   Future<void> getCampanhas() async {
     await campanhaStore.getList();
+    setState(() {});
   }
 
   void _excluirCampanha(String id) async {

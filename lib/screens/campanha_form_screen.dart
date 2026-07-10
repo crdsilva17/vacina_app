@@ -26,7 +26,7 @@ class CampanhaFormScreen extends StatefulWidget {
 
 class _CampanhaFormScreenState extends State<CampanhaFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final DateFormat _apiFormatter = DateFormat('yyyy-MM-dd');
+  final DateFormat _apiFormatter = DateFormat('dd/MM/yyyy');
 
   // Controllers dos Inputs
   final _nomeController = TextEditingController();
@@ -132,6 +132,7 @@ class _CampanhaFormScreenState extends State<CampanhaFormScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              SizedBox(height: 15),
               TextFormField(
                 controller: _nomeController,
                 decoration: const InputDecoration(
