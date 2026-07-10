@@ -130,7 +130,7 @@ class _ChangePassScreenState extends State<ChangePassScreen> {
                         ),
                       ),
                       validator: (value) {
-                        if (value == null || value != passAtual.text) {
+                        if (value == null || value != passNova.text) {
                           return 'Confirmação de Senha inválida.\nAs senhas informadas são diferentes.';
                         }
                         return null;
