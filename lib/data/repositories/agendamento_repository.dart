@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:vacina_app/data/http/api_endpoints.dart';
 import 'package:vacina_app/data/models/agendamento_model.dart';
-import 'package:vacina_app/util/app_logger.dart';
 
 class AgendamentoRepository {
   final String baseUrl;
