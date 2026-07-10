@@ -26,28 +26,10 @@ class CustomDataColumn {
         label: Expanded(child: Text('Lote', textAlign: TextAlign.center)),
       ),
       DataColumn(
-        label: Expanded(
-          child: Text('Idade mínima Recomendada', textAlign: TextAlign.center),
-        ),
-      ),
-      DataColumn(
-        label: Expanded(
-          child: Text('Idade máxima Recomendada', textAlign: TextAlign.center),
-        ),
-      ),
-      DataColumn(
-        label: Expanded(child: Text('Posto', textAlign: TextAlign.center)),
-      ),
-      DataColumn(
         label: Expanded(child: Text('Doses', textAlign: TextAlign.center)),
       ),
       DataColumn(
         label: Expanded(child: Text('Descrição', textAlign: TextAlign.center)),
-      ),
-      DataColumn(
-        label: Expanded(
-          child: Text('Quantidade em Estoque', textAlign: TextAlign.center),
-        ),
       ),
       DataColumn(label: Expanded(child: Text('Editar'))),
       DataColumn(label: Expanded(child: Text('Excluir'))),

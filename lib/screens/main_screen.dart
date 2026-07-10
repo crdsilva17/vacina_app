@@ -260,7 +260,7 @@ class _MainScreenState extends State<MainScreen> {
     se existir, carrega as vacinas ofertadas.
   */
   Future<void> _loadVaccines() async {
-    final int idade = userAge(user.birth);
+    final int idade = userAge(user.birth, formato: 'yyyy-MM-dd');
     await campanhaStore.getByLocalId(local.id);
     List<VaccineModel> vaccineList = [];
     for (CampanhaModel c in campanhaStore.stateList.value) {

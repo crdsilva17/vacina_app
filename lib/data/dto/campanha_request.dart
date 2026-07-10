@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:vacina_app/data/models/campanha_model.dart';
 
 class CampanhaRequest {
   final String nome;
@@ -28,6 +29,18 @@ class CampanhaRequest {
       dataFim: map['dataFim'],
       ageMin: map['ageMin'],
       ageMax: map['ageMax'],
+    );
+  }
+
+  factory CampanhaRequest.fromModel(CampanhaModel model) {
+    return CampanhaRequest(
+      nome: model.nome,
+      vacinaId: model.vacinaId,
+      localIds: model.localIds,
+      dataInicio: model.dataInicio,
+      dataFim: model.dataFim,
+      ageMin: model.ageMin,
+      ageMax: model.ageMax,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/screens/campanha_list_screen.dart';
 import 'package:vacina_app/screens/locais_screen.dart';
 import 'package:vacina_app/screens/vaccine_manage_screen.dart';
 import 'package:vacina_app/util/app_logger.dart';
@@ -55,11 +56,11 @@ class HeroAdmSection extends StatelessWidget {
             SizedBox(
               width: screenWidth * 0.45,
               child: InkWell(
-                onTap: () => ('Campanhas'), //TODO Chamar tela de campanha,
+                onTap: () => push(context, CampanhaListScreen()),
                 child: CustomButtom(
                   text: 'Gerenciar Campanhas de Vacinação',
                   icon: Icons.campaign_outlined,
-                  isEnabled: false,
+                  isEnabled: true,
                 ),
               ),
             ),
