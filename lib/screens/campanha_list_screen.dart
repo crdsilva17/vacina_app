@@ -4,8 +4,10 @@ import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/models/campanha_model.dart';
 import 'package:vacina_app/data/repositories/local_repository.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
+import 'package:vacina_app/data/repositories/campanha_repository.dart';
 import 'package:vacina_app/data/store/local_store.dart';
 import 'package:vacina_app/data/store/vaccine_store.dart';
+import 'package:vacina_app/data/store/campanha_store.dart';
 import 'package:vacina_app/screens/campanha_form_screen.dart'; // Vamos criar a seguir
 
 class CampanhaListScreen extends StatefulWidget {
@@ -23,25 +25,25 @@ class _CampanhaListScreenState extends State<CampanhaListScreen> {
     repository: LocalRepository(client: HttpClient()),
   );
 
-  // Simulando uma lista que viria da sua API Get
-  List<CampanhaModel> campanhasMock = [
-    CampanhaModel(
-      id: "6a502db4e01100bfb67e3d60",
-      nome: "Campanha da Gripe 2026",
-      vacinaId: "vac-influenza",
-      localIds: ["posto-central", "posto-bairro"],
-      dataInicio: "2026-05-01",
-      dataFim: "2026-06-01",
-      ageMin: "10",
-      ageMax: "60",
-    ),
-  ];
+  final CampanhaStore campanhaStore = CampanhaStore(
+    repository: CampanhaRepository(client: HttpClient()),
+  );
 
-  void _excluirCampanha(String id) {
-    setState(() {
-      // No cenário real, faça o await client.delete("url/$id");
-      campanhasMock.removeWhere((c) => c.id == id);
-    });
+  @override
+  void initState() {
+    super.initState();
+    getCampanhas();
+  }
+
+  Future<void> getCampanhas() async {
+    await campanhaStore.getList();
+  }
+
+  void _excluirCampanha(String id) async {
+    await campanhaStore.deletar(id);
+    getCampanhas();
+    setState(() {});
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Campanha excluída com sucesso!')),
     );
@@ -51,14 +53,12 @@ class _CampanhaListScreenState extends State<CampanhaListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Campanhas de Vacinação')),
-      body: campanhasMock.isEmpty
+      body: campanhaStore.stateList.value.isEmpty
           ? const Center(child: Text('Nenhuma campanha cadastrada.'))
           : ListView.builder(
-              itemCount: campanhasMock.length,
+              itemCount: campanhaStore.stateList.value.length,
               itemBuilder: (context, index) {
-                final campanha = CampanhaRequest.fromModel(
-                  campanhasMock[index],
-                );
+                final campanha = campanhaStore.stateList.value[index];
                 return Card(
                   margin: const EdgeInsets.all(8),
                   child: ListTile(
@@ -80,23 +80,26 @@ class _CampanhaListScreenState extends State<CampanhaListScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CampanhaFormScreen(
-                                  campanha: campanha,
+                                  campanha: CampanhaRequest.fromModel(campanha),
                                   vaccineStore: vaccineStore,
                                   localStore: localStore,
                                 ),
                               ),
                             );
-                            if (resultado != null)
-                              setState(() {}); // Atualiza a lista
+                            if (resultado != null) {
+                              await campanhaStore.atualizar(
+                                campanha.id,
+                                resultado,
+                              );
+                              setState(() {
+                                getCampanhas();
+                              }); // Atualiza a lista
+                            }
                           },
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _excluirCampanha(
-                            campanhasMock
-                                .firstWhere((c) => c.nome == campanha.nome)
-                                .id,
-                          ),
+                          onPressed: () => _excluirCampanha(campanha.id),
                         ),
                       ],
                     ),
@@ -118,8 +121,9 @@ class _CampanhaListScreenState extends State<CampanhaListScreen> {
             ),
           );
           if (resultado != null) {
+            await campanhaStore.criar(resultado);
             setState(() {
-              campanhasMock.add(resultado as CampanhaModel);
+              getCampanhas();
             });
           }
         },

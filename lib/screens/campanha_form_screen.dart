@@ -264,7 +264,7 @@ class _CampanhaFormScreenState extends State<CampanhaFormScreen> {
 
                         return CheckboxListTile(
                           title: Text(
-                            local.nome,
+                            local.name,
                           ), // Adapte para a propriedade de nome do seu objeto local
                           value: estaSelecionado,
                           controlAffinity: ListTileControlAffinity.leading,

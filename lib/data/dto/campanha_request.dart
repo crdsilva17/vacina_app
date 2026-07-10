@@ -45,17 +45,23 @@ class CampanhaRequest {
   }
 
   Map<String, dynamic> toMap() {
-    DateTime dateTime1 = DateFormat('dd/MM/yyyy').parse(dataInicio);
-    DateTime dateTime2 = DateFormat('dd/MM/yyyy').parse(dataFim);
+    String formattedDate1 = '';
+    String formattedDate2 = '';
 
-    String formattedDate1 = DateFormat('yyyy-MM-dd').format(dateTime1);
-    String formattedDate2 = DateFormat('yyyy-MM-dd').format(dateTime2);
-
+    if (dataInicio.contains('/')) {
+      DateTime dateTime1 = DateFormat('dd/MM/yyyy').parse(dataInicio);
+      DateTime dateTime2 = DateFormat('dd/MM/yyyy').parse(dataFim);
+      formattedDate1 = DateFormat('yyyy-MM-dd').format(dateTime1);
+      formattedDate2 = DateFormat('yyyy-MM-dd').format(dateTime2);
+    } else {
+      formattedDate1 = dataInicio;
+      formattedDate2 = dataFim;
+    }
     return {
       'nome': nome,
       'vacinaId': vacinaId,
       'localIds': localIds,
-      'datainicio': formattedDate1,
+      'dataInicio': formattedDate1,
       'dataFim': formattedDate2,
       'ageMin': ageMin,
       'ageMax': ageMax,

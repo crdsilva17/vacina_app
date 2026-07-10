@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:vacina_app/data/dto/campanha_request.dart';
 import 'package:vacina_app/data/models/campanha_model.dart';
 import 'package:vacina_app/data/repositories/campanha_repository.dart';
+import 'package:vacina_app/util/app_logger.dart';
 
 class CampanhaStore {
   final ICampanhaRepository repository;
@@ -37,9 +38,14 @@ class CampanhaStore {
     isLoading.value = true;
     try {
       await repository.criar(request);
-      stateList.value = await repository.buscarTodos();
-    } catch (e) {
+    } catch (e, stackTrace) {
       error.value = 'Error ao criar nova Campanha';
+      AppLogger.log(
+        'Erro ao criar nova campanha.',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'CamapnhaStore',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -49,7 +55,6 @@ class CampanhaStore {
     isLoading.value = true;
     try {
       await repository.atualizar(id, request);
-      stateList.value = await repository.buscarTodos();
     } catch (e) {
       error.value = 'Error ao atualizar Campanha';
     } finally {
@@ -61,7 +66,6 @@ class CampanhaStore {
     isLoading.value = true;
     try {
       await repository.deletar(id);
-      stateList.value = await repository.buscarTodos();
     } catch (e) {
       error.value = 'Error ao deletar Campanha';
     } finally {

@@ -71,11 +71,8 @@ class CampanhaRepository implements ICampanhaRepository {
   @override
   Future<void> criar(CampanhaRequest request) async {
     final String? token = await storage.read(key: 'token');
-    await client.postAuth(
-      token: token.toString(),
-      uri: url,
-      body: request.toMap(),
-    );
+    final body = request.toMap();
+    await client.postAuth(token: token.toString(), uri: url, body: body);
   }
 
   @override
