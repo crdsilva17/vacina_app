@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:vacina_app/widget/vaccine_status_card.dart';
 
 class CampanhaModel {
   final String id;
@@ -43,6 +44,19 @@ class CampanhaModel {
       dataFim: formattedDate2,
       ageMin: json['ageMin'] ?? '0',
       ageMax: json['ageMax'] ?? '0',
+    );
+  }
+
+  static CampanhaModel empty() {
+    return CampanhaModel(
+      id: '',
+      nome: '',
+      vacinaId: '',
+      localIds: [],
+      dataInicio: '',
+      dataFim: '',
+      ageMin: '',
+      ageMax: '',
     );
   }
 }

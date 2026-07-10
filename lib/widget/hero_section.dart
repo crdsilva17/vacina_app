@@ -45,7 +45,8 @@ class HeroSection extends StatelessWidget {
       cards.add(
         VaccineStatusCard(
           vaccineModel: vaccine,
-          ubs: local.name,
+          ubs: local,
+          userId: user.id,
           campanhaModel: campanhaModel,
         ),
       );

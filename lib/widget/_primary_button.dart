@@ -6,6 +6,7 @@ class PrimaryButton extends StatelessWidget {
   final IconData? icon;
   final bool isLoading;
   final bool enabled;
+  final bool isAppointment;
 
   const PrimaryButton({
     super.key,
@@ -14,6 +15,7 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
     this.isLoading = false,
     this.enabled = true,
+    required this.isAppointment,
   });
 
   @override
@@ -26,7 +28,9 @@ class PrimaryButton extends StatelessWidget {
         onPressed: canPress ? onPressed : null,
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          backgroundColor: const Color(0xFF16A34A),
+          backgroundColor: !isAppointment
+              ? Color(0xFF16A34A)
+              : Color(0xFF1110FF),
           foregroundColor: Colors.white,
           disabledBackgroundColor: Colors.grey.shade300,
           shape: RoundedRectangleBorder(

@@ -19,6 +19,7 @@ class ApiEndpoints {
   static const String notifications = '/api/v1/notifications';
   static const String count = '/api/v1/notifications/count';
   static const String campanha = '/api/v1/campanha';
+  static const String agendamentos = '/api/v1/agendamentos';
   static const String uriCep = '/api/cep/v1';
   static const String openMap =
       'https://openstreetmap.org{position.latitude}&lon=';
@@ -34,6 +35,19 @@ class ApiEndpoints {
   static String vacinaByName(String name) => '$vacinas/$name';
 
   static String campanhaById(String id) => '$campanha/$id';
+
+  static String isSchedule(String vacinaId) =>
+      '$agendamentos/vacina/$vacinaId/agendado';
+
+  static String getHorarios(String localId, DateTime data) =>
+      '$agendamentos/horarios'
+      '?localId=$localId'
+      '&data=${data.toIso8601String().split('T')[0]}';
+
+  static String cancelAgendamento(String vacinaId) =>
+      '$agendamentos/cancelar/$vacinaId';
+
+  static String getAgendamentos(String userId) => '$agendamentos/$userId';
 
   static String campanhaByLocalId(String localId) => '$campanha/$localId';
 

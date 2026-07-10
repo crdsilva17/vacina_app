@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:vacina_app/data/http/api_endpoints.dart';
+import 'package:vacina_app/data/models/agendamento_model.dart';
+import 'package:vacina_app/util/app_logger.dart';
 
 class AgendamentoRepository {
   final String baseUrl;
@@ -11,11 +14,7 @@ class AgendamentoRepository {
     DateTime data,
     String token,
   ) async {
-    final url = Uri.parse(
-      '$baseUrl/api/v1/agendamentos/horarios'
-      '?localId=$localId'
-      '&data=${data.toIso8601String().split('T')[0]}',
-    );
+    final url = Uri.parse('$baseUrl${ApiEndpoints.getHorarios(localId, data)}');
 
     final response = await http.get(url, headers: {'Authorization': token});
 
@@ -33,7 +32,7 @@ class AgendamentoRepository {
     String horario,
     String token,
   ) async {
-    final url = Uri.parse('$baseUrl/api/v1/agendamentos');
+    final url = Uri.parse('$baseUrl${ApiEndpoints.agendamentos}');
 
     final body = {
       'vacinaId': vacinaId,
@@ -54,7 +53,9 @@ class AgendamentoRepository {
   }
 
   Future<void> cancelar(String vacinaId, String token) async {
-    final url = Uri.parse('$baseUrl/api/v1/agendamentos/cancelar/$vacinaId');
+    final url = Uri.parse(
+      '$baseUrl${ApiEndpoints.cancelAgendamento(vacinaId)}',
+    );
 
     final response = await http.put(url, headers: {'Authorization': token});
 
@@ -64,9 +65,7 @@ class AgendamentoRepository {
   }
 
   Future<bool> isScheduled(String vacinaId, String token) async {
-    final url = Uri.parse(
-      '$baseUrl/api/v1/agendamentos/vacina/$vacinaId/agendado',
-    );
+    final url = Uri.parse('$baseUrl${ApiEndpoints.isSchedule(vacinaId)}');
 
     final response = await http.get(url, headers: {'Authorization': token});
 
@@ -75,5 +74,29 @@ class AgendamentoRepository {
     }
 
     return jsonDecode(response.body);
+  }
+
+  Future<List<AgendamentoModel>> getAgendamentos(
+    String userId,
+    String token,
+  ) async {
+    final url = Uri.parse('$baseUrl${ApiEndpoints.getAgendamentos(userId)}');
+
+    final response = await http.get(url, headers: {'Authorization': token});
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao buscar agendamentos');
+    }
+
+    List<AgendamentoModel> agendamentos = [];
+    final body = jsonDecode(response.body);
+    body.map((agendamento) {
+      AgendamentoModel agendamentoModel = AgendamentoModel.fromJson(
+        agendamento,
+      );
+      agendamentos.add(agendamentoModel);
+    }).toList();
+
+    return agendamentos;
   }
 }

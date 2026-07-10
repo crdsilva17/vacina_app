@@ -40,6 +40,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  bool loading = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final locationService = LocationService();
   final FlutterSecureStorage storage = FlutterSecureStorage();
@@ -207,12 +208,17 @@ class _MainScreenState extends State<MainScreen> {
       return SliverList(
         delegate: SliverChildListDelegate([
           Center(
-            child: HeroSection(
-              user: user,
-              local: local,
-              vaccines: vaccines,
-              campanhas: campanhas,
-            ),
+            child: loading
+                ? Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: SizedBox(child: CircularProgressIndicator()),
+                  )
+                : HeroSection(
+                    user: user,
+                    local: local,
+                    vaccines: vaccines,
+                    campanhas: campanhas,
+                  ),
           ),
         ]),
       );
@@ -275,6 +281,7 @@ class _MainScreenState extends State<MainScreen> {
 
     setState(() {
       vaccines = vaccineList;
+      loading = false;
     });
   }
 
