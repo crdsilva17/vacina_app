@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vacina_app/data/http/config/auth_repository.dart';
 import 'package:vacina_app/data/http/http_client.dart';
 import 'package:vacina_app/data/repositories/token_repository.dart';
 import 'package:vacina_app/screens/account_screen.dart';
 import 'package:vacina_app/screens/check_screen.dart';
 import 'package:vacina_app/data/store/token_store.dart';
+import 'package:vacina_app/screens/recuperar_senha_screen.dart';
 import 'package:vacina_app/util/custom_navigate.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -129,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 10),
 
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _exibirDialogoRecuperacao(context),
                   child: const Text(
                     'Esqueceu a senha?',
                     style: TextStyle(color: Colors.white),
@@ -204,5 +206,100 @@ class _LoginScreenState extends State<LoginScreen> {
       _formKey.currentState!.save();
       _formKey.currentState!.reset();
     }
+  }
+
+  void _exibirDialogoRecuperacao(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    bool carregando = false;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          // Permite atualizar o estado apenas dentro do Modal
+          builder: (context, setStateModal) {
+            return AlertDialog(
+              title: const Text('Recuperar Senha'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Digite seu e-mail cadastrado para receber as instruções de recuperação.',
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'E-mail',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar'),
+                ),
+                carregando
+                    ? const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : ElevatedButton(
+                        // Dentro do botão Enviar do Modal da tela de login:
+                        onPressed: () async {
+                          if (emailController.text.isEmpty) return;
+
+                          setStateModal(() => carregando = true);
+
+                          // Executa o Passo A (Pedir código ao servidor)
+                          bool codigoEnviado = await AuthRepository()
+                              .solicitarCodigoRecuperacao(
+                                emailController.text.trim(),
+                              );
+
+                          setStateModal(() => carregando = false);
+                          if (!context.mounted) return;
+
+                          if (codigoEnviado) {
+                            Navigator.pop(
+                              context,
+                            ); // Fecha o modal de digitação do e-mail
+
+                            // Navega para a nova tela enviando o e-mail digitado como parâmetro
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RecuperarSenhaScreen(
+                                  email: emailController.text.trim(),
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Erro ao processar. Verifique o e-mail.',
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+
+                        child: const Text('Enviar'),
+                      ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }
