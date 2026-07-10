@@ -29,7 +29,7 @@ class ApiEndpoints {
 
   static String localById(String id) => '$locais?id=$id';
 
-  static String vacinaById(String id) => '$vacinas?id=$id';
+  static String vacinaById(String id) => '$vacinas/$id';
 
   static String vacinaByName(String name) => '$vacinas/$name';
 

@@ -265,9 +265,11 @@ class _MainScreenState extends State<MainScreen> {
     List<VaccineModel> vaccineList = [];
     for (CampanhaModel c in campanhaStore.stateList.value) {
       if (int.parse(c.ageMin) <= idade && int.parse(c.ageMax) >= idade) {
-        await vaccineStore.getVaccine(c.vacinaId);
-        vaccineList.add(vaccineStore.stateList.value.first);
-        campanhas.add(c);
+        await vaccineStore.getVaccine(c.vacinaId.toString());
+        if (vaccineStore.stateList.value.isNotEmpty) {
+          vaccineList.add(vaccineStore.stateList.value.first);
+          campanhas.add(c);
+        }
       }
     }
 

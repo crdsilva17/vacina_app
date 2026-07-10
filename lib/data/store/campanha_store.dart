@@ -33,8 +33,14 @@ class CampanhaStore {
     isLoading.value = true;
     try {
       stateList.value = await repository.buscarPorLocalId(localId);
-    } catch (e) {
+    } catch (e, stackTrace) {
       error.value = 'Error ao buscar por UBS';
+      AppLogger.log(
+        error.value,
+        error: e,
+        stackTrace: stackTrace,
+        name: 'CampanhaStore',
+      );
     } finally {
       isLoading.value = false;
     }

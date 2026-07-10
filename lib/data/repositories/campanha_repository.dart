@@ -39,7 +39,7 @@ class CampanhaRepository implements ICampanhaRepository {
     List<CampanhaModel> campanhaList = [];
 
     if (response.statusCode == 200) {
-      final body = jsonDecode(response);
+      final body = jsonDecode(response.body);
 
       body.map((campanha) {
         CampanhaModel campanhaModel = CampanhaModel.fromJson(campanha);

@@ -72,11 +72,11 @@ class VaccineRepository implements IVaccineRepository {
     List<VaccineModel> vaccines = [];
 
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      body.map((vaccine) {
-        VaccineModel vaccineModel = VaccineModel.fromJson(vaccine);
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        VaccineModel vaccineModel = VaccineModel.fromJson(body);
         vaccines.add(vaccineModel);
-      }).toList();
+      }
     }
     return vaccines;
   }

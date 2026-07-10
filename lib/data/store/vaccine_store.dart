@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vacina_app/data/dto/vaccine_request.dart';
 import 'package:vacina_app/data/models/vaccine_model.dart';
 import 'package:vacina_app/data/repositories/vaccine_repository.dart';
+import 'package:vacina_app/util/app_logger.dart';
 
 class VaccineStore {
   final IVaccineRepository repository;
@@ -26,8 +27,14 @@ class VaccineStore {
     isLoading.value = true;
     try {
       stateList.value = await repository.getVaccineById(id);
-    } catch (e) {
-      error.value = 'Error ao buscar vacinas: $e';
+    } catch (e, stackTrace) {
+      error.value = 'Error ao buscar vacinas';
+      AppLogger.log(
+        'Error ao Buscar Vacina por Id',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'VaccineStore',
+      );
     }
 
     isLoading.value = false;
