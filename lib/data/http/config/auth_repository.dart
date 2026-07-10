@@ -11,7 +11,7 @@ class AuthRepository {
   Future<bool> solicitarCodigoRecuperacao(String email) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/forgot-password'),
+        Uri.parse('$baseUrl${ApiEndpoints.forgot}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email}),
       );
@@ -37,7 +37,7 @@ class AuthRepository {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/reset-password'),
+        Uri.parse('$baseUrl${ApiEndpoints.reset}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,

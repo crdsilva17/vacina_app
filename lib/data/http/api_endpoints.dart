@@ -12,6 +12,8 @@ class ApiEndpoints {
   static const String locais = '/api/v1/locais';
   static const String login = '/api/v1/auth/login';
   static const String register = '/api/v1/auth/register';
+  static const String forgot = '/api/v1/auth/forgot-password';
+  static const String reset = '/api/v1/auth/reset-password';
   static const String user = '/api/v1/usuarios';
   static const String vacinas = '/api/v1/vacinas';
   static const String registerToken = '/api/v1/device-token';
