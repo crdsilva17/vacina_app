@@ -14,6 +14,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -29,6 +30,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -38,6 +40,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    
 }
 
 flutter {
@@ -52,6 +55,8 @@ dependencies {
   // TODO: Add the dependencies for Firebase products you want to use
   // When using the BoM, don't specify versions in Firebase dependencies
   implementation("com.google.firebase:firebase-analytics")
+
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
 
   // Add the dependencies for any other desired Firebase products
