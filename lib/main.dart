@@ -30,17 +30,17 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  // Define o handler de background
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  // Inicializa o plugin de notificações locais para o Foreground
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
-      ?.createNotificationChannel(channel);
-
   if (!kIsWeb) {
+    // Define o handler de background
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    // Inicializa o plugin de notificações locais para o Foreground
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
+
     DeviceCalendar.instance.autoPermissions = AutoPermissionMode.full;
     FirebaseMessaging.onMessage.listen((message) {
       AppLogger.log(
@@ -70,6 +70,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _setupFcm() async {
+    if (kIsWeb) return;
+
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     // 1. Solicita permissão ao usuário (Obrigatório para iOS e Android 13+)
